@@ -7,7 +7,6 @@ Using Terminal
 
 ## Run the Example
 
-### Linux
 we strongly recommend you to use docker
 Firstly you need to build the docker images in your local path
 
