@@ -15,11 +15,11 @@ export default class App extends React.Component {
         this.state = {
             title: 'FindMyTutor',
             routes: [
-                // {component: SearchPageView, path: '/', exact: true},
-                // {component: LoginView, path: '/login', exact: true},
+                {component: SearchPageView, path: '/', exact: true},
+                {component: LoginView, path: '/login', exact: true},
                 // {component: ProjectView, path: '/projects', exact: true},
-                // {component: RegisterView, path: '/register', exact: true},
-                // {component: AboutUsView, path: '/about-us', exact: true}
+                {component: RegisterView, path: '/register', exact: true},
+                {component: AboutUsView, path: '/about-us', exact: true}
             ]
         };
     }
