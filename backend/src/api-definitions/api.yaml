@@ -1,0 +1,162 @@
+openapi: 3.0.1
+info:
+  version: '1.0.0'
+  title: 'Find My Tutor Dashboard API'
+  description: 'API providing basic functionalities of the Find My Tutor '
+  termsOfService: https://foo.com/terms-of-use
+  contact:
+    name: Tri
+    url: tum.de
+    email: tri.huynh@tum.de
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+
+tags:
+  - name: user
+    description: Access to sign up or log in
+  - name: contact
+    description: Access to contact the customer service team
+
+
+paths:
+  /user/register:
+    summary: For user registration
+    description: Each each is identified by an unique email
+    post:
+      tags:
+        - user
+      requestBody:
+        description: user object that needs to be added to the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/httpCodesSchemas/200'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+
+  /user/login:
+    summary: For user login.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - user
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /contact/saveMessage:
+    summary: save a contact message
+    description: This endpoint is used to store the contact message sent by our customers/tutors. Each contactMessage is identified by an unique message_id.
+    post:
+      tags:
+        - contact
+      summary: Add a new message into the database
+      operationId: postMessage
+      requestBody:
+        description: Message object that needs to be added to the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contactForms'
+        required: true
+      responses:
+        201:
+          $ref: '#/components/httpCodesSchemas/200'
+        401:
+          $ref: '#/components/httpCodesSchemas/401'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+
+
+components:
+  schemas:
+    registerForms:
+      type: object
+      $ref: '#/components/schemas/registerForms'
+      properties:
+        email:
+          type: string
+        password: # length must greater than 8
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        university:
+          type: string
+        userType:
+          type: string
+    loginForms:
+      type: object
+      $ref: '#/components/schemas/loginForms'
+      properties:
+        email:
+          type: string
+        password: # length must greater than 8
+          type: string
+        userType:
+          type: string
+    contactForms:
+      type: object
+      $ref: '#/components/schemas/contactForms'
+      properties:
+        email:
+          type: string
+        message: # length must greater than 8
+          type: string
+
+  securitySchemas:
+    authenticationHeader:
+      type: apiKey
+      $ref: '#/components/securitySchemas/authenticationHeader'
+      in: header
+      name: Authentication
+      description: Enter your authentication identity
+
+  httpCodesSchemas:
+    200:
+      $ref: '#/components/httpCodesSchemas/200'
+      description: Successful operation
+    201:
+      $ref: '#/components/httpCodesSchemas/201'
+      description: New resource created
+    400:
+      $ref: '#/components/httpCodesSchemas/400'
+      description: Invalid request
+      content: {}
+    401:
+      $ref: '#/components/httpCodesSchemas/401'
+      description: Unauthorized
+    404:
+      $ref: '#/components/httpCodesSchemas/404'
+      description: data object is not found
+      content: {}
+    405:
+      $ref: '#/components/httpCodesSchemas/405'
+      description: Validation exception
+      content: {}
+    500:
+      $ref: '#/components/httpCodesSchemas/500'
+      description: internal error happened by mongodb database
