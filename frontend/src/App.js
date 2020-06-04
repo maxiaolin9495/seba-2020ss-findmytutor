@@ -4,7 +4,7 @@ import React from 'react';
 import {HashRouter as Router, Route, Switch} from 'react-router-dom';
 import {SearchPageView} from "./ViewController/SearchPageView";
 import {LoginView} from "./ViewController/LoginView";
-import {ProjectView} from "./ViewController/ProjectView";
+// import {ProjectView} from "./ViewController/ProjectView";
 import {RegisterView} from "./ViewController/RegisterView";
 import {AboutUsView} from "./ViewController/AboutUsView";
 
