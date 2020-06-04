@@ -7,14 +7,18 @@ Using Terminal
 
 ## Run the Example
 
-we strongly recommend you to use docker
+we strongly recommend you to use docker \
 Firstly you need to build the docker images in your local path
 
 `docker-compose build`
 
 Then you can start the whole project with:
 
-`docker-compose up`
+`docker-compose up -d`
+
+`-d` runs container in detached mode (in the background)
+
+To stop the docker containers, simply use `docker-compose down`
 
 ## Demo
 
