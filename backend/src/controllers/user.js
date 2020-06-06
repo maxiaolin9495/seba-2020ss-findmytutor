@@ -29,25 +29,26 @@ const register = (req, res) => {
     let verificationResult = verifyRequestBody(req);
 
     if (!verificationResult.ifValid) {
+
         return res.status(400).json(verificationResult.message);
+
     }
 
     if (req.body.userType === "tutor") {
+
         const user = Object.assign(req.body, {ifProved: false});
-        console.log(user);
-        console.log(req.body.userType);
         return registerUser(user, customerModel, tutorModel, req, res);
 
     } else {
+
         const user = Object.assign(req.body);
-        console.log(user);
         return registerUser(user, tutorModel, customerModel, req, res);
+
     }
 
 };
 
 const registerUser = (user, dataModel1, dataModel2, req, res) => {
-    console.log(req.body.email);
     dataModel1.findOne({email: req.body.email}).exec()
         .then(data => {
             if (data === null) {
@@ -59,9 +60,7 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
 
                 })
                     .catch(error => {
-
                         return errorHandlerForRegister(error, res);
-
                     });
             }
         }).catch(error => {
