@@ -62,6 +62,11 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
                     .catch(error => {
                         return errorHandlerForRegister(error, res);
                     });
+            } else {
+                return res.status(400).json({
+                    error: 'Duplicated user',
+                    message: 'You have already registered an account with your email'
+                })
             }
         }).catch(error => {
         console.log('error by searching user ' + error);
