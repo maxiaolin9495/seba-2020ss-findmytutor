@@ -65,6 +65,120 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
 
+  /user/login:
+    summary: For user login.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - user
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /user/uploadTutorProfile:
+    summary: For tutor upload Tutor Profile.
+    description: Only valid tutor can use this backend service
+    post:
+      tags:
+        - tutor
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tutorProfileForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /user/getTutorProfile:
+    summary: to ger Tutor Profile.
+    description: Only valid tutor can use this backend service
+    post:
+      tags:
+        - tutor
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tutorProfileForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /user/uploadCustomerProfile:
+    summary: For Customer upload Customer Profile.
+    description: Only valid Customer can use this backend service
+    post:
+      tags:
+        - Customer
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customerProfileForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  
+  /user/getCustomerProfile:
+    summary: To get Customer Profile.
+    description: Only valid Customer can use this backend service
+    post:
+      tags:
+        - Customer
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customerProfileForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
   /contact/saveMessage:
     summary: save a contact message
     description: This endpoint is used to store the contact message sent by our customers/tutors. Each contactMessage is identified by an unique message_id.
@@ -120,6 +234,35 @@ components:
           type: string
         message: # length must greater than 8
           type: string
+    tutorProfileForms:
+      type: object
+      $ref: '#/components/schemas/tutorProfileForms'
+      properties:
+        email:
+          type: string
+        firstName: 
+          type: string
+        lastName: 
+          type: string
+        university:
+          type: string
+        price:
+          type: string
+        description:
+          type: string
+    customerProfileForms:
+      type: object
+      $ref: '#/components/schemas/customerProfileForms'
+      properties:
+        email:
+          type: string
+        firstName: 
+          type: string
+        lastName: 
+          type: string
+        university:
+          type: string
+        
 
   securitySchemas:
     authenticationHeader:
