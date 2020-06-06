@@ -14,14 +14,14 @@ const app = express();
  * Connect to the database
  */
 
-// mongoose.connect(config.mongoURI,{useNewUrlParser: true});
-//
-// mongoose.connection
-//     .once('open',()=> console.log('Connected'))
-//     .on('error',(error)=> {
-//         console.log('Your Error', error);
-//
-//     });
+mongoose.connect(config.mongoURI,{useNewUrlParser: true});
+
+mongoose.connection
+    .once('open',()=> console.log('Connected'))
+    .on('error',(error)=> {
+        console.log('Your Error', error);
+
+    });
 /**
  * Middleware
  */

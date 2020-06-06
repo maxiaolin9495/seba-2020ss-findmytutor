@@ -13,21 +13,6 @@ const login = (req, res) => {
         return res.status(400).json(verificationResult.message);
     }
 
-    // if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
-    //     error: 'Bad Request',
-    //     message: 'The request body must contain a password property'
-    // });
-    //
-    // if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
-    //     error: 'Bad Request',
-    //     message: 'The request body must contain a email property'
-    // });
-    //
-    // if (!Object.prototype.hasOwnProperty.call(req.body, 'userType')) return res.status(400).json({
-    //     error: 'Bad Request',
-    //     message: 'The request body must contain a userType property'
-    // });
-
     if (req.body.userType === "customer") {
 
         return findUser(req, res, customerModel);
@@ -35,22 +20,6 @@ const login = (req, res) => {
     } else {
 
         return findUser(req, res, tutorModel);
-        // tutorModel.findOne({email: req.body.email}).exec()//tutorModel schema
-        //     .then(user => {//user object
-        //
-        //         // check if the password is valid
-        //         if (!(req.body.password === user.password)) return res.status(401).send({token: null});
-        //
-        //         return createTokenResponse(req, res, user);
-        //
-        //     })
-        //     .catch(error => {
-        //         console.log('error by searching user');
-        //         return res.status(404).json({
-        //             error: 'User Not Found',
-        //             message: error.message
-        //         })
-        //     });
 
     }
 
@@ -68,29 +37,7 @@ const register = (req, res) => {
         console.log(user);
         console.log(req.body.userType);
         return registerUser(user, customerModel, tutorModel, req, res);
-        // customerModel.findOne({email: req.body.email}).exec()
-        //     .then(user => {
-        //         if (user === null) {
-        //             tutorModel.create(user).then(user => {
-        //
-        //                 // if user is registered without errors
-        //                 // create a token
-        //                 return createTokenResponse(req, res, user);
-        //
-        //             })
-        //                 .catch(error => {
-        //
-        //                     return errorHandlerForRegister(error, res);
-        //
-        //                 });
-        //         }
-        //     }).catch(error => {
-        //     console.log('error by searching user ' + error);
-        //     return res.status(404).json({
-        //         error: 'User Not Found',
-        //         message: error.message
-        //     })
-        // });
+
     } else {
         const user = Object.assign(req.body);
         console.log(user);
@@ -100,9 +47,10 @@ const register = (req, res) => {
 };
 
 const registerUser = (user, dataModel1, dataModel2, req, res) => {
+    console.log(req.body.email);
     dataModel1.findOne({email: req.body.email}).exec()
-        .then(user => {
-            if (user === null) {
+        .then(data => {
+            if (data === null) {
                 dataModel2.create(user).then(user => {
 
                     // if user is registered without errors

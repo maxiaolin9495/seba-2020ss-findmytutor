@@ -100,12 +100,6 @@ components:
           type: string
         password: # length must greater than 8
           type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        university:
-          type: string
         userType:
           type: string
     loginForms:
