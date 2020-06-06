@@ -36,6 +36,9 @@ const TutorSchema = new mongoose.Schema({
     price: {
         type: String
     },
+    description:{
+        type: String
+    },
     ifProved: {
         type: Boolean,
         required: true,
