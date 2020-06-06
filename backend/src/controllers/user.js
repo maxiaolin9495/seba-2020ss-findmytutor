@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const customerModel = require('../models/customer');
 const tutorModel = require('../models/tutor');
-const customerModel = require('../models/customer');
 const config = require('../config');
 
 
