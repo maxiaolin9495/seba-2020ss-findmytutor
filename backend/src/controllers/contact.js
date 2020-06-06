@@ -27,8 +27,8 @@ const saveMessage = (req, res) =>{
     })
 
 
-}
+};
 
 module.exports = {
     saveMessage
-}
+};

@@ -4,22 +4,21 @@ const mongoose = require('mongoose');
 const TutorSchema = new mongoose.Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
         required: true
     },
     firstName: {
-        type: String,
-        required: true
+        type: String
     },
     lastName: {
-        type: String,
-        required: true
+        type: String
     },
     university: {
-        type: String,
+        type: String
     },
     timeSlotIds: [{
         id: {
@@ -39,7 +38,7 @@ const TutorSchema = new mongoose.Schema({
     },
     ifProved: {
         type: Boolean,
-        required: true
+        required: true,
     },
     documentIds: [{
         id: {

@@ -7,7 +7,7 @@ export default class LoginService {
     }
 
     static baseURL() {
-        return config.backendUri + "/login"
+        return config.backendUri + "user/login"
     }
     static login(email, pass) {
         return new Promise((resolve, reject) => {
