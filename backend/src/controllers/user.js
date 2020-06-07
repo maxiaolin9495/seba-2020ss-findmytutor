@@ -36,7 +36,7 @@ const register = (req, res) => {
 
     if (req.body.userType === "tutor") {
 
-        const user = Object.assign(req.body, {ifProved: false});
+        const user = Object.assign(req.body, { ifProved: false });
         return registerUser(user, customerModel, tutorModel, req, res);
 
     } else {
@@ -49,7 +49,7 @@ const register = (req, res) => {
 };
 
 const registerUser = (user, dataModel1, dataModel2, req, res) => {
-    dataModel1.findOne({email: req.body.email}).exec()
+    dataModel1.findOne({ email: req.body.email }).exec()
         .then(data => {
             if (data === null) {
                 dataModel2.create(user).then(user => {
@@ -69,20 +69,20 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
                 })
             }
         }).catch(error => {
-        console.log('error by searching user ' + error);
-        return res.status(404).json({
-            error: 'User Not Found',
-            message: error.message
-        })
-    });
+            console.log('error by searching user ' + error);
+            return res.status(404).json({
+                error: 'User Not Found',
+                message: error.message
+            })
+        });
 };
 
 const findUser = (req, res, dataModel) => {
-    dataModel.findOne({email: req.body.email}).exec()//customerModel schema
+    dataModel.findOne({ email: req.body.email }).exec()//customerModel schema
         .then(user => {//user object
 
             // check if the password is valid
-            if (!(req.body.password === user.password)) return res.status(401).send({token: null});
+            if (!(req.body.password === user.password)) return res.status(401).send({ token: null });
 
             return createTokenResponse(req, res, user);
 
@@ -106,7 +106,7 @@ const createTokenResponse = (req, res, user) => {
     }, config.JwtSecret, {
         expiresIn: 999999,
     });
-    return res.status(200).json({token: token})
+    return res.status(200).json({ token: token })
 };
 
 const errorHandlerForRegister = (error, res) => {
@@ -124,7 +124,7 @@ const errorHandlerForRegister = (error, res) => {
     }
 };
 
-const verifyRequestBody = (req) =>{
+const verifyRequestBody = (req) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) {
         return {
             ifValid: false,
@@ -173,29 +173,19 @@ const verifyRequestBody = (req) =>{
 
 };
 const getTutorProfile = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a email property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'userType')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a userType property'
-    });
-
-    if (req.body.userType === 'tutor') {
-        tutorModel.findOne({email: req.body.email}).exec()
-        .then(tutor => {
-            return res.status(200).json({
-                email: tutor.email,
-                firstName: tutor.firstName,
-                lastName: tutor.lastName,
-                university: tutor.university,
-                price: tutor.price,
-                description: tutor.description,
-                courses: tutor.courses,
+    if (req.userType === 'tutor') {
+        tutorModel.findOne({ email: req.email }).exec()
+            .then(tutor => {
+                return res.status(200).json({
+                    email: tutor.email,
+                    firstName: tutor.firstName,
+                    lastName: tutor.lastName,
+                    university: tutor.university,
+                    price: tutor.price,
+                    description: tutor.description,
+                    courses: tutor.courses,
+                })
             })
-        })
     }
 }
 const uploadTutorProfile = (req, res) => {
@@ -208,22 +198,22 @@ const uploadTutorProfile = (req, res) => {
             error: 'Bad Request',
             message: 'The request body must contain a firstName property'
         });
-    
+
         if (!Object.prototype.hasOwnProperty.call(req.body, 'lastName')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a lastName property'
         });
-    
+
         if (!Object.prototype.hasOwnProperty.call(req.body, 'university')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a university property'
         });
-    
+
         if (!Object.prototype.hasOwnProperty.call(req.body, 'price')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a price property'
         });
-    
+
         if (!Object.prototype.hasOwnProperty.call(req.body, 'description')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a description property'
@@ -237,8 +227,8 @@ const uploadTutorProfile = (req, res) => {
             description: req.body.description,
             courses: req.body.courses,
         });
-        tutorModel.updateOne({email: tutor.email}, tutor).then(tutor => {
-            return res.status(200).json({message: "successfully updated"});
+        tutorModel.updateOne({ email: tutor.email }, tutor).then(tutor => {
+            return res.status(200).json({ message: "successfully updated" });
         }).catch(error => {
             console.log('error by creating a Tutor Profile');
             if (error.code == 11000) {
@@ -258,26 +248,16 @@ const uploadTutorProfile = (req, res) => {
 
 }
 const getCustomerProfile = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a email property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'userType')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a userType property'
-    });
-
-    if (req.body.userType === 'customer') {
-        customerModel.findOne({email: req.body.email}).exec()
-        .then(customer => {
-            return res.status(200).json({
-                email: customer.email,
-                firstName: customer.firstName,
-                lastName: customer.lastName,
-                university: customer.university,
+    if (req.userType === 'customer') {
+        customerModel.findOne({ email: req.email }).exec()
+            .then(customer => {
+                return res.status(200).json({
+                    email: customer.email,
+                    firstName: customer.firstName,
+                    lastName: customer.lastName,
+                    university: customer.university,
+                })
             })
-        })
     }
 }
 
@@ -291,25 +271,25 @@ const uploadCustomerProfile = (req, res) => {
             error: 'Bad Request',
             message: 'The request body must contain a firstName property'
         });
-    
+
         if (!Object.prototype.hasOwnProperty.call(req.body, 'lastName')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a lastName property'
         });
-    
+
         if (!Object.prototype.hasOwnProperty.call(req.body, 'university')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a university property'
         });
-    
+
         const customer = Object.assign({
             email: req.body.email,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             university: customer.university,
         });
-        customerModel.updateOne({email: customer.email}, customer).then(customer => {
-            return res.status(200).json({message: "successfully updated"});
+        customerModel.updateOne({ email: customer.email }, customer).then(customer => {
+            return res.status(200).json({ message: "successfully updated" });
         }).catch(error => {
             console.log('error by creating a customer Profile');
             if (error.code == 11000) {

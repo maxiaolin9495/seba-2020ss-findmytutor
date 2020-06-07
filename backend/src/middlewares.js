@@ -7,7 +7,7 @@ const config = require ('./config');
 const allowCrossDomain = (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, x-access-token');
 
     // intercept OPTIONS method
     if ('OPTIONS' === req.method) {
@@ -37,7 +37,8 @@ const checkAuthentication = (req, res, next) => {
         });
 
         // if everything is good, save to request for use in other routes
-        req.userId = decoded.id;
+        req.email = decoded.email;
+        req.userType = decoded.userType;
         next();
     });
 

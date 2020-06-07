@@ -116,9 +116,16 @@ paths:
     get:
       tags:
         - tutor
+      parameters:
+        - name: token
+          in: headers
+          description: JWT token
+          required: true
+          schema:
+            type: string
       requestBody:
         description: user object that needs to be verified
-        required: true
+        required: false
       responses:
         200:
           description: token created
@@ -162,6 +169,13 @@ paths:
     get:
       tags:
         - Customer
+      parameters:
+        - name: token
+          in: headers
+          description: JWT token
+          required: true
+          schema:
+            type: string
       requestBody:
         description: user object that needs to be verified
         required: true
