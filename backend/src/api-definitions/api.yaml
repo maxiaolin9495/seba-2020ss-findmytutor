@@ -113,19 +113,19 @@ paths:
   /user/getTutorProfile:
     summary: to ger Tutor Profile.
     description: Only valid tutor can use this backend service
-    post:
+    get:
       tags:
         - tutor
       requestBody:
         description: user object that needs to be verified
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/tutorProfileForms'
         required: true
       responses:
         200:
           description: token created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tutorProfileForms'
         400:
           $ref: '#/components/httpCodesSchemas/400'
         404:
@@ -159,19 +159,19 @@ paths:
   /user/getCustomerProfile:
     summary: To get Customer Profile.
     description: Only valid Customer can use this backend service
-    post:
+    get:
       tags:
         - Customer
       requestBody:
         description: user object that needs to be verified
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/customerProfileForms'
         required: true
       responses:
         200:
           description: token created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/customerProfileForms'
         400:
           $ref: '#/components/httpCodesSchemas/400'
         404:
