@@ -21,48 +21,79 @@ export class EditProfileView extends React.Component {
     }
 
     componentDidMount() {
-        // let user = UserService.getCurrentUser()
-
-        // if (!user || Object.keys(obj).length === 0) {
-        //     user = {
-        //         email: '123',
-        //         userType: 'tutor'
-        //     }
-        // }
-
-        // TODO: get customer profile
-        EditProfileService.getTutorProfile().then((data) => {
+        let user = UserService.getCurrentUser();
+        if (Object.keys(user).length === 0 && user.constructor === Object) {
+            // user not define
             this.setState({
-                userProfile: data,
+                userType: undefined,
                 loading: false,
-                error: undefined
-            });
-        }).catch((e) => {
-            console.error(e);
-        });
+                error: "No login information"
+            })
+        }
+        else {
+            this.setState({
+                userType: user.userType
+            })
+            // get customer profile
+            if (user.userType === 'tutor') {
+                EditProfileService.getTutorProfile().then((data) => {
+                    this.setState({
+                        userProfile: data,
+                        loading: false,
+                        error: undefined
+                    });
+                }).catch((e) => {
+                    console.error(e);
+                });
+            } else {
+                EditProfileService.getCustomerProfile().then((data) => {
+                    this.setState({
+                        userProfile: data,
+                        loading: false,
+                        error: undefined
+                    });
+                }).catch((e) => {
+                    console.error(e);
+                });
+            }
+        }
     }
 
     updateProfile = (userProfile) => {
-        EditProfileService.updateTutorProfile(userProfile).then((data) => {
-            console.log(data)
-        }).catch((e) => {
-            console.error(e);
-            this.setState({
-                error: 'Error while updating user profile'
+        if (this.state.userType === 'tutor') {
+            EditProfileService.updateTutorProfile(userProfile).then((data) => {
+                console.log(data)
+            }).catch((e) => {
+                console.error(e);
+                this.setState({
+                    error: 'Error while updating user profile'
+                });
             });
-        });
+        } else {
+            EditProfileService.updateCustomerProfile(userProfile).then((data) => {
+                console.log(data)
+            }).catch((e) => {
+                console.error(e);
+                this.setState({
+                    error: 'Error while updating customer profile'
+                });
+            });
+        }
     }
 
     render() {
         if (this.state.loading) {
             return (<h2>Loading...</h2>);
         }
+        if (this.state.userType === undefined) {
+            this.props.history.goBack();
+        }
 
         return (<div>
             <Navigation />
             <section>
                 <img src={Background} alt={"Ein Hintergrundbild"} className="bg" />
-                <EditProfile userProfile={this.state.userProfile} onSubmit={(userProfile) => this.updateProfile(userProfile)} error={this.state.error} />
+                <EditProfile userType={this.state.userType} userProfile={this.state.userProfile} onSubmit={(userProfile) => this.updateProfile(userProfile)} error={this.state.error} />
 
                 <div style={{ marginTop: '25%', position: 'relative' }}>
                 </div>
