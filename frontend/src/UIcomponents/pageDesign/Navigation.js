@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Link, withRouter} from 'react-router-dom';
-import {FontIcon, ListItem, NavigationDrawer, Button, IconSeparator } from 'react-md';
-//import imgURL from '../../Images/fmc.png';
+import {Avatar, FontIcon, ListItem, NavigationDrawer, Button, IconSeparator } from 'react-md';
+import imgURL from '../../Images/logoIcon.png';
 import NavigationMenuStyle from '../../css/Navigation.css';
 import LoginService from '../../Services/LoginService';
 import UserService from '../../Services/UserService';
@@ -156,8 +156,10 @@ class NavigationMenu extends React.Component {
                         this.state.navItems.map(props => <NavLink {...props} key={props.to}/>)
                     }
                     toolbarTitle={
-                        <Item label="Budget Management">
-                            <Button onClick={() => this.props.history.push('/')}/>
+                        <Item label="FindMyTutor">
+                            <Button onClick={() => this.props.history.push('/')}><Avatar src={imgURL}
+                                                                                          role="presentation"
+                                                                                          suffix="green-300"/></Button>
                         </Item>
                     }
 

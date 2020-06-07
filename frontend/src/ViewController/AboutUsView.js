@@ -19,7 +19,7 @@ export class AboutUsView extends React.Component {
             <div>
                 <Navigation/>
                 <section>
-                    <img src={Background} alt={"Ein Hintergrundbild"} className="bg"/>
+                    <img src={Background} alt={"A Background Picture"} className="bg"/>
                     <AboutUs/>
                 </section>
             </div>

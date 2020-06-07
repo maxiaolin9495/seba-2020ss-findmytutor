@@ -25,7 +25,7 @@ class AboutUs extends React.Component {
                 }}/>
                 <CardText>
                     <p>
-                        BudgetManagement is a online platform for msg projects
+                        FindMyTutor is a platform to connect learner and tutor together.
                     </p>
                 </CardText>
         </div>)

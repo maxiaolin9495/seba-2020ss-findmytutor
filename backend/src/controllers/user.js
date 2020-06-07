@@ -51,7 +51,9 @@ const register = (req, res) => {
 const registerUser = (user, dataModel1, dataModel2, req, res) => {
     dataModel1.findOne({email: req.body.email}).exec()
         .then(data => {
+            //verify if the email is registered in the dataModel1
             if (data === null) {
+                //if not, then try to register the email in the dataModel2
                 dataModel2.create(user).then(user => {
 
                     // if user is registered without errors
