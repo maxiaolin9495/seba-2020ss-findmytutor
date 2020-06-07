@@ -36,7 +36,7 @@ app.use(middlewares.allowCrossDomain);
 // Basic route
 app.get('/', (req, res) => {
     res.json({
-        name: 'FindMyCook Backend'
+        name: 'FindMyTutor Backend'
     });
 });
 

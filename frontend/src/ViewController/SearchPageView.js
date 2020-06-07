@@ -1,7 +1,7 @@
 "use strict";
 
 import React from 'react';
-import Background from '../Images/Homepage.jpg';
+import Background from '../Images/Homepage.jpg';//https://www.umc.edu/Research/Centers-and-Institutes/Centers/Center-for-Informatics-and-Analytics/Center-for-Informatics-and-Analytics-Home.html
 import '../css/bg.css';
 import Navigation from "../UIcomponents/pageDesign/Navigation";
 import UserService from '../Services/UserService';

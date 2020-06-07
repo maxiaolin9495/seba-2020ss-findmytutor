@@ -5,7 +5,7 @@ const config = require ('../config');
 export default class RegisterService {
 
     static baseURL() {
-        return config.backendUri + "user/register";
+        return config.backendUri + "/user/register";
     }
 
     static register(email, pass) {
