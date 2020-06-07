@@ -3,6 +3,7 @@ import Navigation from "../UIcomponents/pageDesign/Navigation";
 import Background from "../Images/Homepage.jpg";
 import LoginTab from "../UIcomponents/pageDesign/Login";
 import LoginService from "../Services/LoginService";
+import { toast } from 'react-toastify';
 
 export class LoginView extends React.Component {
     constructor(props) {
@@ -11,10 +12,12 @@ export class LoginView extends React.Component {
     }
 
     login=(user) =>{
-        LoginService.login(user.email, user.password).then(() => {
+        LoginService.login(user.email, user.password, user.userType).then(() => {
+            toast.success('Login succeeded');
             this.props.history.push('/');
+
         }).catch((e) => {
-            alert('Please input correct email and password');
+            toast.error('Please input correct email and password');
             document.getElementById('floating-password').value = '';
             this.setState({
                 error: e
@@ -28,7 +31,7 @@ export class LoginView extends React.Component {
             <div>
                 <Navigation/>
                 <section>
-                    <img src={Background} alt={"Ein Hintergrundbild"} className="bg"/>
+                    <img src={Background} alt={"A Background Picture"} className="bg"/>
                     <LoginTab  onSubmit={(user) => this.login(user)} error={this.state.error}/>
                 </section>
             </div>

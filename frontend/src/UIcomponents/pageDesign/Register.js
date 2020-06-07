@@ -1,8 +1,9 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {Button, TextField, CardTitle} from 'react-md';
+import {Button, TextField, CardTitle, SelectField} from 'react-md';
+import { toast } from 'react-toastify';
 
-
+const USER_TYPE = ['customer', 'tutor'];
 
 class RegisterTab extends React.Component {
     constructor(props) {
@@ -10,24 +11,43 @@ class RegisterTab extends React.Component {
         this.state = {
             email: '',
             password: '',
-            passwordConfirm: ''
+            passwordConfirm: '',
+            userType: ''
         }
     }
+
+    handleUserType=(value)=>{
+        this.state.userType = value
+    };
 
     render() {
         return (
             <div className="md-grid" id="registrationTable"
                  style={{
-                     width: '30%',
+                     width: '20%',
                      marginTop: '10%',
-                     background: 'white'
+                     background: 'white',
+                     minWidth: '200px'
                  }}>
                 <CardTitle title="Register" id='RegisterTitle' style={{
                     marginLeft: 'auto',
-                    marginRight: 'auto',
-                    minWidth: '200px'
+                    marginRight: 'auto'
                 }}/>
                 <form className="md-grid" onSubmit={this.handleSubmit}>
+                    <SelectField
+                        id="select-field-styling-1"
+                        label="userType"
+                        placeholder="Please choose your userType"
+                        itemLabel="userType"
+                        menuItems={USER_TYPE}
+                        className="md-cell"
+                        required
+                        onChange={this.handleUserType}
+                        errorText="This field is required"
+                        style={{
+                            width: '100%'
+                        }}
+                    />
                     <TextField
                         id="floating-center-email"
                         label="Email"
@@ -35,6 +55,11 @@ class RegisterTab extends React.Component {
                         lineDirection="center"
                         placeholder="Please input your emailAddress"
                         onChange={value => this.handleChange('email', value)}
+                        className="md-cell md-cell--bottom"
+                        style={{
+                            marginTop: '-20px',
+                            width: '100%'
+                        }}
                     />
                     <TextField
                         id="floating-password"
@@ -42,6 +67,10 @@ class RegisterTab extends React.Component {
                         required
                         type="password"
                         onChange={value => this.handleChange('password', value)}
+                        className="md-cell md-cell--bottom"
+                        style={{
+                            width: '100%'
+                        }}
                     />
                     <TextField
                         id="floating-password-confirm"
@@ -49,19 +78,20 @@ class RegisterTab extends React.Component {
                         required
                         type="password"
                         onChange={value => this.handleChange('passwordConfirm', value)}
+                        className="md-cell md-cell--bottom"
+                        style={{
+                            width: '100%'
+                        }}
                     />
                     <Button id="submit" type="submit" flat primary swapTheming style={{
+                        marginTop: '10px',
                         marginLeft: 'auto',
-                        marginRight: 'auto',
+                        marginRight: 'auto'
                     }}>Register</Button>
                 </form>
             </div>
         )
     }
-
-    onClick = () => {
-
-    };
 
     isEmail = () => {
         if (this.state.email.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) !== -1) {
@@ -73,7 +103,13 @@ class RegisterTab extends React.Component {
         }
     };
     verifyPassword = () => {
-        if (this.state.password === this.state.passwordConfirm) {
+        if (this.state.password.length < 8 ){
+            document.getElementById('floating-password').label = "Password length must larger than 8";
+            document.getElementById('floating-password').value = "";
+            return false;
+        }
+
+        if ( this.state.password === this.state.passwordConfirm) {
             return true;
         } else {
             document.getElementById('floating-password-confirm').value = "";
@@ -90,15 +126,20 @@ class RegisterTab extends React.Component {
     };
 
     handleSubmit = (event) => {
-
+        if(this.state.userType === ''){
+            toast.error('You need first choose a userType');
+            return
+        }
         if (event)
             event.preventDefault();
         if (!this.isEmail() || !this.verifyPassword()) {
             return;
         }
+        console.log(this.state);
         let user = {
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            userType: this.state.userType
         };
 
         this.props.onSubmit(user);

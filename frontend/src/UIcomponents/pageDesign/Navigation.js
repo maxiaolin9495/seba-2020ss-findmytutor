@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Link, withRouter} from 'react-router-dom';
-import {FontIcon, ListItem, NavigationDrawer, Button, Avatar, IconSeparator } from 'react-md';
-import imgURL from '../../Images/logo.png';
+import {Avatar, FontIcon, ListItem, NavigationDrawer, Button, IconSeparator } from 'react-md';
+import imgURL from '../../Images/logoIcon.png';
 import NavigationMenuStyle from '../../css/Navigation.css';
 import LoginService from '../../Services/LoginService';
 import UserService from '../../Services/UserService';

@@ -3,6 +3,7 @@ import Navigation from "../UIcomponents/pageDesign/Navigation";
 import Background from "../Images/Homepage.jpg";
 import RegisterTab from "../UIcomponents/pageDesign/Register";
 import RegisterService from "../Services/RegisterService";
+import { toast } from 'react-toastify';
 
 export class RegisterView extends React.Component {
     constructor(props) {
@@ -12,10 +13,11 @@ export class RegisterView extends React.Component {
     }
 
     register=(user)=> {
-        RegisterService.register(user.email, user.password).then((data) => {
+        RegisterService.register(user.email, user.password, user.userType).then((data) => {
+            toast.success('Registration succeeded');
             this.props.history.push('/');
         }).catch((e) => {
-            console.error(e);
+            toast.error('Registration failed, please check your input');
             this.setState({
                 error: e
             });
@@ -28,7 +30,7 @@ export class RegisterView extends React.Component {
             <div>
                 <Navigation/>
                 <section>
-                    <img src={Background} alt={"Ein Hintergrundbild"} className="bg"/>
+                    <img src={Background} alt={"A Background Picture"} className="bg"/>
                     <RegisterTab onSubmit={(user) => this.register(user)} error={this.state.error}/>
                 </section>
             </div>
