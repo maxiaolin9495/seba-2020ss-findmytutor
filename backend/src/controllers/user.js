@@ -191,9 +191,9 @@ const getTutorProfile = (req, res) => {
                 firstName: tutor.firstName,
                 lastName: tutor.lastName,
                 university: tutor.university,
-                description: tutor.description,
                 price: tutor.price,
-                photo: tutor.photo,
+                description: tutor.description,
+                courses: tutor.courses,
             })
         })
     }
@@ -235,6 +235,7 @@ const uploadTutorProfile = (req, res) => {
             university: req.body.university,
             price: req.body.price,
             description: req.body.description,
+            courses: req.body.courses,
         });
         tutorModel.updateOne({email: tutor.email}, tutor).then(tutor => {
             return res.status(200).json({message: "successfully updated"});

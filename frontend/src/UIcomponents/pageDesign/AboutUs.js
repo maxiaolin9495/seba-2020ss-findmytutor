@@ -13,7 +13,7 @@ class AboutUs extends React.Component {
     render(){
         return (<div className="md-grid" id="AboutUsTable"  style={{
             display: 'flex',
-            width: '30%',
+            width: '20%',
             margin: '0 auto',
             marginTop: '10%',
             background: 'white',
@@ -25,7 +25,8 @@ class AboutUs extends React.Component {
                 }}/>
                 <CardText>
                     <p>
-                        BudgetManagement is a online platform for msg projects
+                    FindMyTutor is platform that lists tutors from different universities to help informatics
+learners and students to book personalized tutorial.
                     </p>
                 </CardText>
         </div>)
