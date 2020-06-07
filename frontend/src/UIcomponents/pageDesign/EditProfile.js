@@ -5,7 +5,9 @@ import { Card, Button, FontIcon, TextField } from 'react-md';
 import { withRouter } from 'react-router-dom'
 
 
-const style = { maxWidth: 500 };
+const style = { maxWidth: 500,
+opacity: 0.85,
+};
 
 
 class EditProfile extends React.Component {
@@ -20,7 +22,8 @@ class EditProfile extends React.Component {
                 email: props.userProfile.email,
                 university: props.userProfile.university,
                 price: props.userProfile.price,
-                description: props.userProfile.description
+                description: props.userProfile.description,
+                courses: props.userProfile.courses
             }
         } else {
             this.state = {
@@ -31,6 +34,7 @@ class EditProfile extends React.Component {
                 price: '',
                 description: ''
             }
+            // TODO: add courses
         }
     }
 
@@ -59,9 +63,10 @@ class EditProfile extends React.Component {
     }
 
     handleChangePrice = (price) => {
-        this.setState({
-            price
-        })
+        // if(/\d+.\d{2}/.test(price))
+            this.setState({
+                price
+            })    
     }
 
     handleChangeDescription = (description) => {
@@ -70,9 +75,9 @@ class EditProfile extends React.Component {
         })
     }
 
-    // TODO: change Avatar
+    // TODO: change Avatar?
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
 
         let userProfile = this.props.userProfile;
@@ -88,9 +93,8 @@ class EditProfile extends React.Component {
         userProfile.price = this.state.price;
         userProfile.description = this.state.description;
 
-
-        // TODO: onsubmit from view?
-        // this.props.onSubmit(userProfile);
+        // onsubmit defined by EditProfileView
+        this.props.onSubmit(userProfile);
     }
 
     // onReset={() => this.props.history.goBack()}
@@ -125,7 +129,7 @@ class EditProfile extends React.Component {
                         className="md-row"
                         active={false}
                         required={false}
-                        value={this.state.email} />
+                        defaultValue={this.state.email} />
                     <TextField
                         label="University"
                         id="UniversityField"
@@ -153,11 +157,11 @@ class EditProfile extends React.Component {
                         rows={5}
                         value={this.state.description}
                         onChange={value => this.handleChangeDescription(value)}
-                        placeHolder="Write some text to describe yourself"
+                        placeholder="Write some text to describe yourself"
                         errorText="Description is required" />
 
                     <Button id="submit" type="submit"
-                        disabled={!this.state.firstName || !this.state.lastName || this.state.lastName == '' || this.state.email == undefined || this.state.university == '' || !this.state.price || !this.state.description}
+                        disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university || !this.state.price || !this.state.description}
                         raised primary className="md-cell md-cell--2">Save</Button>
                     <Button id="reset" type="reset" raised secondary className="md-cell md-cell--2">Dismiss</Button>
                 </form>

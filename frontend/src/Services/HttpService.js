@@ -4,11 +4,11 @@ export default class HttpService {
     }
 
     static get(url, onSuccess, onError) {
-        //let token = window.localStorage['jwtTokenFMC'];
+        let token = window.localStorage['jwtTokenFMC'];
         let header = new Headers();
-        //if (token) {
-        //    header.append('Authorization', `JWT ${token}`);
-        //}
+        if (token) {
+           header.append('x-access-token', `${token}`);
+        }
 
         fetch(url, {
             method: 'GET',
