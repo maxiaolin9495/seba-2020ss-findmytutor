@@ -9,6 +9,7 @@ const swaggerDocument = YAML.load('./src/api-definitions/api.yaml');
 const mongoose   = require('mongoose');
 const middlewares = require('./middlewares');
 const user = require('./routes/user.js');
+const tutor = require('./routes/tutor.js');
 const app = express();
 /**
  * Connect to the database
@@ -35,13 +36,14 @@ app.use(middlewares.allowCrossDomain);
 // Basic route
 app.get('/', (req, res) => {
     res.json({
-        name: 'FindMyCook Backend'
+        name: 'FindMyTutor Backend'
     });
 });
 
 // API routes=
 app.use('/user', user);
 app.use('/contact', contact);
+app.use('/tutor', tutor);
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
