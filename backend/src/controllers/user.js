@@ -183,6 +183,11 @@ const getTutorProfile = (req, res) => {
                 })
             })
     }
+    else
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'Wrong user type'
+        });
 }
 const uploadTutorProfile = (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
@@ -194,7 +199,7 @@ const uploadTutorProfile = (req, res) => {
             error: 'Bad Request',
             message: 'No permission to upload other profile'
         });
-    if (req.body.userType === 'tutor') {
+    if (req.userType === 'tutor') {
         if (!Object.prototype.hasOwnProperty.call(req.body, 'firstName')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a firstName property'
@@ -259,7 +264,11 @@ const getCustomerProfile = (req, res) => {
                     university: customer.university,
                 })
             })
-    }
+    } else
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'Wrong user type'
+        });
 }
 
 const uploadCustomerProfile = (req, res) => {
@@ -272,7 +281,7 @@ const uploadCustomerProfile = (req, res) => {
             error: 'Bad Request',
             message: 'No permission to upload other profile'
         });
-    if (req.body.userType === 'customer') {
+    if (req.userType === 'customer') {
         if (!Object.prototype.hasOwnProperty.call(req.body, 'firstName')) return res.status(400).json({
             error: 'Bad Request',
             message: 'The request body must contain a firstName property'

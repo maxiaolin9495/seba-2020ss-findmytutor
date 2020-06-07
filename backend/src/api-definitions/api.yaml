@@ -94,6 +94,14 @@ paths:
     post:
       tags:
         - tutor
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
       requestBody:
         description: user object that needs to be verified
         content:
@@ -103,32 +111,30 @@ paths:
         required: true
       responses:
         200:
-          description: token created
+          description: Successfully update
         400:
           $ref: '#/components/httpCodesSchemas/400'
         404:
           $ref: '#/components/httpCodesSchemas/404'
         500:
           $ref: '#/components/httpCodesSchemas/500'
-  /user/getTutorProfile:
+  /user/tutorProfile:
     summary: to ger Tutor Profile.
     description: Only valid tutor can use this backend service
     get:
       tags:
         - tutor
       parameters:
-        - name: token
-          in: headers
+        - name: x-access-token
+          in: header
           description: JWT token
           required: true
           schema:
             type: string
-      requestBody:
-        description: user object that needs to be verified
-        required: false
+            format: byte
       responses:
         200:
-          description: token created
+          description: Load tutor profile
           content:
             application/json:
               schema:
@@ -146,8 +152,16 @@ paths:
     post:
       tags:
         - Customer
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
       requestBody:
-        description: user object that needs to be verified
+        description: customer profile to update
         content:
           application/json:
             schema:
@@ -155,7 +169,7 @@ paths:
         required: true
       responses:
         200:
-          description: token created
+          description: Successfully updated
         400:
           $ref: '#/components/httpCodesSchemas/400'
         404:
@@ -163,25 +177,23 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
   
-  /user/getCustomerProfile:
+  /user/customerProfile:
     summary: To get Customer Profile.
     description: Only valid Customer can use this backend service
     get:
       tags:
         - Customer
       parameters:
-        - name: token
-          in: headers
+        - name: x-access-token
+          in: header
           description: JWT token
           required: true
           schema:
             type: string
-      requestBody:
-        description: user object that needs to be verified
-        required: true
+            format: byte
       responses:
         200:
-          description: token created
+          description: Customer profile loaded
           content:
             application/json:
               schema:
