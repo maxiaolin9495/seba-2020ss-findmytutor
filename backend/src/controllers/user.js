@@ -14,13 +14,9 @@ const login = (req, res) => {
     }
 
     if (req.body.userType === "customer") {
-
         return findUser(req, res, customerModel);
-
     } else {
-
         return findUser(req, res, tutorModel);
-
     }
 
 };
@@ -193,6 +189,11 @@ const uploadTutorProfile = (req, res) => {
         error: 'Bad Request',
         message: 'The request body must contain a email property'
     });
+    if (req.body.email !== req.email)
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'No permission to upload other profile'
+        });
     if (req.body.userType === 'tutor') {
         if (!Object.prototype.hasOwnProperty.call(req.body, 'firstName')) return res.status(400).json({
             error: 'Bad Request',
@@ -266,6 +267,11 @@ const uploadCustomerProfile = (req, res) => {
         error: 'Bad Request',
         message: 'The request body must contain a email property'
     });
+    if (req.body.email !== req.email)
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'No permission to upload other profile'
+        });
     if (req.body.userType === 'customer') {
         if (!Object.prototype.hasOwnProperty.call(req.body, 'firstName')) return res.status(400).json({
             error: 'Bad Request',
@@ -286,7 +292,7 @@ const uploadCustomerProfile = (req, res) => {
             email: req.body.email,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            university: customer.university,
+            university: req.body.university,
         });
         customerModel.updateOne({ email: customer.email }, customer).then(customer => {
             return res.status(200).json({ message: "successfully updated" });
