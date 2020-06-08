@@ -21,7 +21,7 @@ const getTutorProfile = (req, res) => {
             error: 'Bad Request',
             message: 'Wrong user type'
         });
-}
+};
 
 const getTutorProfileById = (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
@@ -47,7 +47,7 @@ const getTutorProfileById = (req, res) => {
             error: 'Bad Request',
             message: 'Wrong user type'
         });
-}
+};
 
 const uploadTutorProfile = (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
@@ -111,7 +111,7 @@ const uploadTutorProfile = (req, res) => {
             }
         });
     }
-}
+};
 
 const confirmTutorial = async (req, res) =>{
     if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
@@ -137,7 +137,7 @@ const confirmTutorial = async (req, res) =>{
             })
         });
     }
-}
+};
 
 const getTutorialsForTutor = (req, res) =>{
     const email = req.query.email;
@@ -145,10 +145,10 @@ const getTutorialsForTutor = (req, res) =>{
         .then(tutorials =>{
             return res.status(200).json(tutorials)})
         .catch(error => {
-            console.log('internal error by searching')
+            console.log('internal error by searching');
             return req.status(400).json({error: error.message})
         })
-}
+};
 
 module.exports = {
     getTutorProfile,

@@ -185,7 +185,7 @@ const getCustomerProfile = (req, res) => {
             error: 'Bad Request',
             message: 'Wrong user type'
         });
-}
+};
 
 const uploadCustomerProfile = (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
@@ -223,7 +223,7 @@ const uploadCustomerProfile = (req, res) => {
             return res.status(200).json({ message: "successfully updated" });
         }).catch(error => {
             console.log('error by creating a customer Profile');
-            if (error.code == 11000) {
+            if (error.code === 11000) {
                 return res.status(400).json({
                     error: 'customer Profile exists',
                     message: error.message
@@ -237,7 +237,7 @@ const uploadCustomerProfile = (req, res) => {
             }
         });
     }
-}
+};
 
 const createTutorial = (req, res) => {
     if (req.userType === 'customer') {
@@ -280,7 +280,7 @@ const createTutorial = (req, res) => {
         });
        
     }
-}
+};
 
 const cancelTutorial = async (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
@@ -306,7 +306,7 @@ const cancelTutorial = async (req, res) => {
             })
         });
     }
-}
+};
 
 const closeTutorial = async  (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
@@ -332,7 +332,7 @@ const closeTutorial = async  (req, res) => {
             })
         });
     }
-}
+};
 
 const updateTutorialforTutor = async  (email, course, res) => {
 
@@ -348,7 +348,7 @@ const updateTutorialforTutor = async  (email, course, res) => {
             })
         });
     
-}
+};
 
 const updateTutorialforCustomer = async  (email, course, res) => {
 
