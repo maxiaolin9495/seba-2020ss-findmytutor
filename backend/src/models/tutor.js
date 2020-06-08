@@ -21,7 +21,10 @@ const TutorSchema = new mongoose.Schema({
         type: String
     },
     timeSlotIds: [{
-        id: {
+        start: {
+            type: String
+        },
+        end: {
             type: String
         }
     }],
