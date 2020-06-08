@@ -34,4 +34,4 @@ const TutorialSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('tutorial', BookingSchema);
+module.exports = mongoose.model('tutorial', TutorialSchema);
