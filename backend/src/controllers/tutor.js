@@ -1,5 +1,5 @@
-const tutorialgModel = require('../models/tutorial');
-const tutorialModel = require('../models/tutor');
+const tutorialModel = require('../models/tutorial');
+const tutorModel = require('../models/tutor');
 
 const getTutorProfile = (req, res) => {
     if (req.userType === 'tutor') {
@@ -97,7 +97,7 @@ const uploadTutorProfile = (req, res) => {
             return res.status(200).json({ message: "successfully updated" });
         }).catch(error => {
             console.log('error by creating a Tutor Profile');
-            if (error.code == 11000) {
+            if (error.code === 11000) {
                 return res.status(400).json({
                     error: 'tutor Profile exists',
                     message: error.message

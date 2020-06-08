@@ -27,4 +27,4 @@ const TimeslotSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('timeslot', BookingSchema);
+module.exports = mongoose.model('timeslot', TimeslotSchema);
