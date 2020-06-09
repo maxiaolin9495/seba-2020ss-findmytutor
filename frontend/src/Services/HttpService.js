@@ -1,13 +1,13 @@
 export default class HttpService {
     constructor() {
-        this.state={};
+        this.state = {};
     }
 
     static get(url, onSuccess, onError) {
-        let token = window.localStorage['jwtTokenFMC'];
+        let token = window.localStorage['jwtTokenFMT'];
         let header = new Headers();
         if (token) {
-           header.append('x-access-token', `${token}`);
+            header.append('x-access-token', `${token}`);
         }
 
         fetch(url, {
@@ -27,7 +27,7 @@ export default class HttpService {
             }
         }).then((resp) => {
             if (resp.hasOwnProperty('token')) {
-                window.localStorage['jwtTokenFMC'] = resp.token;
+                window.localStorage['jwtTokenFMT'] = resp.token;
             }
             onSuccess(resp);
         }).catch((e) => {
@@ -36,11 +36,11 @@ export default class HttpService {
     }
 
     static put(url, data, onSuccess, onError) {
-        //let token = window.localStorage['jwtTokenFMC'];
+        let token = window.localStorage['jwtTokenFMT'];
         let header = new Headers();
-        //if (token) {
-        //    header.append('Authorization', `JWT ${token}`);
-        //}
+        if (token) {
+            header.append('x-access-token', `${token}`);
+        }
         header.append('Content-Type', 'application/json');
 
         fetch(url, {
@@ -61,7 +61,7 @@ export default class HttpService {
             }
         }).then((resp) => {
             if (resp.hasOwnProperty('token')) {
-                window.localStorage['jwtTokenFMC'] = resp.token;
+                window.localStorage['jwtTokenFMT'] = resp.token;
             }
             onSuccess(resp);
         }).catch((e) => {
@@ -71,11 +71,11 @@ export default class HttpService {
     }
 
     static post(url, data, onSuccess, onError) {
-        //let token = window.localStorage['jwtTokenFMC'];
+        let token = window.localStorage['jwtTokenFMT'];
         let header = new Headers();
-        //if (token) {
-        //    header.append('Authorization', `JWT ${token}`);
-        //}
+        if (token) {
+            header.append('x-access-token', `${token}`);
+        }
         header.append('Content-Type', 'application/json');
 
         fetch(url, {
@@ -96,7 +96,7 @@ export default class HttpService {
             }
         }).then((resp) => {
             if (resp.hasOwnProperty('token')) {
-                window.localStorage['jwtTokenFMC'] = resp.token;
+                window.localStorage['jwtTokenFMT'] = resp.token;
             }
             onSuccess(resp);
         }).catch((e) => {
@@ -105,11 +105,11 @@ export default class HttpService {
     }
 
     static remove(url, onSuccess, onError) {
-        //let token = window.localStorage['jwtTokenFMC'];
+        let token = window.localStorage['jwtTokenFMT'];
         let header = new Headers();
-        //if (token) {
-        //    header.append('Authorization', `JWT ${token}`);
-        //}
+        if (token) {
+            header.append('x-access-token', `${token}`);
+        }
 
         fetch(url, {
             method: 'DELETE',

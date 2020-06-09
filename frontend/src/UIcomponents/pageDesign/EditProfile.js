@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 
 
 const style = {
-    maxWidth: 500,
+    maxWidth: 750,
     opacity: 0.85,
 };
 
@@ -133,7 +133,8 @@ class EditProfile extends React.Component {
                             className="md-row"
                             active={false}
                             required={false}
-                            defaultValue={this.state.email} />
+                            defaultValue={this.state.email} 
+                            disabled={true} />
                         <TextField
                             label="University"
                             id="UniversityField"
@@ -202,7 +203,8 @@ class EditProfile extends React.Component {
                             className="md-row"
                             active={false}
                             required={false}
-                            defaultValue={this.state.email} />
+                            defaultValue={this.state.email} 
+                            disabled={true} />
                         <TextField
                             label="University"
                             id="UniversityField"

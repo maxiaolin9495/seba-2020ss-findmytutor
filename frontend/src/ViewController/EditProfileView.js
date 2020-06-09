@@ -8,6 +8,7 @@ import Background from '../Images/Homepage.jpg';
 
 import UserService from '../Services/UserService';
 import EditProfileService from '../Services/EditProfileService';
+import {toast} from "react-toastify";
 
 
 export class EditProfileView extends React.Component {
@@ -62,18 +63,20 @@ export class EditProfileView extends React.Component {
     updateProfile = (userProfile) => {
         if (this.state.userType === 'tutor') {
             EditProfileService.updateTutorProfile(userProfile).then((data) => {
-                console.log(data)
+                toast.success('Update profile succeeded');
+                this.props.history.push('/');
             }).catch((e) => {
-                console.error(e);
+                toast.error('Please input correct information');
                 this.setState({
                     error: 'Error while updating user profile'
                 });
             });
         } else {
             EditProfileService.updateCustomerProfile(userProfile).then((data) => {
-                console.log(data)
+                toast.success('Update profile succeeded');
+                this.props.history.push('/');        
             }).catch((e) => {
-                console.error(e);
+                toast.error('Please input correct information');
                 this.setState({
                     error: 'Error while updating customer profile'
                 });

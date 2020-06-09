@@ -7,7 +7,7 @@ export default class UserService {
     }
 
     static getCurrentUser() {
-        let token = window.localStorage['jwtTokenFMC'];
+        let token = window.localStorage['jwtTokenFMT'];
         if (!token) return {};
 
         let base64Url = token.split('.')[1];

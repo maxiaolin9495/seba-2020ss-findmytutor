@@ -67,13 +67,18 @@ const logInNavItemsCustomer = [
     //     icon: 'store'
     // },
     {
+        label: 'Profile',
+        to: '/me',
+        icon: 'person'
+    },
+    {
         label: 'About us',
         to: '/about-us',
         icon: 'book'
     },
 ];
 
-const logInNavItemsChef = [
+const logInNavItemsTutor = [
     {
         label: 'Home',
         to: '/',
@@ -85,6 +90,11 @@ const logInNavItemsChef = [
     //     to: '/projects',
     //     icon: 'store'
     // },
+    {
+        label: 'Profile',
+        to: '/me',
+        icon: 'person'
+    },
     {
         label: 'About us',
         to: '/about-us',
@@ -125,7 +135,7 @@ class NavigationMenu extends React.Component {
             attractions: [],
             titles: [],
             toolbarTitle: this.getCurrentTitle(props),
-            navItems: LoginService.isAuthenticated() ? (UserService.getCurrentUser().userType === 'Customer'? logInNavItemsCustomer : logInNavItemsChef) :defaultNavItems
+            navItems: LoginService.isAuthenticated() ? (UserService.getCurrentUser().userType === 'customer'? logInNavItemsCustomer : logInNavItemsTutor) :defaultNavItems
         };
     }
 
