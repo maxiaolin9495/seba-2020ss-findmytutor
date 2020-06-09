@@ -29,7 +29,7 @@ const getTutorProfileById = (req, res) => {
         message: 'The request body must contain a _id property'
     });
     if (req.userType === 'tutor') {
-        tutorModel.findOne({_id: req.body._id}).exec()
+        tutorModel.findOne({ _id: req.body._id }).exec()
             .then(tutor => {
                 return res.status(200).json({
                     email: tutor.email,
@@ -113,7 +113,7 @@ const uploadTutorProfile = (req, res) => {
     }
 };
 
-const confirmTutorial = async (req, res) =>{
+const confirmTutorial = async (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a _id property'
@@ -124,12 +124,12 @@ const confirmTutorial = async (req, res) =>{
         message: 'The request body must contain a status property'
     });
 
-    if(req.body.status === 'confirmed'){
-        tutorialModel.updateOne({_id: req.body._id}, {tutorialStatus: req.body.status}).then(tutorial => {
+    if (req.body.status === 'confirmed') {
+        tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status }).then(tutorial => {
             return res.status(200).json({
                 tutorial: tutorial,
             })
-        }) .catch(error => {
+        }).catch(error => {
             console.log('error by creating a tutorial');
             return res.status(500).json({
                 error: 'Internal server error',
@@ -139,11 +139,12 @@ const confirmTutorial = async (req, res) =>{
     }
 };
 
-const getTutorialsForTutor = (req, res) =>{
+const getTutorialsForTutor = (req, res) => {
     const email = req.query.email;
     tutorialModel.find({tutorEmail: email})
-        .then(tutorials =>{
-            return res.status(200).json(tutorials)})
+        .then(tutorials => {
+            return res.status(200).json(tutorials)
+        })
         .catch(error => {
             console.log('internal server error by searching');
             return req.status(400).json({error: error.message})
