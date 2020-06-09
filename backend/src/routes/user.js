@@ -5,8 +5,7 @@ const middlewares = require('../middlewares')
 
 router.post('/login', userController.login);
 router.post('/register', userController.register);
-router.post('/uploadTutorProfile', middlewares.checkAuthentication, userController.uploadTutorProfile);
-router.post('/uploadCustomerProfile', middlewares.checkAuthentication, userController.uploadCustomerProfile);
-router.get('/tutorProfile', middlewares.checkAuthentication, userController.getTutorProfile);
-router.get('/customerProfile', middlewares.checkAuthentication, userController.getCustomerProfile);
+router.put('/createTutorial', middlewares.checkAuthentication, userController.createTutorial);
+router.post('/cancelTutorial', middlewares.checkAuthentication, userController.cancelTutorial);
+router.post('/closeTutorial', middlewares.checkAuthentication, userController.closeTutorial);
 module.exports = router;

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const customerModel = require('../models/customer');
 const tutorModel = require('../models/tutor');
 const config = require('../config');
-
+const tutorialModel = require('../models/tutorial');
 
 
 const login = (req, res) => {
@@ -170,166 +170,139 @@ const verifyRequestBody = (req) => {
     }
 
 };
-const getTutorProfile = (req, res) => {
-    if (req.userType === 'tutor') {
-        tutorModel.findOne({ email: req.email }).exec()
-            .then(tutor => {
-                return res.status(200).json({
-                    email: tutor.email,
-                    firstName: tutor.firstName,
-                    lastName: tutor.lastName,
-                    university: tutor.university,
-                    price: tutor.price,
-                    description: tutor.description,
-                    courses: tutor.courses,
-                })
-            })
-    }
-    else
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'Wrong user type'
-        });
-}
-const uploadTutorProfile = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a email property'
-    });
-    if (req.body.email !== req.email)
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'No permission to upload other profile'
-        });
-    if (req.userType === 'tutor') {
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'firstName')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a firstName property'
-        });
 
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'lastName')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a lastName property'
-        });
-
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'university')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a university property'
-        });
-
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'price')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a price property'
-        });
-
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'description')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a description property'
-        });
-        const tutor = Object.assign({
-            email: req.body.email,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            university: req.body.university,
+const createTutorial = (req, res) => {
+    if (req.userType === 'customer') {
+        const tutorial = Object.assign({
+            tutorEmail: req.body.tutorEmail,
+            customerEmail: req.body.customerEmail,
+            sessionTopic: req.body.sessionTopic,
+            bookedTime: req.body.bookedTime,
             price: req.body.price,
-            description: req.body.description,
-            courses: req.body.courses,
+            tutorialStatus: 'notConfirmed',
+            transactionStatus: 'transfered'
         });
-        tutorModel.updateOne({ email: tutor.email }, tutor).then(tutor => {
-            return res.status(200).json({ message: "successfully updated" });
+        tutorialModel.create(tutorial).then(tutorial => {
+            const tutorialId = tutorial._id;
+            // updateTutorialforTutor(req.body.tutorEmail,tutorialId);
+            // updateTutorialforCustomer (req.body.customer,Email,tutorialId);
+            return res.status(200).json({
+                tutorEmail: req.body.tutorEmail,
+                customerEmail: req.body.customerEmail,
+                sessionTopic: req.body.sessionTopic,
+                bookedTime: req.body.bookedTime,
+                price: req.body.price,
+                tutorialStatus: 'notConfirmed',
+                transactionStatus: 'transfered'
+            });
         }).catch(error => {
-            console.log('error by creating a Tutor Profile');
-            if (error.code == 11000) {
+            console.log('error by creating a Tutorial');
+            if (error.code === 11000) {
                 return res.status(400).json({
-                    error: 'tutor Profile exists',
+                    error: 'Tutorial exists',
                     message: error.message
                 })
             }
             else {
                 return res.status(500).json({
-                    error: 'Internal server error happens by add tutor Profile',
+                    error: 'Internal server error happens by add Tutorial',
                     message: error.message
                 })
             }
         });
+       
     }
+};
 
-}
-const getCustomerProfile = (req, res) => {
-    if (req.userType === 'customer') {
-        customerModel.findOne({ email: req.email }).exec()
-            .then(customer => {
-                return res.status(200).json({
-                    email: customer.email,
-                    firstName: customer.firstName,
-                    lastName: customer.lastName,
-                    university: customer.university,
-                })
-            })
-    } else
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'Wrong user type'
-        });
-}
-
-const uploadCustomerProfile = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
+const cancelTutorial = async (req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
         error: 'Bad Request',
-        message: 'The request body must contain a email property'
+        message: 'The request body must contain a _id property'
     });
-    if (req.body.email !== req.email)
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'No permission to upload other profile'
-        });
-    if (req.userType === 'customer') {
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'firstName')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a firstName property'
-        });
 
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'lastName')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a lastName property'
-        });
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'status')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a status property'
+    });
 
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'university')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a university property'
-        });
-
-        const customer = Object.assign({
-            email: req.body.email,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            university: req.body.university,
-        });
-        customerModel.updateOne({ email: customer.email }, customer).then(customer => {
-            return res.status(200).json({ message: "successfully updated" });
+    if (req.body.status === 'canceled') {
+        tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status, transactionStatus: 'inProgress' }).then(tutorial => {
+            return res.status(200).json({
+                tutorial: tutorial,
+            })
         }).catch(error => {
-            console.log('error by creating a customer Profile');
-            if (error.code == 11000) {
-                return res.status(400).json({
-                    error: 'customer Profile exists',
-                    message: error.message
-                })
-            }
-            else {
-                return res.status(500).json({
-                    error: 'Internal server error happens by add customer Profile',
-                    message: error.message
-                })
-            }
+            console.log('error by creating a tutorial');
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: error.message
+            })
         });
     }
+};
 
-}
+const closeTutorial = async (req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a _id property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'status')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a status property'
+    });
+
+    if (req.body.status === 'closed') {
+        tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status }).then(tutorial => {
+            return res.status(200).json({
+                tutorial: tutorial,
+            })
+        }).catch(error => {
+            console.log('error by creating a booking');
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: error.message
+            })
+        });
+    }
+};
+
+const updateTutorialforTutor = async (email, course, res) => {
+
+    tutorialModel.updateOne({ email: email }, { $push: { courses: course } }).then(tutor => {
+        return res.status(200).json({
+            message: "successfully updated"
+        })
+    }).catch(error => {
+        console.log('error by adding a course to the tutor');
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        })
+    });
+
+};
+
+const updateTutorialforCustomer = async (email, course, res) => {
+
+    customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: course } }).then(customer => {
+        return res.status(200).json({
+            message: "successfully updated"
+        })
+    }).catch(error => {
+        console.log('error by adding a course to the customer');
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: error.message
+        })
+    });
+
+};
+
 module.exports = {
     login,
     register,
-    getTutorProfile,
-    uploadTutorProfile,
-    getCustomerProfile,
-    uploadCustomerProfile,
+    createTutorial,
+    cancelTutorial,
+    closeTutorial,
+
 };

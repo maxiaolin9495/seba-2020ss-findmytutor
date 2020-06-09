@@ -5,8 +5,8 @@ info:
   description: 'API providing basic functionalities of the Find My Tutor '
   termsOfService: https://foo.com/terms-of-use
   contact:
-    name: Tri
-    url: tum.de
+    name: Tri Huynh
+    url: https://wwwmatthes.in.tum.de/pages/v4xzukutru9w/Tri-Huynh
     email: tri.huynh@tum.de
   license:
     name: MIT License
@@ -41,29 +41,6 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
 
-
-  /user/login:
-    summary: For user login.
-    description: Only valid user can use this backend service
-    post:
-      tags:
-        - user
-      requestBody:
-        description: user object that needs to be verified
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/loginForms'
-        required: true
-      responses:
-        200:
-          description: token created
-        400:
-          $ref: '#/components/httpCodesSchemas/400'
-        404:
-          $ref: '#/components/httpCodesSchemas/404'
-        500:
-          $ref: '#/components/httpCodesSchemas/500'
 
   /user/login:
     summary: For user login.

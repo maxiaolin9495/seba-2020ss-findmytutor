@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const middlewares = require('../middlewares');
+const tutorController = require('../controllers/tutor');
 
-const contactController = require('../controllers/tutor');
-
-
+router.get('/tutorialForTutor', middlewares.checkAuthentication,tutorController.getTutorialsForTutor);
+router.post('/uploadTutorProfile', middlewares.checkAuthentication, tutorController.uploadTutorProfile);
+router.post('/confirmTutorial', middlewares.checkAuthentication,tutorController.confirmTutorial);
+router.get('/tutorProfile', middlewares.checkAuthentication, tutorController.getTutorProfile);
+router.get('/tutorProfilebyId',tutorController.getTutorProfileById);
 module.exports = router;
