@@ -199,7 +199,7 @@ const createTutorial = (req, res) => {
             console.log('error by creating a Tutorial');
             if (error.code === 11000) {
                 return res.status(400).json({
-                    error: 'Tutorial exists',
+                    error: 'Internal server error happens by add Tutorial',
                     message: error.message
                 })
             }

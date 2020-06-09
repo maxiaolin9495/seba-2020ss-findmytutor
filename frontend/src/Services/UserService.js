@@ -2,10 +2,6 @@ import HttpService from './HttpService';
 
 export default class UserService {
 
-    static baseURL() {
-        return "http://localhost:3000"
-    }
-
     static getCurrentUser() {
         let token = window.localStorage['jwtTokenFMT'];
         if (!token) return {};

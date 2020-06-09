@@ -145,7 +145,6 @@ class RegisterTab extends React.Component {
         if (!this.isEmail() || !this.verifyPassword()) {
             return;
         }
-        console.log(this.state);
         let user = {
             email: this.state.email,
             password: this.state.password,
