@@ -30,7 +30,7 @@ const TutorialSchema = new mongoose.Schema({
     transactionStatus: {
         type: String,
         required: true,
-        enum: ['transfered', 'cancelled', 'paid'],
+        enum: ['transferred', 'cancelled', 'paid'],
     }
 });
 
