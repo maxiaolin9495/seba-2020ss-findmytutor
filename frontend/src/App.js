@@ -9,6 +9,7 @@ import {LoginView} from "./ViewController/LoginView";
 // import {ProjectView} from "./ViewController/ProjectView";
 import {RegisterView} from "./ViewController/RegisterView";
 import {AboutUsView} from "./ViewController/AboutUsView";
+import { EditProfileView } from "./ViewController/EditProfileView";
 
 export default class App extends React.Component {
 
@@ -21,7 +22,8 @@ export default class App extends React.Component {
                 {component: LoginView, path: '/login', exact: true},
                 // {component: ProjectView, path: '/projects', exact: true},
                 {component: RegisterView, path: '/register', exact: true},
-                {component: AboutUsView, path: '/about-us', exact: true}
+                {component: AboutUsView, path: '/about-us', exact: true},
+                {component: EditProfileView, path: '/me', exact: true}
             ]
         };
     }
