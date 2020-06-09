@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const customerModel = require('../models/customer');
 const tutorModel = require('../models/tutor');
 const config = require('../config');
-const tutorialModel = require('../models/tutorial')
+const tutorialModel = require('../models/tutorial');
 
 
 const login = (req, res) => {
@@ -183,7 +183,7 @@ const getCustomerProfile = (req, res) => {
     } else
         return res.status(400).json({
             error: 'Bad Request',
-            message: 'Wrong user type'
+            message: 'Invalid userType value'
         });
 };
 
@@ -251,7 +251,7 @@ const createTutorial = (req, res) => {
             transactionStatus: 'transfered'
         });
         tutorialModel.create(tutorial).then(tutorial=>{
-            const tutorialId = tutorial._id
+            const tutorialId = tutorial._id;
            // updateTutorialforTutor(req.body.tutorEmail,tutorialId);
            // updateTutorialforCustomer (req.body.customer,Email,tutorialId);
             return res.status(200).json({
@@ -265,7 +265,7 @@ const createTutorial = (req, res) => {
             });
         }).catch(error => {
             console.log('error by creating a Tutorial');
-            if (error.code == 11000) {
+            if (error.code === 11000) {
                 return res.status(400).json({
                     error: 'Tutorial exists',
                     message: error.message
@@ -301,7 +301,7 @@ const cancelTutorial = async (req, res) => {
         }) .catch(error => {
             console.log('error by creating a tutorial');
             return res.status(500).json({
-                error: 'Internal error',
+                error: 'Internal server error',
                 message: error.message
             })
         });
@@ -327,7 +327,7 @@ const closeTutorial = async  (req, res) => {
         }) .catch(error => {
             console.log('error by creating a booking');
             return res.status(500).json({
-                error: 'Internal error',
+                error: 'Internal server error',
                 message: error.message
             })
         });
@@ -343,7 +343,7 @@ const updateTutorialforTutor = async  (email, course, res) => {
         }) .catch(error => {
             console.log('error by adding a course to the tutor');
             return res.status(500).json({
-                error: 'Internal error',
+                error: 'Internal server error',
                 message: error.message
             })
         });
@@ -359,12 +359,12 @@ const updateTutorialforCustomer = async  (email, course, res) => {
     }) .catch(error => {
         console.log('error by adding a course to the customer');
         return res.status(500).json({
-            error: 'Internal error',
+            error: 'Internal server error',
             message: error.message
         })
     });
 
-}
+};
 
 module.exports = {
     login,

@@ -8,7 +8,7 @@ const getTutorialsForCustomer = (req, res) =>{
             return res.status(200).json(tutorials);
         })
         .catch(error => {
-            console.log('internal error by searching');
+            console.log('internal server error by searching');
             return req.status(400).json({error: error.message})
         })
 };

@@ -19,7 +19,7 @@ const getTutorProfile = (req, res) => {
     else
         return res.status(400).json({
             error: 'Bad Request',
-            message: 'Wrong user type'
+            message: 'Invalid userType value'
         });
 };
 
@@ -45,7 +45,7 @@ const getTutorProfileById = (req, res) => {
     else
         return res.status(400).json({
             error: 'Bad Request',
-            message: 'Wrong user type'
+            message: 'Invalid userType value'
         });
 };
 
@@ -132,7 +132,7 @@ const confirmTutorial = async (req, res) =>{
         }) .catch(error => {
             console.log('error by creating a tutorial');
             return res.status(500).json({
-                error: 'Internal error',
+                error: 'Internal server error',
                 message: error.message
             })
         });
@@ -145,7 +145,7 @@ const getTutorialsForTutor = (req, res) =>{
         .then(tutorials =>{
             return res.status(200).json(tutorials)})
         .catch(error => {
-            console.log('internal error by searching');
+            console.log('internal server error by searching');
             return req.status(400).json({error: error.message})
         })
 };
