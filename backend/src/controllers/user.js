@@ -3,7 +3,7 @@ const customerModel = require('../models/customer');
 const tutorModel = require('../models/tutor');
 const config = require('../config');
 const tutorialModel = require('../models/tutorial');
-
+const emailService = require('../services/emailService');
 
 const login = (req, res) => {
 
@@ -172,6 +172,12 @@ const verifyRequestBody = (req) => {
 };
 
 const createTutorial = (req, res) => {
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a tutorFirstName property'
+    });
+
     if (req.userType === 'customer') {
         const tutorial = Object.assign({
             tutorEmail: req.body.tutorEmail,
@@ -194,7 +200,7 @@ const createTutorial = (req, res) => {
                 price: req.body.price,
                 tutorialStatus: 'notConfirmed',
                 transactionStatus: 'transferred'
-            });
+            }.then(emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial)));
         }).catch(error => {
             console.log('error by creating a Tutorial');
             if (error.code === 11000) {
@@ -225,11 +231,24 @@ const cancelTutorial = async (req, res) => {
         message: 'The request body must contain a status property'
     });
 
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a tutorFirstName property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerFirstName')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a customerFirstName property'
+    });
+
     if (req.body.status === 'canceled') {
         tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status, transactionStatus: 'inProgress' }).then(tutorial => {
             return res.status(200).json({
                 tutorial: tutorial,
-            })
+            }).then( () => {
+                emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
+                emailService.emailNotification(req.body.customerEmail, req.body.customerFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
+            });
         }).catch(error => {
             console.log('error by creating a tutorial');
             return res.status(500).json({
