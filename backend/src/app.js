@@ -7,10 +7,10 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/api-definitions/api.yaml');
 const mongoose   = require('mongoose');
-const middlewares = require('./middlewares');
+const middleWares = require('./middleWares');
 const user = require('./routes/user.js');
 const tutor = require('./routes/tutor.js');
-const customer = require('./routes/customer')
+const customer = require('./routes/customer');
 const app = express();
 /**
  * Connect to the database
@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(helmet());
-app.use(middlewares.allowCrossDomain);
+app.use(middleWares.allowCrossDomain);
 
 // Basic route
 app.get('/', (req, res) => {
