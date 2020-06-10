@@ -1,8 +1,10 @@
 "use strict";
 
 import React from 'react';
-import { Card, Button, FontIcon, TextField } from 'react-md';
-import { withRouter } from 'react-router-dom'
+import {Card, Button, FontIcon, TextField} from 'react-md';
+import {withRouter} from 'react-router-dom'
+import TutorCalendar from "../TutorCalendar";
+import {toast} from "react-toastify";
 
 
 const style = {
@@ -24,7 +26,8 @@ class EditProfile extends React.Component {
                 university: props.userProfile.university,
                 price: props.userProfile.price,
                 description: props.userProfile.description,
-                courses: props.userProfile.courses
+                courses: props.userProfile.courses,
+                timeSlotIds: props.userProfile.timeSlotIds
             }
         } else {
             this.state = {
@@ -33,7 +36,8 @@ class EditProfile extends React.Component {
                 email: '',
                 university: '',
                 price: '',
-                description: ''
+                description: '',
+                timeSlotIds: []
             }
             // TODO: add courses
         }
@@ -76,6 +80,10 @@ class EditProfile extends React.Component {
         })
     }
 
+    handleComingTimeSlots = (arr) => {
+        this.setState({timeSlotIds: arr});
+    }
+
     // TODO: change Avatar?
 
     handleSubmit = (event) => {
@@ -94,6 +102,7 @@ class EditProfile extends React.Component {
         if (this.props.userType === 'tutor') {
             userProfile.price = this.state.price;
             userProfile.description = this.state.description;
+            userProfile.timeSlotIds = this.state.timeSlotIds;
         }
 
         // onsubmit defined by EditProfileView
@@ -115,7 +124,7 @@ class EditProfile extends React.Component {
                             required={true}
                             value={this.state.firstName}
                             onChange={this.handleChangeFirstName}
-                            errorText="First name is required" />
+                            errorText="First name is required"/>
                         <TextField
                             label="LastName"
                             id="LastNameField"
@@ -125,7 +134,7 @@ class EditProfile extends React.Component {
                             value={this.state.lastName}
                             onChange={this.handleChangeLastName}
                             errorText="Last name is required"
-                            maxLength={20} />
+                            maxLength={20}/>
                         <TextField
                             label="email"
                             id="emailField"
@@ -133,8 +142,8 @@ class EditProfile extends React.Component {
                             className="md-row"
                             active={false}
                             required={false}
-                            defaultValue={this.state.email} 
-                            disabled={true} />
+                            defaultValue={this.state.email}
+                            disabled={true}/>
                         <TextField
                             label="University"
                             id="UniversityField"
@@ -143,7 +152,7 @@ class EditProfile extends React.Component {
                             required={true}
                             value={this.state.university}
                             onChange={this.handleChangeUniversity}
-                            errorText="University is required" />
+                            errorText="University is required"/>
                         <TextField
                             label="price"
                             id="PriceLabel"
@@ -152,7 +161,7 @@ class EditProfile extends React.Component {
                             required={true}
                             value={this.state.price}
                             onChange={value => this.handleChangePrice(value)}
-                            errorText="Price is required" />
+                            errorText="Price is required"/>
                         <TextField
                             label="Description"
                             id="DescriptionLabel"
@@ -163,17 +172,26 @@ class EditProfile extends React.Component {
                             value={this.state.description}
                             onChange={value => this.handleChangeDescription(value)}
                             placeholder="Write some text to describe yourself"
-                            errorText="Description is required" />
+                            errorText="Description is required"/>
 
-                        <Button id="submit" type="submit"
-                            disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university || !this.state.price || !this.state.description}
-                            raised primary className="md-cell md-cell--2">Save</Button>
-                        <Button id="reset" type="reset" raised secondary className="md-cell md-cell--2">Dismiss</Button>
+                        <div>
+                            <TutorCalendar
+                                sendTimeSlots={this.handleComingTimeSlots}
+                            />
+                            <div>
+                                <Button id="submit" type="submit"
+                                        disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university || !this.state.price || !this.state.description}
+                                        raised primary className="md-cell md-cell--2">Save</Button>
+                                <Button id="reset" type="reset" raised secondary
+                                        className="md-cell md-cell--2">Dismiss</Button>
+                            </div>
+
+                        </div>
+
                     </form>
                 </Card>
             );
-        }
-        else if (this.props.userType === 'customer') {
+        } else if (this.props.userType === 'customer') {
             return (
                 <Card style={style} className="md-block-centered">
                     <form className="md-grid" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
@@ -185,7 +203,7 @@ class EditProfile extends React.Component {
                             required={true}
                             value={this.state.firstName}
                             onChange={this.handleChangeFirstName}
-                            errorText="First name is required" />
+                            errorText="First name is required"/>
                         <TextField
                             label="LastName"
                             id="LastNameField"
@@ -195,7 +213,7 @@ class EditProfile extends React.Component {
                             value={this.state.lastName}
                             onChange={this.handleChangeLastName}
                             errorText="Last name is required"
-                            maxLength={20} />
+                            maxLength={20}/>
                         <TextField
                             label="email"
                             id="emailField"
@@ -203,8 +221,8 @@ class EditProfile extends React.Component {
                             className="md-row"
                             active={false}
                             required={false}
-                            defaultValue={this.state.email} 
-                            disabled={true} />
+                            defaultValue={this.state.email}
+                            disabled={true}/>
                         <TextField
                             label="University"
                             id="UniversityField"
@@ -213,10 +231,10 @@ class EditProfile extends React.Component {
                             required={true}
                             value={this.state.university}
                             onChange={this.handleChangeUniversity}
-                            errorText="University is required" />
+                            errorText="University is required"/>
                         <Button id="submit" type="submit"
-                            disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university}
-                            raised primary className="md-cell md-cell--2">Save</Button>
+                                disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university}
+                                raised primary className="md-cell md-cell--2">Save</Button>
                         <Button id="reset" type="reset" raised secondary className="md-cell md-cell--2">Dismiss</Button>
                     </form>
                 </Card>
