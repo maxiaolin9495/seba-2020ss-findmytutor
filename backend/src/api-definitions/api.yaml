@@ -233,9 +233,11 @@ components:
       type: object
       $ref: '#/components/schemas/contactForms'
       properties:
+        firstName:
+          type: string
         email:
           type: string
-        message: # length must greater than 8
+        message:
           type: string
     tutorProfileForms:
       type: object
