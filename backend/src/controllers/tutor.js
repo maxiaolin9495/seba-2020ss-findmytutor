@@ -13,6 +13,7 @@ const getTutorProfile = (req, res) => {
                     price: tutor.price,
                     description: tutor.description,
                     courses: tutor.courses,
+                    timeSlotIds: tutor.timeSlotIds,
                 })
             })
     }
@@ -39,6 +40,7 @@ const getTutorProfileById = (req, res) => {
                     price: tutor.price,
                     description: tutor.description,
                     courses: tutor.courses,
+                    timeSlotIds: tutor.timeSlotIds,
                 })
             })
     }
@@ -84,6 +86,10 @@ const uploadTutorProfile = (req, res) => {
             error: 'Bad Request',
             message: 'The request body must contain a description property'
         });
+        if (!Object.prototype.hasOwnProperty.call(req.body, 'timeSlotIds')) return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body must contain a time slot property'
+        });
         const tutor = Object.assign({
             email: req.body.email,
             firstName: req.body.firstName,
@@ -92,6 +98,7 @@ const uploadTutorProfile = (req, res) => {
             price: req.body.price,
             description: req.body.description,
             courses: req.body.courses,
+            timeSlotIds: req.body.timeSlotIds,
         });
         tutorModel.updateOne({ email: tutor.email }, tutor).then(tutor => {
             return res.status(200).json({ message: "successfully updated" });

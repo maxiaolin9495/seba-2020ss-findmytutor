@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const middlewares = require('../middlewares')
 const customerController = require('../controllers/customer');
 
 router.get('/tutorialForCustomer', middlewares.checkAuthentication, customerController.getTutorialsForCustomer);

@@ -180,7 +180,7 @@ const createTutorial = (req, res) => {
             bookedTime: req.body.bookedTime,
             price: req.body.price,
             tutorialStatus: 'notConfirmed',
-            transactionStatus: 'transfered'
+            transactionStatus: 'transferred'
         });
         tutorialModel.create(tutorial).then(tutorial => {
             const tutorialId = tutorial._id;
@@ -193,13 +193,13 @@ const createTutorial = (req, res) => {
                 bookedTime: req.body.bookedTime,
                 price: req.body.price,
                 tutorialStatus: 'notConfirmed',
-                transactionStatus: 'transfered'
+                transactionStatus: 'transferred'
             });
         }).catch(error => {
             console.log('error by creating a Tutorial');
             if (error.code === 11000) {
                 return res.status(400).json({
-                    error: 'Tutorial exists',
+                    error: 'Internal server error happens by add Tutorial',
                     message: error.message
                 })
             }

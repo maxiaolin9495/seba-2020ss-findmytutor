@@ -1,35 +1,39 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import AvailableTimes from "react-available-times";
-import {Button} from "react-md";
-import {toast} from "react-toastify";
-//import ProfileService from "../services/ProfileService";
+import EditProfileService from "../Services/EditProfileService";
+
 
 class TutorCalendar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            schedule: [],
             initialTimes: [],
-            timeSlots:<div/>
+            timeSlots: <div/>
         };
     }
 
 //upload initial selected time slots
     componentWillMount() {
-       let tmp = [];
-     /*   ProfileService.getCurrentUser().timeSlots.forEach((data) => {
-            tmp.push({
-                start: new Date(parseInt(data.start)),
-                end: new Date(parseInt(data.end))
-            });
-        });*/
-        this.setState({initialTimes:tmp},()=>{
-            this.setState({timeSlots:this.createTimeSlots()})
+        let tmp = [];
+        EditProfileService.getTutorProfile().then((data) => {
+            console.log(data)
+            data.timeSlotIds.forEach((times) => {
+                tmp.push({
+                    start: new Date(parseInt(times.start)),
+                    end: new Date(parseInt(times.end))
+                })
+            })
+
+            this.setState({initialTimes: tmp}, () => {
+                this.setState({timeSlots: this.createTimeSlots()})
+            })
+
         })
     }
+
     //calendar
-    createTimeSlots=()=><AvailableTimes
+    createTimeSlots = () => <AvailableTimes
         weekStartsOn="monday"
         //save selected time slots
         onChange={(selections) => {
@@ -43,7 +47,7 @@ class TutorCalendar extends React.Component {
                     end: data.end.getTime()
                 })
             });
-            this.setState({schedule: arr})
+            this.props.sendTimeSlots(arr);
         }}
         width={500}
         height={600}
@@ -56,20 +60,12 @@ class TutorCalendar extends React.Component {
         availableDays={['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']}
         availableHourRange={{start: 6, end: 24}}
     />;
-    handleChangeSave = () => {
-        toast.success('Schedule successfully saved!');
-      //  this.props.parentCallback(this.state.schedule);
-    };
 
 
     render() {
         return (
             <div>
                 {this.state.timeSlots}
-                <Button id="save"
-                        raised primary swapTheming
-                        onClick={this.handleChangeSave}
-                >Save</Button>
             </div>
 
         );
