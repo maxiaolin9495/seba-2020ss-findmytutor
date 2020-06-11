@@ -233,6 +233,8 @@ components:
       type: object
       $ref: '#/components/schemas/contactForms'
       properties:
+        firstname:
+          type: string
         email:
           type: string
         message: # length must greater than 8

@@ -1,5 +1,6 @@
 const tutorialModel = require('../models/tutorial');
 const tutorModel = require('../models/tutor');
+const emailService = require('../services/emailService');
 
 const getTutorProfile = (req, res) => {
     if (req.userType === 'tutor') {
@@ -135,7 +136,7 @@ const confirmTutorial = async (req, res) => {
         tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status }).then(tutorial => {
             return res.status(200).json({
                 tutorial: tutorial,
-            })
+            }).then(emailService.emailNotification(req.body.customerEmail, req.body.firstName, 'Tutorial Session Confirmed', emailService.confirmTutorial));
         }).catch(error => {
             console.log('error by creating a tutorial');
             return res.status(500).json({
