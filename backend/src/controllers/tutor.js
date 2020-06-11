@@ -15,6 +15,7 @@ const getTutorProfile = (req, res) => {
                     description: tutor.description,
                     courses: tutor.courses,
                     timeSlotIds: tutor.timeSlotIds,
+                    avatar: tutor.avatar,
                 })
             })
     }
@@ -26,30 +27,29 @@ const getTutorProfile = (req, res) => {
 };
 
 const getTutorProfileById = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
+    if (!Object.prototype.hasOwnProperty.call(req.query, '_id')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a _id property'
     });
-    if (req.userType === 'tutor') {
-        tutorModel.findOne({ _id: req.body._id }).exec()
-            .then(tutor => {
-                return res.status(200).json({
-                    email: tutor.email,
-                    firstName: tutor.firstName,
-                    lastName: tutor.lastName,
-                    university: tutor.university,
-                    price: tutor.price,
-                    description: tutor.description,
-                    courses: tutor.courses,
-                    timeSlotIds: tutor.timeSlotIds,
-                })
+    tutorModel.findOne({ _id: req.query._id }).exec()
+        .then(tutor => {
+            return res.status(200).json({
+                email: tutor.email,
+                firstName: tutor.firstName,
+                lastName: tutor.lastName,
+                university: tutor.university,
+                price: tutor.price,
+                description: tutor.description,
+                courses: tutor.courses,
+                timeSlotIds: tutor.timeSlotIds,
+                avatar: tutor.avatar
             })
-    }
-    else
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'Invalid userType value'
-        });
+        }).catch(error => {
+            return res.status(404).json({
+                error: 'Tutor not found',
+                message: error.message
+            })
+        })
 };
 
 const uploadTutorProfile = (req, res) => {
@@ -91,6 +91,10 @@ const uploadTutorProfile = (req, res) => {
             error: 'Bad Request',
             message: 'The request body must contain a time slot property'
         });
+        if (!Object.prototype.hasOwnProperty.call(req.body, 'avatar')) return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body must contain a time slot property'
+        });
         const tutor = Object.assign({
             email: req.body.email,
             firstName: req.body.firstName,
@@ -100,6 +104,7 @@ const uploadTutorProfile = (req, res) => {
             description: req.body.description,
             courses: req.body.courses,
             timeSlotIds: req.body.timeSlotIds,
+            avatar: req.body.avatar,
         });
         tutorModel.updateOne({ email: tutor.email }, tutor).then(tutor => {
             return res.status(200).json({ message: "successfully updated" });
@@ -149,13 +154,13 @@ const confirmTutorial = async (req, res) => {
 
 const getTutorialsForTutor = (req, res) => {
     const email = req.query.email;
-    tutorialModel.find({tutorEmail: email})
+    tutorialModel.find({ tutorEmail: email })
         .then(tutorials => {
             return res.status(200).json(tutorials)
         })
         .catch(error => {
             console.log('internal server error by searching');
-            return req.status(400).json({error: error.message})
+            return req.status(400).json({ error: error.message })
         })
 };
 

@@ -54,6 +54,9 @@ const TutorSchema = new mongoose.Schema({
     courses: [{
         type: [String]
     }],
+    avatar: {
+        type: String
+    }
 });
 
 module.exports = mongoose.model('tutors', TutorSchema);
