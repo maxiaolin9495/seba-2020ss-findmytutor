@@ -8,7 +8,7 @@ import Background from '../Images/Homepage.jpg';
 
 import UserService from '../Services/UserService';
 import EditProfileService from '../Services/EditProfileService';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 
 export class EditProfileView extends React.Component {
@@ -74,7 +74,7 @@ export class EditProfileView extends React.Component {
         } else {
             EditProfileService.updateCustomerProfile(userProfile).then((data) => {
                 toast.success('Update profile succeeded');
-                this.props.history.push('/');        
+                this.props.history.push('/');
             }).catch((e) => {
                 toast.error('Please input correct information');
                 this.setState({
@@ -92,16 +92,13 @@ export class EditProfileView extends React.Component {
             this.props.history.goBack();
         }
 
-        return (<div>
-            <Navigation />
-            <section>
-                <img src={Background} alt={"Ein Hintergrundbild"} className="bg" />
-                <EditProfile userType={this.state.userType} userProfile={this.state.userProfile} onSubmit={(userProfile) => this.updateProfile(userProfile)} error={this.state.error} />
-
-                <div style={{ marginTop: '25%', position: 'relative' }}>
-                </div>
-
-            </section>
-        </div>);
+        return (
+            <div>
+                <Navigation />
+                <section>
+                    <img src={Background} alt={"A Background Picture"} className="bg" />
+                    <EditProfile userType={this.state.userType} userProfile={this.state.userProfile} onSubmit={(userProfile) => this.updateProfile(userProfile)} error={this.state.error} />
+                </section>
+            </div>);
     }
 }

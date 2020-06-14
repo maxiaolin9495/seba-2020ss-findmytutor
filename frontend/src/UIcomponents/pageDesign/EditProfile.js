@@ -1,10 +1,11 @@
 "use strict";
 
 import React from 'react';
-import {Card, Button, FontIcon, TextField} from 'react-md';
-import {withRouter} from 'react-router-dom'
+import { Card, Button, FontIcon, TextField, FileInput, Media, Cell } from 'react-md';
+import { withRouter } from 'react-router-dom'
 import TutorCalendar from "../TutorCalendar";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+import Resizer from 'react-image-file-resizer';
 
 
 const style = {
@@ -27,7 +28,8 @@ class EditProfile extends React.Component {
                 price: props.userProfile.price,
                 description: props.userProfile.description,
                 courses: props.userProfile.courses,
-                timeSlotIds: props.userProfile.timeSlotIds
+                timeSlotIds: props.userProfile.timeSlotIds,
+                avatar: props.userProfile.avatar,
             }
         } else {
             this.state = {
@@ -37,9 +39,10 @@ class EditProfile extends React.Component {
                 university: '',
                 price: '',
                 description: '',
-                timeSlotIds: []
+                timeSlotIds: [],
+                courses: [],
+                avatar: ''
             }
-            // TODO: add courses
         }
     }
 
@@ -81,10 +84,30 @@ class EditProfile extends React.Component {
     }
 
     handleComingTimeSlots = (arr) => {
-        this.setState({timeSlotIds: arr});
+        this.setState({ timeSlotIds: arr });
     }
 
-    // TODO: change Avatar?
+    // resize uploaded avatar as base64 string
+    fileChangedHandler(value) {
+        if (value && value.name) {
+            Resizer.imageFileResizer(
+                value,
+                200,
+                300,
+                'JPEG',
+                100,
+                0,
+                uri => {
+                    this.setState({
+                        avatar: uri,
+                        fileName: value.name
+                    })
+                    console.log(uri);
+                },
+                'base64'
+            );
+        }
+    }
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -103,6 +126,7 @@ class EditProfile extends React.Component {
             userProfile.price = this.state.price;
             userProfile.description = this.state.description;
             userProfile.timeSlotIds = this.state.timeSlotIds;
+            userProfile.avatar = this.state.avatar
         }
 
         // onsubmit defined by EditProfileView
@@ -116,74 +140,119 @@ class EditProfile extends React.Component {
             return (
                 <Card style={style} className="md-block-centered">
                     <form className="md-grid" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
-                        <TextField
-                            label="FirstName"
-                            id="FirstNameField"
-                            type="text"
-                            className="md-row"
-                            required={true}
-                            value={this.state.firstName}
-                            onChange={this.handleChangeFirstName}
-                            errorText="First name is required"/>
-                        <TextField
-                            label="LastName"
-                            id="LastNameField"
-                            type="text"
-                            className="md-row"
-                            required={true}
-                            value={this.state.lastName}
-                            onChange={this.handleChangeLastName}
-                            errorText="Last name is required"
-                            maxLength={20}/>
-                        <TextField
-                            label="email"
-                            id="emailField"
-                            type="text"
-                            className="md-row"
-                            active={false}
-                            required={false}
-                            defaultValue={this.state.email}
-                            disabled={true}/>
-                        <TextField
-                            label="University"
-                            id="UniversityField"
-                            type="text"
-                            className="md-row"
-                            required={true}
-                            value={this.state.university}
-                            onChange={this.handleChangeUniversity}
-                            errorText="University is required"/>
-                        <TextField
-                            label="price"
-                            id="PriceLabel"
-                            type="number"
-                            className="md-row"
-                            required={true}
-                            value={this.state.price}
-                            onChange={value => this.handleChangePrice(value)}
-                            errorText="Price is required"/>
-                        <TextField
-                            label="Description"
-                            id="DescriptionLabel"
-                            type="text"
-                            className="md-row"
-                            required={true}
-                            rows={5}
-                            value={this.state.description}
-                            onChange={value => this.handleChangeDescription(value)}
-                            placeholder="Write some text to describe yourself"
-                            errorText="Description is required"/>
-
+                        <div className='md-grid md-cell md-cell--7' style={{ padding: '0px' }}>
+                            <TextField
+                                style={{ padding: 0, margin: 0 }}
+                                className="md-cell md-cell--6"
+                                leftIcon={<FontIcon>person</FontIcon>}
+                                label="FirstName"
+                                id="FirstNameField"
+                                type="text"
+                                value={this.state.firstName}
+                                required={true}
+                                onChange={this.handleChangeFirstName}
+                                errorText="First name is required" />
+                            <TextField
+                                style={{ padding: 0, margin: 0 }}
+                                className="md-cell md-cell--6"
+                                leftIcon={<FontIcon>person</FontIcon>}
+                                label="LastName"
+                                id="LastNameField"
+                                type="text"
+                                required={true}
+                                value={this.state.lastName}
+                                onChange={this.handleChangeLastName}
+                                errorText="Last name is required" />
+                            <TextField
+                                style={{ padding: 0, margin: 0 }}
+                                className="md-cell md-cell--6"
+                                leftIcon={<FontIcon>email</FontIcon>}
+                                label="email"
+                                id="emailField"
+                                type="text"
+                                value={this.state.email} />
+                            <TextField
+                                style={{ padding: 0, margin: 0 }}
+                                className="md-cell md-cell--6"
+                                label="price"
+                                id="PriceField"
+                                leftIcon={<FontIcon>euro_symbol</FontIcon>}
+                                value={this.state.price}
+                                type="number"
+                                required={true}
+                                onChange={value => this.handleChangePrice(value)}
+                                errorText="Price is required" />
+                            <TextField
+                                label="University"
+                                style={{ paddingLeft: '0px', width: '100%' }}
+                                leftIcon={<FontIcon>school</FontIcon>}
+                                id="UniversityField"
+                                type="text"
+                                className="md-row"
+                                required={true}
+                                value={this.state.university}
+                                onChange={this.handleChangeUniversity}
+                                errorText="University is required" />
+                            {/* TODO: Add courses
+                                <Grid style={{ padding: 0, margin: 0 }}>
+                                    <Cell size={6}>
+                                        <TextField
+                                            id="TeachingCoursesField"
+                                            leftIcon={<FontIcon>book</FontIcon>}
+                                            value={'Teaching Courses: '}
+                                            type="text" />
+                                    </Cell>
+                                    <Cell size={6} align='middle'>
+                                        {this.renderCourses()}
+                                    </Cell>
+                                </Grid> */}
+                            {/* TODO: show rating
+                                <div style={{ marginBottom: '13.5px' }}>
+                                    <FontIcon style={{ paddingLeft: '8px', marginRight: '16px', }}>thumbs_up_down</FontIcon>
+                                    <span style={{ height: '100%', verticalAlign: 'middle' }}>Rating:</span>
+                                    <div style={{ paddingLeft: '8px', display: 'inline', verticalAlign: 'middle' }}>
+                                        <StarRatingComponent
+                                            name="rate2"
+                                            editing={false}
+                                            starCount={5}
+                                            value={+this.state.rating}
+                                            starColor={`#ffb400`}
+                                            emptyStarColor={`#333`} />
+                                    </div>
+                                </div> */}
+                            <hr />
+                            <TextField
+                                label="description"
+                                id="DescriptionLabel"
+                                leftIcon={<FontIcon>description</FontIcon>}
+                                type="text"
+                                className="md-row"
+                                required={true}
+                                rows={2}
+                                value={this.state.description}
+                                onChange={value => this.handleChangeDescription(value)}
+                                placeholder="Write some text to describe yourself"
+                                errorText="Description is required" />
+                        </div>
+                        <Cell size={5} style={{ paddingTop: '16px' }}>
+                            <div style={{ padding: '0 50px', }}>
+                                <Media style={{ borderRadius: '15px', boxShadow: '4px 4px 10px gray' }} aspectRatio="1-1">
+                                    <img src={this.state.avatar} alt="Tutor Avatar" />
+                                </Media>
+                            </div>
+                            <FileInput className="md-block-centered" style={{ marginTop: '16px', width: '60%' }} type="file" id='photo' accept="image/*" onChange={values => this.fileChangedHandler(values)} primary />
+                        </Cell>
+                        <hr style={{ height: '1px', width: '100%' }} />
                         <div>
                             <TutorCalendar
                                 sendTimeSlots={this.handleComingTimeSlots}
                             />
                             <div>
                                 <Button id="submit" type="submit"
-                                        disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university || !this.state.price || !this.state.description}
-                                        raised primary className="md-cell md-cell--2">Save</Button>
+                                    disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university || !this.state.price || !this.state.description}
+                                    raised primary className="md-cell md-cell--2">Save</Button>
                                 <Button id="reset" type="reset" raised secondary
-                                        className="md-cell md-cell--2">Dismiss</Button>
+                                    className="md-cell md-cell--2">Dismiss</Button>
                             </div>
 
                         </div>
@@ -197,15 +266,17 @@ class EditProfile extends React.Component {
                     <form className="md-grid" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
                         <TextField
                             label="FirstName"
+                            leftIcon={<FontIcon>person</FontIcon>}
                             id="FirstNameField"
                             type="text"
                             className="md-row"
                             required={true}
                             value={this.state.firstName}
                             onChange={this.handleChangeFirstName}
-                            errorText="First name is required"/>
+                            errorText="First name is required" />
                         <TextField
                             label="LastName"
+                            leftIcon={<FontIcon>person</FontIcon>}
                             id="LastNameField"
                             type="text"
                             className="md-row"
@@ -213,28 +284,27 @@ class EditProfile extends React.Component {
                             value={this.state.lastName}
                             onChange={this.handleChangeLastName}
                             errorText="Last name is required"
-                            maxLength={20}/>
+                            maxLength={20} />
                         <TextField
                             label="email"
+                            leftIcon={<FontIcon>email</FontIcon>}
                             id="emailField"
                             type="text"
                             className="md-row"
-                            active={false}
-                            required={false}
-                            defaultValue={this.state.email}
-                            disabled={true}/>
+                            value={this.state.email} />
                         <TextField
                             label="University"
+                            leftIcon={<FontIcon>school</FontIcon>}
                             id="UniversityField"
                             type="text"
                             className="md-row"
                             required={true}
                             value={this.state.university}
                             onChange={this.handleChangeUniversity}
-                            errorText="University is required"/>
+                            errorText="University is required" />
                         <Button id="submit" type="submit"
-                                disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university}
-                                raised primary className="md-cell md-cell--2">Save</Button>
+                            disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university}
+                            raised primary className="md-cell md-cell--2">Save</Button>
                         <Button id="reset" type="reset" raised secondary className="md-cell md-cell--2">Dismiss</Button>
                     </form>
                 </Card>
