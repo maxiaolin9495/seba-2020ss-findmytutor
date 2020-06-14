@@ -1,11 +1,11 @@
 "use strict";
 
 import React from 'react';
-import { Card, CardTitle, TextField, CardText, Media, MediaOverlay, Grid, Cell, Button, FontIcon } from 'react-md';
+import { Avatar, Card, CardTitle, TextField, CardText, Media, MediaOverlay, Grid, Cell, Button, FontIcon } from 'react-md';
 import { withRouter } from 'react-router-dom'
 import StarRatingComponent from 'react-star-rating-component';
 import UserService from "../../Services/UserService";
-
+import FindMyTutor from '../../Images/logo.png';
 
 
 class TutorPersonalPage extends React.Component {
@@ -21,9 +21,51 @@ class TutorPersonalPage extends React.Component {
 
     // TODO: get available time slots
 
-    // TODO: add reviews
+    // add reviews
     addReview = () => {
-        console.log('Add Review')
+        let reviews = [{
+            user: 'Linda',
+            rating: 5,
+            comment: 'Best teacher and advisor!!!I have had 30 lessons with her, and I am 100% satisfied.',
+            avatar: FindMyTutor
+        }, {
+            user: 'Lukas',
+            rating: 4,
+            comment: 'Jerry is a professional and understanding tutor, she always wait for her lessons with interest and invariably makes progress',
+            avatar: FindMyTutor
+        }]
+
+        return reviews.map(r => {
+            return (
+                <Card
+                    className="md-grid md-block-centered md-row md-full-width"
+                    style={{
+                        background: 'transparent',
+                        marginBottom: '8px'
+                    }}
+                    key={r.user}>
+                    <CardTitle
+                        title={
+                            <div>
+                                <span style={{ height: '100%', verticalAlign: 'middle' }}>{r.user}</span>
+                                <div style={{ paddingLeft: '32px', display: 'inline', verticalAlign: 'middle' }}>
+                                    <StarRatingComponent
+                                        name="rate2"
+                                        editing={false}
+                                        starCount={5}
+                                        value={r.rating}
+                                        starColor={`#ffb400`}
+                                        emptyStarColor={`#333`} />
+                                </div>
+                            </div>
+                        }
+                        subtitle={r.comment}
+                        avatar={<Avatar src={r.avatar} role="presentation" />}
+                        style={{ padding: '8px' }}
+                    />
+                </Card>
+            )
+        })
     }
 
     renderCourses = () => {
@@ -67,7 +109,7 @@ class TutorPersonalPage extends React.Component {
                 id="tutorPersonalPageBox"
                 label="TutorPersonalPage"
                 style={{
-                    maxWidth: '90%',
+                    maxWidth: '75%',
                     marginTop: '1%',
                     background: 'rgb(255,255,255,0.8)'
                 }} >
@@ -135,14 +177,14 @@ class TutorPersonalPage extends React.Component {
                             </Cell>
                         </Grid>
                         <div className='md-grid'>
-                        <h3 className='md-row md-full-width'>About me</h3>
-                        <div className='md-row'>{this.props.tutor.description}</div>
+                            <h3 className='md-row md-full-width'>About me</h3>
+                            <div className='md-row'>{this.props.tutor.description}</div>
                         </div>
                     </Cell>
                     <Cell size={5}>
                         <div style={{ padding: '0 50px', }}>
                             <div style={{}}>
-                                <Media style={{ borderRadius: '15px', boxShadow: '4px 4px 10px gray' }} aspectRatio="1-1">
+                                <Media aspectRatio="1-1" style={{ borderRadius: '15px', boxShadow: '4px 4px 10px gray', maxHeight: '40px' }} >
                                     <img src={this.props.tutor.avatar} alt="Tutor Avatar" />
                                 </Media>
                             </div>
@@ -165,6 +207,11 @@ class TutorPersonalPage extends React.Component {
                     {/** Calender should be placed here */}
                 </div>
 
+                <hr style={{ height: 1 }} />
+                <div className="md-grid">
+                    <h1 className='md-row md-full-width'>Comments</h1>
+                    {this.addReview()}
+                </div>
 
             </Card >
         );
