@@ -93,7 +93,7 @@ const uploadTutorProfile = (req, res) => {
         });
         if (!Object.prototype.hasOwnProperty.call(req.body, 'avatar')) return res.status(400).json({
             error: 'Bad Request',
-            message: 'The request body must contain a time slot property'
+            message: 'The request body must contain an avatar property'
         });
         const tutor = Object.assign({
             email: req.body.email,
