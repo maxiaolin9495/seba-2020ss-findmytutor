@@ -29,34 +29,39 @@ const TutorSchema = new mongoose.Schema({
         }
     }],
     bookedTutorialSessionIds: [{
-        id: {
-            type: String
-        }
+        type: String
     }],
     rating: {
         type: Number
     },
     price: {
-        type: String
+        type: String,
+        required: false
     },
     description:{
-        type: String
+        type: String,
+        required: false
     },
     ifProved: {
         type: Boolean,
         required: true,
     },
     documentIds: [{
-        id: {
-            type: String
-        }
+        type: String,
+        required: false
     }],
     courses: [{
-        type: [String]
+        type: [String],
+        required: false
     }],
     avatar: {
-        type: String
-    }
+        type: String,
+        required: false
+    },
+    reviewIds: [{
+        type: [String],
+        required: false
+    }]
 });
 
 module.exports = mongoose.model('tutors', TutorSchema);
