@@ -1,4 +1,5 @@
 const customerSupportModel = require('../models/customerSupport');
+const emailService = require('../services/emailService');
 
 
 const saveMessage = (req, res) =>{
@@ -20,6 +21,7 @@ const saveMessage = (req, res) =>{
     };
 
     customerSupportModel.create(contact).then(contact => {
+        emailService.contactUs(req.body.email, req.body.firstName);
         return res.status(200).json({});
     }).catch(error => {
         console.log('error happened by creating customerSupport');
