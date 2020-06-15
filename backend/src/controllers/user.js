@@ -173,6 +173,7 @@ const verifyRequestBody = (req) => {
 
 const createTutorial = (req, res) => {
 
+    //todo this create logic is far from perfect, further work needed
     if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a tutorFirstName property'
