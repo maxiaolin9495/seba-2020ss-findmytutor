@@ -29,7 +29,7 @@ const TutorSchema = new mongoose.Schema({
         }
     }],
     bookedTutorialSessionIds: [{
-        type: String
+        type: [String]
     }],
     rating: {
         type: Number

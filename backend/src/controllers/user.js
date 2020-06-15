@@ -79,7 +79,7 @@ const findUser = (req, res, dataModel) => {
 
     dataModel.findOne({ email: req.body.email }).exec()//customerModel schema
         .then(user => {//user object
-       console.log(user)
+            console.log(user);
             // check if the password is valid
             if (!(req.body.password === user.password)) return res.status(401).send({ token: null });
 
@@ -174,6 +174,7 @@ const verifyRequestBody = (req) => {
 
 const createTutorial = (req, res) => {
 
+    //todo this create logic is far from perfect, further work needed
     if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a tutorFirstName property'
@@ -187,21 +188,31 @@ const createTutorial = (req, res) => {
             bookedTime: req.body.bookedTime,
             price: req.body.price,
             tutorialStatus: 'notConfirmed',
-            transactionStatus: 'transferred'
+            transactionStatus: 'transferred',
+            startTime:req.body.startTime,
+            endTime:req.body.endTime
         });
         tutorialModel.create(tutorial).then(tutorial => {
-            const tutorialId = tutorial._id;
-            // updateTutorialforTutor(req.body.tutorEmail,tutorialId);
-            // updateTutorialforCustomer (req.body.customer,Email,tutorialId);
-            return res.status(200).json({
-                tutorEmail: req.body.tutorEmail,
-                customerEmail: req.body.customerEmail,
-                sessionTopic: req.body.sessionTopic,
-                bookedTime: req.body.bookedTime,
-                price: req.body.price,
-                tutorialStatus: 'notConfirmed',
-                transactionStatus: 'transferred'
-            }.then(emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial)));
+            console.log(tutorial);
+            let tutorialId = tutorial._id;
+            let error = updateTutorialForTutor(req.body.tutorEmail, tutorialId);
+            if (!error) {
+                error = updateTutorialForCustomer(req.body.customerEmail, tutorialId);
+                if (!error) {
+                    emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
+                    return res.status(200).json({
+                        tutorEmail: req.body.tutorEmail,
+                        customerEmail: req.body.customerEmail,
+                        sessionTopic: req.body.sessionTopic,
+                        bookedTime: req.body.bookedTime,
+                        price: req.body.price,
+                        tutorialStatus: 'notConfirmed',
+                        transactionStatus: 'transferred',
+                        startTime:req.body.startTime,
+                        endTime:req.body.endTime
+                    });
+                }
+            }
         }).catch(error => {
             console.log('error by creating a Tutorial');
             if (error.code === 11000) {
@@ -242,13 +253,22 @@ const cancelTutorial = async (req, res) => {
         message: 'The request body must contain a customerFirstName property'
     });
 
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a tutorEmail property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerEmail')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a customerEmail property'
+    });
+
     if (req.body.status === 'canceled') {
         tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status, transactionStatus: 'inProgress' }).then(tutorial => {
+            emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
+            emailService.emailNotification(req.body.customerEmail, req.body.customerFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
             return res.status(200).json({
                 tutorial: tutorial,
-            }).then( () => {
-                emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
-                emailService.emailNotification(req.body.customerEmail, req.body.customerFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
             });
         }).catch(error => {
             console.log('error by creating a tutorial');
@@ -277,7 +297,7 @@ const closeTutorial = async (req, res) => {
                 tutorial: tutorial,
             })
         }).catch(error => {
-            console.log('error by creating a booking');
+            console.log('error by closing a Tutorial');
             return res.status(500).json({
                 error: 'Internal server error',
                 message: error.message
@@ -286,34 +306,44 @@ const closeTutorial = async (req, res) => {
     }
 };
 
-const updateTutorialforTutor = async (email, course, res) => {
+const getAllTutorials = async (req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'ids')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a ids property'
+    });
+    let ids = req.body.ids;
+    if (ids) {
+        tutorialModel.find().where('_id').in(ids).exec().then(records => {
+            console.log(records);
+            return res.status(200).json(records);
+        }).catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: error.message
+            })
+        });
+    } else {
+        return res.status(200).json({});
+    }
+};
 
-    tutorialModel.updateOne({ email: email }, { $push: { courses: course } }).then(tutor => {
-        return res.status(200).json({
-            message: "successfully updated"
-        })
+const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
+    tutorModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().then(tutor => {
+        console.log(tutor);
+        return tutor;
     }).catch(error => {
         console.log('error by adding a course to the tutor');
-        return res.status(500).json({
-            error: 'Internal server error',
-            message: error.message
-        })
+        return error;
     });
 
 };
 
-const updateTutorialforCustomer = async (email, course, res) => {
-
-    customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: course } }).then(customer => {
-        return res.status(200).json({
-            message: "successfully updated"
-        })
+const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
+    customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().then(customer => {
     }).catch(error => {
         console.log('error by adding a course to the customer');
-        return res.status(500).json({
-            error: 'Internal server error',
-            message: error.message
-        })
+        return error;
     });
 
 };
@@ -324,5 +354,5 @@ module.exports = {
     createTutorial,
     cancelTutorial,
     closeTutorial,
-
+    getAllTutorials
 };
