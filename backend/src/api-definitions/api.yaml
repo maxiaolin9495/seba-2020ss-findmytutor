@@ -180,9 +180,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                - type: string
+              $ref: '#/components/schemas/allTutorialIdsForms'
         required: true
       responses:
         200:
@@ -452,6 +450,14 @@ components:
           type: string
         status:
           type: string
+    allTutorialIdsForms:
+      type: object
+      $ref: '#/components/schemas/allTutorialIdsForms'
+      properties:
+        ids:
+          type: array
+          items:
+          - type: string
     tutorProfileForms:
       type: object
       $ref: '#/components/schemas/tutorProfileForms'
