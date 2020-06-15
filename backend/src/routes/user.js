@@ -9,4 +9,5 @@ router.put('/createTutorial', middleWares.checkAuthentication, userController.cr
 router.post('/cancelTutorial', middleWares.checkAuthentication, userController.cancelTutorial);
 router.post('/closeTutorial', middleWares.checkAuthentication, userController.closeTutorial);
 router.post('/getAllTutorials', middleWares.checkAuthentication, userController.getAllTutorials);
+router.get('/getAllTutorials/:tutorId', userController.getAllTutorialsByTutorId);
 module.exports = router;
