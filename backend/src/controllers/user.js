@@ -76,9 +76,10 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
 };
 
 const findUser = (req, res, dataModel) => {
+
     dataModel.findOne({ email: req.body.email }).exec()//customerModel schema
         .then(user => {//user object
-
+       console.log(user)
             // check if the password is valid
             if (!(req.body.password === user.password)) return res.status(401).send({ token: null });
 

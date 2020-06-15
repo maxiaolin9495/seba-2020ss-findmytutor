@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom'
 import StarRatingComponent from 'react-star-rating-component';
 import UserService from "../../Services/UserService";
 import FindMyTutor from '../../Images/logo.png';
+import BookingCalendar from "../Calendar/BookingCalendar";
 
 
 class TutorPersonalPage extends React.Component {
@@ -205,6 +206,7 @@ class TutorPersonalPage extends React.Component {
                 <div className="md-grid">
                     <h1 className='md-row md-full-width'>Calender</h1>
                     {/** Calender should be placed here */}
+                    <BookingCalendar/>
                 </div>
 
                 <hr style={{ height: 1 }} />

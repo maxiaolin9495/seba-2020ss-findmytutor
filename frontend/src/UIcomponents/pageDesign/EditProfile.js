@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, Button, FontIcon, TextField, FileInput, Media, Cell } from 'react-md';
 import { withRouter } from 'react-router-dom'
-import TutorCalendar from "../TutorCalendar";
+import TutorCalendar from "../Calendar/TutorCalendar";
 import { toast } from "react-toastify";
 import Resizer from 'react-image-file-resizer';
 
