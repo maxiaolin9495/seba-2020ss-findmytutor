@@ -323,6 +323,10 @@ const getAllTutorials = async (req, res) => {
     }
 };
 
+const getAlltutorialsById = (req, res) => {
+
+};
+
 const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
     tutorModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().then(tutor => {
         console.log(tutor);

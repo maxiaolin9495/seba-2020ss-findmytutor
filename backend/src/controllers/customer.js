@@ -1,5 +1,6 @@
 const tutorialModel = require('../models/tutorial');
 const customerModel = require('../models/customer');
+const reviewModel = require('../models/review');
 
 const getTutorialsForCustomer = (req, res) =>{
     const email = req.query.email;
@@ -81,6 +82,10 @@ const uploadCustomerProfile = (req, res) => {
             }
         });
     }
+};
+
+const createReview = (req, res) => {
+
 };
 
 module.exports = {
