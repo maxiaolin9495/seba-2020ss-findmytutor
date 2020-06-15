@@ -68,7 +68,7 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
                 })
             }
         }).catch(error => {
-            console.log('error by searching user ' + error);
+            console.log('error by searching user ' + error.message);
             return res.status(404).json({
                 error: 'User Not Found',
                 message: error.message
@@ -79,7 +79,6 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
 const findUser = (req, res, dataModel) => {
     dataModel.findOne({ email: req.body.email }).exec()//customerModel schema
         .then(user => {//user object
-            console.log(user);
             // check if the password is valid
             if (!(req.body.password === user.password)) return res.status(401).send({ token: null });
 
@@ -191,7 +190,6 @@ const createTutorial = (req, res) => {
             transactionStatus: 'transferred'
         });
         tutorialModel.create(tutorial).then(tutorial => {
-            console.log(tutorial);
             let tutorialId = tutorial._id;
             let error = updateTutorialForTutor(req.body.tutorEmail, tutorialId);
             if (!error) {
@@ -310,7 +308,6 @@ const getAllTutorials = async (req, res) => {
     let ids = req.body.ids;
     if (ids) {
         tutorialModel.find().where('_id').in(ids).exec().then(records => {
-            console.log(records);
             return res.status(200).json(records);
         }).catch(err => {
             console.log(err);
@@ -329,13 +326,9 @@ const getAllTutorialsByTutorId = async (req, res) => {
         tutorId,
     } = req.params;
 
-    console.log(tutorId);
-
     if(tutorId){
         tutorModel.findById(tutorId).exec().then(tutor => {
-            console.log(tutor);
             tutorialModel.find().where('_id').in(tutor.bookedTutorialSessionIds).exec().then(records => {
-                console.log(records);
                 return res.status(200).json(records);
             });
         }).catch(err => {
@@ -355,13 +348,9 @@ const getAllReviewsByTutorId = async (req, res) => {
         tutorId,
     } = req.params;
 
-    console.log(tutorId);
-
     if(tutorId){
         tutorModel.findById(tutorId).exec().then(tutor => {
-            console.log(tutor);
             reviewModel.find().where('_id').in(tutor.reviewIds).exec().then(records => {
-                console.log(records);
                 return res.status(200).json(records);
             });
         }).catch(err => {
@@ -377,10 +366,7 @@ const getAllReviewsByTutorId = async (req, res) => {
 };
 
 const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
-    tutorModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().then(tutor => {
-        console.log(tutor);
-        return tutor;
-    }).catch(error => {
+    tutorModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().catch(error => {
         console.log('error by adding a tutorial id to the tutor');
         return error;
     });
@@ -388,8 +374,7 @@ const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
 };
 
 const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
-    customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().then(customer => {
-    }).catch(error => {
+    customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().catch(error => {
         console.log('error by adding a tutorial id to the customer');
         return error;
     });

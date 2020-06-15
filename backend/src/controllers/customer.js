@@ -65,7 +65,7 @@ const uploadCustomerProfile = (req, res) => {
             lastName: req.body.lastName,
             university: req.body.university,
         });
-        customerModel.updateOne({ email: customer.email }, customer).then(customer => {
+        customerModel.updateOne({ email: customer.email }, customer).then(() => {
             return res.status(200).json({ message: "successfully updated" });
         }).catch(error => {
             console.log('error by creating a customer Profile');
@@ -136,7 +136,6 @@ const createReview = (req, res) => {
 
     reviewModel.create(review).then(
         review => {
-            console.log(review);
             let error = updateReviewForCustomer(req.body.customerEmail, review._id);
             if (!error){
                 error = updateReviewForTutor(req.body.tutorEmail, review._id);
@@ -150,10 +149,85 @@ const createReview = (req, res) => {
             console.log(error);
             return res.status(500).json({
                 error: 'Internal server error',
-                message: 'Internal server error happened when create a new review ' + error
+                message: 'Internal server error happened when create a new review ' + error.message
             });
         }
     )
+
+};
+
+const updateReview = (req, res) => {
+
+    const {
+        reviewId,
+    } = req.params;
+
+    if (!reviewId) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a reviewId parameter'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a tutorEmail property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerEmail')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a customerEmail property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'comprehensionRating')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a comprehensionRating property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'friendlinessRating')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a friendlinessRating property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'teachingStyleRating')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a teachingStyleRating property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'text')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a text property'
+    });
+
+    let overallRating = Math.round((req.body.comprehensionRating + req.body.friendlinessRating + req.body.teachingStyleRating)/3);
+
+    let review = Object.assign({
+        comprehensionRating: req.body.comprehensionRating,
+        friendlinessRating: req.body.friendlinessRating,
+        teachingStyleRating: req.body.teachingStyleRating,
+        text: req.body.text,
+        overallRating: overallRating,
+        tutorEmail: req.body.tutorEmail,
+        reviewerName: req.body.reviewerName
+    });
+
+    reviewModel.updateOne({_id: reviewId}, review).then(
+        review => {
+            let error = updateRatingForTutor(req.body.tutorEmail);
+            if (!error) {
+                return res.status(200).json(review);
+            }
+            console.log(error);
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: 'Internal server error happened when create a new review ' + error.message
+            });
+        }
+    ).catch(error => {
+        console.log(error);
+        return res.status(404).json({
+            error: 'Review Not Found',
+            message: error.message
+        });
+    })
 
 };
 
@@ -170,12 +244,9 @@ const updateRatingForTutor = (email) => {
         tutor => {
             let reviewIds = tutor.reviewIds;
             reviewModel.find().where('_id').in(reviewIds).exec().then(reviews => {
-                console.log(reviews);
-                let sumOverallRating = 0;
                 for ( let i = 0; i < reviews.length; i++){
                     sumOverallRating += reviews[i].overallRating;
                 }
-                console.log(sumOverallRating);
                 tutorModel.updateOne({ email: email }, { $push: { rating: Math.round(sumOverallRating/reviews.length) } }).exec();
             });
         }
@@ -197,5 +268,6 @@ module.exports = {
     getTutorialsForCustomer,
     getCustomerProfile,
     uploadCustomerProfile,
-    createReview
+    createReview,
+    updateReview
 };

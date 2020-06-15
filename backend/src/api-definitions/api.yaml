@@ -237,6 +237,40 @@ paths:
           $ref: '#/components/schemas/reviewForms'
         400:
           $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /customer/updateReview/{reviewId}:
+    summary: To update an existing review.
+    description: Only valid user can use this backend service
+    put:
+      tags:
+      - review
+      parameters:
+      - name: x-access-token
+        in: header
+        description: JWT token
+        required: true
+        schema:
+          type: string
+          format: byte
+      - name: reviewId
+        in: path
+        description: the id of the review
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reviewForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/schemas/reviewForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
         404:
           $ref: '#/components/httpCodesSchemas/404'
         500:
