@@ -323,8 +323,30 @@ const getAllTutorials = async (req, res) => {
     }
 };
 
-const getAlltutorialsById = (req, res) => {
+const getAllTutorialsByTutorId = async (req, res) => {
+    const {
+        tutorId,
+    } = req.params;
 
+    console.log(tutorId);
+
+    if(tutorId){
+        tutorModel.findById(tutorId).exec().then(tutor => {
+            console.log(tutor);
+            tutorialModel.find().where('_id').in(tutor.bookedTutorialSessionIds).exec().then(records => {
+                console.log(records);
+                return res.status(200).json(records);
+            });
+        }).catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: error.message
+            })
+        });
+    } else {
+        return res.status(200).json({});
+    }
 };
 
 const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
@@ -353,5 +375,6 @@ module.exports = {
     createTutorial,
     cancelTutorial,
     closeTutorial,
-    getAllTutorials
+    getAllTutorials,
+    getAllTutorialsByTutorId
 };
