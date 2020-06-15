@@ -24,24 +24,36 @@ class BookingCalendar extends React.Component {
             initialTimesForSpecificDay: [],
             price: 0,
             duration: 0,
-            totalPrice: 0
+            totalPrice: 0,
+            bookedTimes: [],
+            bookingTimesForSpecificDay: [],
+            minDate: undefined,
         };
     }
 
     componentDidMount() {
+
         let initials = [];
         TutorPageService.getTutorProfileById(this.props.match.params.id).then((data) => {
             this.setState({price: data.price});
-            console.log(data)
+            console.log(data);
             data.timeSlotIds.forEach((times) => {
                 initials.push({
                     start: new Date(parseInt(times.start)),
                     end: new Date(parseInt(times.end))
                 })
-            })
-            this.setState({initialTimes: initials})
-             TutorialService.getAllTutorials(props.match.params.id).then((data)=>{
-              console.log(data)
+            });
+            this.setState({initialTimes: initials});
+            let bookedTimes = [];
+            TutorialService.getAllTutorials(this.props.match.params.id).then((bookings) => {
+                bookings.map((data) => {
+                    bookedTimes.push({
+                        start: new Date(parseInt(data.startTime)),
+                        end: new Date(parseInt(data.endTime)),
+                    })
+                });
+                this.setState({bookedTimes: bookedTimes});
+
             })
 
         })
@@ -58,9 +70,9 @@ class BookingCalendar extends React.Component {
         }
         arr.push(new Date(parseInt(endTimestamp)));
         return arr;
-    }
+    };
 
-    //get all time slots
+    //get all time slots in time arr
     availableTimes = (initials) => {
         let arr = [];
         initials.forEach((data) => {
@@ -72,30 +84,39 @@ class BookingCalendar extends React.Component {
                     newArr.forEach((data) => {
                         if (arr.indexOf(data) === -1) {
                             arr.push(data);
-                            console.log(arr)
+                            //    console.log(arr)
                         }
                     })
                 }
             }
 
-        })
+        });
         return arr;
-    }
+    };
     handleChangeStart = (value) => {
         let timeOnSpecificDay = [];
         this.state.initialTimes.map((data) => {
-            console.log(data)
             let dateDay = data.start.getDate();
             if (value.getDate() === dateDay) {
-                console.log(dateDay);
                 timeOnSpecificDay.push(data);
             }
-        })
+        });
+        let bookingOnSpecificDay = [];
+        this.state.bookedTimes.map((data) => {
+            let dateDay = data.start.getDate();
+            if (value.getDate() === dateDay) {
+                bookingOnSpecificDay.push(data);
+            }
+        });
         this.setState({selectedStart: value});
-        console.log(this.state.selectedStart);
-        this.setState({initialTimesForSpecificDay: timeOnSpecificDay})
+        let tmpDate = new Date();
+        tmpDate.setDate(value.getDate());
+        this.setState({selectedEnd: tmpDate});
+        this.setState({initialTimesForSpecificDay: timeOnSpecificDay});
+        this.setState({bookingTimesForSpecificDay: bookingOnSpecificDay});
+        this.setState({minDate: value});
 
-    }
+    };
 
     handleChangeEnd = (value) => {
         this.setState({selectedEnd: value});
@@ -107,20 +128,14 @@ class BookingCalendar extends React.Component {
             let duration = endTime - startTime;
             this.setState({duration: duration});
             this.setState({totalPrice: duration * this.state.price})
-            console.log('total price')
-            console.log(duration)
-            console.log(duration * this.state.price)
         }
-    }
+    };
 
     //get and display start and end time
     getTime = (timestamp) => {
         if (timestamp === undefined) {
             return '';
         }
-        console.log('_timestamp')
-        console.log(timestamp)
-        // let timeClick = new Date(parseInt(timestamp));
         let timeHour = timestamp.getHours();
         let timeMin = timestamp.getMinutes();
         if (timestamp.getHours() < 10) {
@@ -130,7 +145,7 @@ class BookingCalendar extends React.Component {
             timeMin = '0' + timestamp.getMinutes();
         }
         return timestamp.toDateString() + ' ' + timeHour + ":" + timeMin;
-    }
+    };
 
     render() {
         return (
@@ -142,6 +157,7 @@ class BookingCalendar extends React.Component {
                         inline
                         includeDates={this.availableTimes(this.state.initialTimes)}
                         includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay)}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay)}
                         timesShown={2}
                         style={stylePicker}
                         dateFormat='dd.MM.yyyy HH:mm'
@@ -168,8 +184,9 @@ class BookingCalendar extends React.Component {
                         selected={this.state.selectedEnd}
                         includeDates={this.availableTimes(this.state.initialTimes)}
                         includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay)}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay)}
                         isClearable
-                        //   minDate={this.state.test}
+                        minDate={this.state.minDate}
                         onChange={this.handleChangeEnd}
                         showTimeSelect
                         showTimeSelectOnly
@@ -184,9 +201,9 @@ class BookingCalendar extends React.Component {
                     <p> - {this.getTime(this.state.selectedEnd)}</p>
                 </div>
                 <PaymentDialog totalPrice={this.state.totalPrice}
-                duration={this.state.duration}
-                startTime={this.state.selectedStart}
-                endTime={this.state.selectedEnd}/>
+                               duration={this.state.duration}
+                               startTime={this.state.selectedStart}
+                               endTime={this.state.selectedEnd}/>
             </div>
 
         );

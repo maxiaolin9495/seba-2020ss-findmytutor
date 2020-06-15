@@ -10,8 +10,9 @@ export default class TutorialService {
         console.log(booking);
         return new Promise((resolve, reject) => {
 
-            HttpService.put(this.baseURL() + '/createTutorial',
+            HttpService.put(this.baseURL() + '/user/createTutorial',
                 {
+                    tutorFirstName:booking.tutorFirstName,
                     tutorEmail: booking.tutorEmail,
                     customerEmail: booking.customerEmail,
                     sessionTopic: booking.sessionTopic,
@@ -32,8 +33,10 @@ export default class TutorialService {
 
     static getAllTutorials(id) {
         return new Promise((resolve, reject) => {
-            HttpService.get(`${this.baseURL()}/getAllTutorials/${id}`, function (data) {
+            HttpService.get(`${this.baseURL()}/user/getAllTutorials/${id}`, function (data) {
+                console.log('service')
                 console.log(data)
+
                 if (data !== undefined || Object.keys(data).length !== 0) {
                     resolve(data);
                 }

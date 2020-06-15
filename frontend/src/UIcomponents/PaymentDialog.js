@@ -35,18 +35,19 @@ class PaymentDialog extends PureComponent {
         this.hide();
        // let bookedTimes=[];
         let booking={
-           tutorEmail: this.state.tutor.email,
+            tutorFirstName:this.state.tutor.firstName,
+            tutorEmail: this.state.tutor.email,
             customerEmail:UserService.getCurrentUser().email,
             sessionTopic:'topic',
-            bookedTimes:this.props.duration,
+            bookedTime:this.props.duration,
             price:this.props.totalPrice,
             tutorialStatus: 'notConfirmed',
             transactionStatus: 'paid',
             startTime:this.props.startTime.getTime(),
             endTime:this.props.endTime.getTime()
 
-        }
-        console.log(booking)
+        };
+        console.log(booking);
        TutorialService.createBooking(booking);
 
     };
