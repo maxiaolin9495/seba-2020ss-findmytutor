@@ -87,14 +87,16 @@ const uploadTutorProfile = (req, res) => {
             error: 'Bad Request',
             message: 'The request body must contain a description property'
         });
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'timeSlotIds')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a time slot property'
-        });
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'avatar')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain an avatar property'
-        });
+        //todo timeSlots are not required during update tutor's profile, it should be added separately
+        // if (!Object.prototype.hasOwnProperty.call(req.body, 'timeSlotIds')) return res.status(400).json({
+        //     error: 'Bad Request',
+        //     message: 'The request body must contain a time slot property'
+        // });
+        //todo it's similar for the avatar part
+        // if (!Object.prototype.hasOwnProperty.call(req.body, 'avatar')) return res.status(400).json({
+        //     error: 'Bad Request',
+        //     message: 'The request body must contain an avatar property'
+        // });
         const tutor = Object.assign({
             email: req.body.email,
             firstName: req.body.firstName,
