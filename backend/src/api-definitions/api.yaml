@@ -15,6 +15,10 @@ info:
 tags:
   - name: user
     description: Access to sign up or log in
+  - name: tutor
+    description: Access to add or upload tutor's profile
+  - name: customer
+    description: Access to add or upload customer's profile
   - name: contact
     description: Access to contact the customer service team
 
@@ -65,7 +69,7 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
 
-  /user/uploadTutorProfile:
+  /tutor/uploadTutorProfile:
     summary: For tutor upload Tutor Profile.
     description: Only valid tutor can use this backend service
     post:
@@ -95,7 +99,7 @@ paths:
           $ref: '#/components/httpCodesSchemas/404'
         500:
           $ref: '#/components/httpCodesSchemas/500'
-  /user/tutorProfile:
+  /tutor/tutorProfile:
     summary: to ger Tutor Profile.
     description: Only valid tutor can use this backend service
     get:
@@ -123,12 +127,12 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
 
-  /user/uploadCustomerProfile:
+  /customer/uploadCustomerProfile:
     summary: For Customer upload Customer Profile.
     description: Only valid Customer can use this backend service
     post:
       tags:
-        - Customer
+        - customer
       parameters:
         - name: x-access-token
           in: header
@@ -154,12 +158,12 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
   
-  /user/customerProfile:
+  /customer/customerProfile:
     summary: To get Customer Profile.
     description: Only valid Customer can use this backend service
     get:
       tags:
-        - Customer
+        - customer
       parameters:
         - name: x-access-token
           in: header

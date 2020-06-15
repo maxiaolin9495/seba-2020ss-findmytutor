@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const TimeslotSchema = new mongoose.Schema({
+const TimeSlotSchema = new mongoose.Schema({
     tutorEmail: {
         type: String,
         required: true
@@ -27,4 +27,4 @@ const TimeslotSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('timeslot', TimeslotSchema);
+module.exports = mongoose.model('timeSlot', TimeSlotSchema);
