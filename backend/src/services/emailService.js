@@ -1,9 +1,9 @@
 const nodemailer = require('nodemailer');
 
 const newTutorial = 'You have new Tutorial Session from FindMyTutor, please confirm it or cancel it in soon.';
-const confirmTutorial = 'Your Tutorial Session  has just been confirmed by tutor ';
-const cancelTutorial = 'Your Tutorial Session  has just been canceled';
-const reviewTutorial = 'Your Tutorial Session  has been just reviewed';
+const confirmTutorial = 'Your Tutorial Session has just been confirmed by tutor ';
+const cancelTutorial = 'Your Tutorial Session has just been canceled';
+const reviewTutorial = 'Your Tutorial Session has been just reviewed';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',

@@ -10,4 +10,5 @@ router.post('/cancelTutorial', middleWares.checkAuthentication, userController.c
 router.post('/closeTutorial', middleWares.checkAuthentication, userController.closeTutorial);
 router.post('/getAllTutorials', middleWares.checkAuthentication, userController.getAllTutorials);
 router.get('/getAllTutorials/:tutorId', userController.getAllTutorialsByTutorId);
+router.get('/getAllReviews/:tutorId', userController.getAllReviewsByTutorId);
 module.exports = router;

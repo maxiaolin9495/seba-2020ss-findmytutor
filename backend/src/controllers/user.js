@@ -3,6 +3,7 @@ const customerModel = require('../models/customer');
 const tutorModel = require('../models/tutor');
 const config = require('../config');
 const tutorialModel = require('../models/tutorial');
+const reviewModel = require('../models/review');
 const emailService = require('../services/emailService');
 
 const login = (req, res) => {
@@ -349,12 +350,38 @@ const getAllTutorialsByTutorId = async (req, res) => {
     }
 };
 
+const getAllReviewsByTutorId = async (req, res) => {
+    const {
+        tutorId,
+    } = req.params;
+
+    console.log(tutorId);
+
+    if(tutorId){
+        tutorModel.findById(tutorId).exec().then(tutor => {
+            console.log(tutor);
+            reviewModel.find().where('_id').in(tutor.reviewIds).exec().then(records => {
+                console.log(records);
+                return res.status(200).json(records);
+            });
+        }).catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: error.message
+            })
+        });
+    } else {
+        return res.status(200).json({});
+    }
+};
+
 const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
     tutorModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().then(tutor => {
         console.log(tutor);
         return tutor;
     }).catch(error => {
-        console.log('error by adding a course to the tutor');
+        console.log('error by adding a tutorial id to the tutor');
         return error;
     });
 
@@ -363,10 +390,9 @@ const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
 const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
     customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().then(customer => {
     }).catch(error => {
-        console.log('error by adding a course to the customer');
+        console.log('error by adding a tutorial id to the customer');
         return error;
     });
-
 };
 
 module.exports = {
@@ -376,5 +402,6 @@ module.exports = {
     cancelTutorial,
     closeTutorial,
     getAllTutorials,
-    getAllTutorialsByTutorId
+    getAllTutorialsByTutorId,
+    getAllReviewsByTutorId
 };

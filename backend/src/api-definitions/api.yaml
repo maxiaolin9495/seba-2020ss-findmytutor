@@ -22,8 +22,9 @@ tags:
   - name: contact
     description: Access to contact the customer service team
   - name: tutorial
-    description: Access to do CRU operation on a tutorial session object or get all tutorial sessions with a list of ids.
-
+    description: Access to do CRU operation on a tutorial session object or get all tutorial sessions with a tutor id.
+  - name: review
+    description: Access to do CRU operation on a review object or get all reviews with a tutor id.
 
 paths:
   /user/register:
@@ -184,7 +185,7 @@ paths:
         required: true
       responses:
         200:
-          description: []
+          content: []
         400:
           $ref: '#/components/httpCodesSchemas/400'
         500:
@@ -205,12 +206,61 @@ paths:
           type: string
       responses:
         200:
-          description: []
+          content: []
         400:
           $ref: '#/components/httpCodesSchemas/400'
         500:
           $ref: '#/components/httpCodesSchemas/500'
-
+  /customer/createReview:
+    summary: To create a new review.
+    description: Only valid user can use this backend service
+    put:
+      tags:
+      - review
+      parameters:
+      - name: x-access-token
+        in: header
+        description: JWT token
+        required: true
+        schema:
+          type: string
+          format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reviewForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/schemas/reviewForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /user/getAllReviews/{tutorId}:
+    get:
+      tags:
+      - review
+      summary: To get a list of reviews by a tutor id
+      description: Only valid user can use this backend service
+      parameters:
+      - name: tutorId
+        in: path
+        description: the id of related tutor
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content: []
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
   /user/closeTutorial:
     summary: For close a tutorial.
     description: Only valid user can use this backend service
@@ -433,6 +483,33 @@ components:
         bookedTime:
           type: string
         price:
+          type: string
+    reviewForms:
+      type: object
+      $ref: '#/components/schemas/reviewForms'
+      properties:
+        reviewerName:
+          type: string
+        tutorEmail:
+          type: string
+        customerEmail:
+          type: string
+        comprehensionRating:
+          type: integer
+          format: int32
+          maximum: 5
+          minimum: 1
+        friendlinessRating:
+          type: integer
+          format: int32
+          maximum: 5
+          minimum: 1
+        teachingStyleRating:
+          type: integer
+          format: int32
+          maximum: 5
+          minimum: 1
+        text:
           type: string
     confirmTutorialForms:
       type: object
