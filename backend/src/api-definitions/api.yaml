@@ -184,13 +184,33 @@ paths:
         required: true
       responses:
         200:
-          description: token created
+          description: []
         400:
           $ref: '#/components/httpCodesSchemas/400'
-        404:
-          $ref: '#/components/httpCodesSchemas/404'
         500:
           $ref: '#/components/httpCodesSchemas/500'
+
+  /user/getAllTutorials/{tutorId}:
+    get:
+      tags:
+      - tutorial
+      summary: To get a list of tutorials by a tutor id
+      description: Only valid user can use this backend service
+      parameters:
+      - name: tutorId
+        in: path
+        description: the id of related tutor
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: []
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
   /user/closeTutorial:
     summary: For close a tutorial.
     description: Only valid user can use this backend service

@@ -182,5 +182,5 @@ module.exports = {
     getTutorProfileById,
     uploadTutorProfile,
     getTutorialsForTutor,
-    confirmTutorial,
+    confirmTutorial
 };
