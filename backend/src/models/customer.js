@@ -12,18 +12,19 @@ const CustomerSchema = new mongoose.Schema({
         required: true
     },
     firstName: {
-        type: String
+        type: String,
+        required: false
     },
     lastName: {
-        type: String
+        type: String,
+        required: false
     },
     university: {
-        type: String
+        type: String,
+        required: false
     },
     bookedTutorialSessionIds: [{
-        id: {
-            type: String
-        }
+        type: [String]
     }]
 });
 

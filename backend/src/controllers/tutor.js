@@ -139,11 +139,22 @@ const confirmTutorial = async (req, res) => {
         message: 'The request body must contain a status property'
     });
 
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a tutorFirstName property'
+    });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerEmail')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a customerEmail property'
+    });
+
     if (req.body.status === 'confirmed') {
         tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status }).then(tutorial => {
+            emailService.emailNotification(req.body.customerEmail, req.body.tutorFirstName, 'Tutorial Session Confirmed', emailService.confirmTutorial);
             return res.status(200).json({
                 tutorial: tutorial,
-            }).then(emailService.emailNotification(req.body.customerEmail, req.body.firstName, 'Tutorial Session Confirmed', emailService.confirmTutorial));
+            });
         }).catch(error => {
             console.log('error by creating a tutorial');
             return res.status(500).json({
@@ -172,5 +183,4 @@ module.exports = {
     uploadTutorProfile,
     getTutorialsForTutor,
     confirmTutorial,
-
 };
