@@ -2,6 +2,7 @@ const customerModel = require('../models/customer');
 const tutorialModel = require('../models/tutorial');
 const tutorModel =  require('../models/tutor');
 const reviewModel = require('../models/review');
+const emailService = require('../services/emailService');
 
 const getTutorialsForCustomer = (req, res) =>{
     const email = req.query.email;
@@ -114,7 +115,7 @@ const createReview = (req, res) => {
                 error = updateReviewForTutor(req.body.tutorEmail, review._id);
                 if(!error) {
                     error = updateRatingForTutor(req.body.tutorEmail);
-
+                    emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, "New Feedback Received", emailService.reviewTutorial);
                     if (!error) {
                         return res.status(200).json(review);
                     }

@@ -524,9 +524,9 @@ components:
       properties:
         reviewerName:
           type: string
-        tutorEmail:
+        tutorName:
           type: string
-        customerEmail:
+        tutorEmail:
           type: string
         comprehensionRating:
           type: integer
