@@ -87,40 +87,13 @@ const uploadCustomerProfile = (req, res) => {
 
 
 const createReview = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'reviewerName')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a reviewerName property'
-    });
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a tutorEmail property'
-    });
+    let verificationResult = verifyReviewBody(req);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerEmail')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a customerEmail property'
-    });
+    if (!verificationResult.ifValid) {
+        return res.status(400).json(verificationResult.message);
+    }
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'comprehensionRating')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a comprehensionRating property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'friendlinessRating')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a friendlinessRating property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'teachingStyleRating')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a teachingStyleRating property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'text')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a text property'
-    });
 
     let overallRating = Math.round((req.body.comprehensionRating + req.body.friendlinessRating + req.body.teachingStyleRating)/3);
 
@@ -136,11 +109,12 @@ const createReview = (req, res) => {
 
     reviewModel.create(review).then(
         review => {
-            let error = updateReviewForCustomer(req.body.customerEmail, review._id);
+            let error = updateReviewForCustomer(req.email, review._id);
             if (!error){
                 error = updateReviewForTutor(req.body.tutorEmail, review._id);
                 if(!error) {
                     error = updateRatingForTutor(req.body.tutorEmail);
+
                     if (!error) {
                         return res.status(200).json(review);
                     }
@@ -167,35 +141,11 @@ const updateReview = (req, res) => {
         message: 'The request body must contain a reviewId parameter'
     });
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a tutorEmail property'
-    });
+    let verificationResult = verifyReviewBody(req);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerEmail')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a customerEmail property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'comprehensionRating')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a comprehensionRating property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'friendlinessRating')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a friendlinessRating property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'teachingStyleRating')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a teachingStyleRating property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'text')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a text property'
-    });
+    if (!verificationResult.ifValid) {
+        return res.status(400).json(verificationResult.message);
+    }
 
     let overallRating = Math.round((req.body.comprehensionRating + req.body.friendlinessRating + req.body.teachingStyleRating)/3);
 
@@ -229,6 +179,64 @@ const updateReview = (req, res) => {
         });
     })
 
+};
+
+const verifyReviewBody = (req) =>{
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) {
+        return {
+            ifValid: false,
+            message: {
+                error: 'Bad Request',
+                message:
+                    'The request body must contain a tutorEmail property'
+            }
+        };
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'comprehensionRating')) {
+        return {
+            ifValid: false,
+            message: {
+                error: 'Bad Request',
+                message: 'The request body must contain a comprehensionRating property'
+            }
+        };
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'friendlinessRating')) {
+        return {
+            ifValid: false,
+            message: {
+                error: 'Bad Request',
+                message: 'The request body must contain a friendlinessRating property'
+            }
+        };
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'teachingStyleRating')) {
+        return {
+            ifValid: false,
+            message: {
+                error: 'Bad Request',
+                message: 'The request body must contain a teachingStyleRating property'
+            }
+        };
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'text')) {
+        return {
+            ifValid: false,
+            message: {
+                error: 'Bad Request',
+                message: 'The request body must contain a text property'
+            }
+        };
+    }
+
+    return {
+        ifValid: true
+    }
 };
 
 const updateReviewForTutor = (email, reviewId) => {
