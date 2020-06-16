@@ -33,7 +33,7 @@ class TutorPersonalPage extends React.Component {
             rating: 4,
             comment: 'Jerry is a professional and understanding tutor, she always wait for her lessons with interest and invariably makes progress',
             avatar: FindMyTutor
-        }]
+        }];
 
         return reviews.map(r => {
             return (
@@ -66,7 +66,7 @@ class TutorPersonalPage extends React.Component {
                 </Card>
             )
         })
-    }
+    };
 
     renderCourses = () => {
         // TODO: remove manual added courses
@@ -93,13 +93,13 @@ class TutorPersonalPage extends React.Component {
                     {c}
                 </Button>)
         })
-    }
+    };
 
     changeSelectedCourse = (selectedCourse) => {
         this.setState({
             selectedCourse
         })
-    }
+    };
 
 
     render() {
