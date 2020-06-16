@@ -75,7 +75,7 @@ paths:
   /user/createTutorial:
     summary: To create a new tutorial.
     description: Only valid user can use this backend service
-    put:
+    post:
       tags:
         - tutorial
       parameters:
