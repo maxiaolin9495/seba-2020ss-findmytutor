@@ -2,11 +2,12 @@ import React from "react";
 import {withRouter} from "react-router-dom";
 import DatePicker from "react-datepicker";
 import '../../css/react-datepicker.css';
-import EditProfileService from "../../Services/EditProfileService";
 import PaymentDialog from "../PaymentDialog";
 import {toast} from "react-toastify";
 import TutorPageService from "../../Services/TutorPageService";
 import TutorialService from "../../Services/TutorialService";
+import {TextIconSpacing} from "@react-md/icon";
+import {AccessAlarmFontIcon} from "@react-md/material-icons";
 
 const stylePicker = {
     display: "contents",
@@ -32,7 +33,7 @@ class BookingCalendar extends React.Component {
     }
 
     componentDidMount() {
-
+        //get initial available times
         let initials = [];
         TutorPageService.getTutorProfileById(this.props.match.params.id).then((data) => {
             this.setState({price: data.price});
@@ -44,6 +45,7 @@ class BookingCalendar extends React.Component {
                 })
             });
             this.setState({initialTimes: initials});
+            //get booked times
             let bookedTimes = [];
             TutorialService.getAllTutorials(this.props.match.params.id).then((bookings) => {
                 bookings.map((data) => {
@@ -72,7 +74,7 @@ class BookingCalendar extends React.Component {
         return arr;
     };
 
-    //get all time slots in time arr
+    //get all time slots in time array
     availableTimes = (initials) => {
         let arr = [];
         initials.forEach((data) => {
@@ -195,9 +197,15 @@ class BookingCalendar extends React.Component {
                         timeFormat="HH:mm"
 
                     />
+
                 </div>
-                <div style={{display: "flex"}}>
-                    <p>Selected time:{this.getTime(this.state.selectedStart)}</p>
+
+                <div style={{display: "flex", alignItems: "center"}}>
+
+                    <TextIconSpacing icon={<AccessAlarmFontIcon style={{opacity: 0.6}}/>}> Selected
+                        time </TextIconSpacing>
+
+                    <p> {this.getTime(this.state.selectedStart)}</p>
                     <p> - {this.getTime(this.state.selectedEnd)}</p>
                 </div>
                 <PaymentDialog totalPrice={this.state.totalPrice}

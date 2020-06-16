@@ -285,7 +285,7 @@
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
     list-style: none;
     margin: 0;
-    height: calc(195px + (1.7rem / 2));
+    height: 184px;
     overflow-y: scroll;
     padding-right: 0px;
     padding-left: 0px;
