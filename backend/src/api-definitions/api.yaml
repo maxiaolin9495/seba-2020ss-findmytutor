@@ -214,7 +214,7 @@ paths:
   /customer/createReview:
     summary: To create a new review.
     description: Only valid user can use this backend service
-    put:
+    post:
       tags:
       - review
       parameters:
