@@ -173,7 +173,7 @@ const getTutorialsForTutor = (req, res) => {
         })
         .catch(error => {
             console.log('internal server error by searching');
-            return req.status(400).json({ error: error.message })
+            return res.status(400).json({ error: error.message })
         })
 };
 
@@ -181,10 +181,85 @@ const getReviews = (req, res) => {
 
 };
 
+const searchTutor = (req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
+        return res.status(200).json({
+            error: 'Bad Request',
+            message: 'The request query must contain a q property'
+        });
+    if (!req.query.q)
+        return res.status(200).json({});
+    const queryString = req.query.q;
+    const pattern = new RegExp(`${queryString}`, 'i'); // Regex find all value match the query string starting from the first position
+    const l = queryString.length;
+    // const filteredData = await 
+    tutorModel.find(
+        { $or: [{ 'firstName': pattern }, { 'lastName': pattern }, { 'courses': pattern }] }
+    ).then(tutors => {
+        return res.status(200).json(tutors);
+    }).catch(error => {
+        console.log('internal server error by searching');
+        return res.status(400).json({
+            error: 'Internal Server Error',
+            message: 'Error in search function: ' + error.message
+        });
+    })
+};
+
+const autoCompleteForSearch = async (req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
+        return res.status(200).json({
+            error: 'Bad Request',
+            message: 'The request query must contain a q property'
+        });
+    if (!req.query.q)
+        return res.status(200).json({});
+    const queryString = req.query.q;
+    const pattern = new RegExp(`${queryString}`, 'i');
+    const length = queryString.length;
+    let filteredCourses = [];
+    // TODO: Combine two queries to one
+    try {
+        const courses = await tutorModel.distinct('courses');
+        const tutorNames = await tutorModel.find(
+            { $or: [{ 'firstName': pattern }, { 'lastName': pattern }] },
+            { firstName: true, lastName: true, _id: false }
+        );
+        filteredCourses = courses.reduce((matches, c) => {
+            if (pattern.test(c)) {
+                // let pos = 1;
+                // matches.push({
+                //     label: [
+                //         <span key="bold" className="md-font-bold">{c.substring(0, l)}</span>,
+                //         c.substring(length),
+                //     ],
+                //     value: c,
+                // });
+                matches.push(c);
+            }
+            return matches;
+        }, []);
+        filteredTutorName = filteredTutorName = tutorNames.reduce((matches, tN) => {
+            const {firstName, lastName} = tN;
+            matches.push(firstName + ', ' + lastName);
+            return matches;
+        }, []);
+        return res.status(200).json([...filteredCourses, ...filteredTutorName]);
+    } catch (error) {
+        console.log('internal server error by auto complete function for searching');
+        return res.status(400).json({
+            error: 'Internal Server Error',
+            message: 'Error in auto complete function: ' + error.message
+        });
+    }
+}
+
 module.exports = {
     getTutorProfile,
     getTutorProfileById,
     uploadTutorProfile,
     getTutorialsForTutor,
-    confirmTutorial
+    confirmTutorial,
+    searchTutor,
+    autoCompleteForSearch,
 };

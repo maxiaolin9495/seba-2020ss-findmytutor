@@ -8,4 +8,6 @@ router.post('/uploadTutorProfile', middleWares.checkAuthentication, tutorControl
 router.post('/confirmTutorial', middleWares.checkAuthentication,tutorController.confirmTutorial);
 router.get('/tutorProfile', middleWares.checkAuthentication, tutorController.getTutorProfile);
 router.get('/tutorProfileById',tutorController.getTutorProfileById);
+router.get('/autoComplete', tutorController.autoCompleteForSearch);
+router.get('/search', tutorController.searchTutor);
 module.exports = router;
