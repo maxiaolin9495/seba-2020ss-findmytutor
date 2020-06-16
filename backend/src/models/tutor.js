@@ -12,13 +12,16 @@ const TutorSchema = new mongoose.Schema({
         required: true
     },
     firstName: {
-        type: String
+        type: String,
+        required: false
     },
     lastName: {
-        type: String
+        type: String,
+        required: false
     },
     university: {
-        type: String
+        type: String,
+        required: false
     },
     timeSlotIds: [{
         start: {
@@ -26,13 +29,16 @@ const TutorSchema = new mongoose.Schema({
         },
         end: {
             type: String
-        }
+        },
+        required: false
     }],
     bookedTutorialSessionIds: [{
-        type: [String]
+        type: [String],
+        required: false
     }],
     rating: {
-        type: Number
+        type: Number,
+        required: false
     },
     price: {
         type: String,
