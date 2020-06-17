@@ -4,7 +4,6 @@ import React from 'react';
 import { Avatar, Card, CardTitle, TextField, CardText, Media, MediaOverlay, Grid, Cell, Button, FontIcon } from 'react-md';
 import { withRouter } from 'react-router-dom'
 import StarRatingComponent from 'react-star-rating-component';
-import UserService from "../../Services/UserService";
 import FindMyTutor from '../../Images/logo.png';
 import BookingCalendar from "../Calendar/BookingCalendar";
 

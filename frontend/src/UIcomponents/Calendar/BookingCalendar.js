@@ -112,11 +112,14 @@ class BookingCalendar extends React.Component {
         });
         this.setState({selectedStart: value});
         let tmpDate = new Date();
+        tmpDate.setHours(0);
+        tmpDate.setMinutes(0);
         tmpDate.setDate(value.getDate());
         this.setState({selectedEnd: tmpDate});
         this.setState({initialTimesForSpecificDay: timeOnSpecificDay});
-        this.setState({bookingTimesForSpecificDay: bookingOnSpecificDay});
         this.setState({minDate: value});
+        this.setState({bookingTimesForSpecificDay: bookingOnSpecificDay});
+
 
     };
 
@@ -125,7 +128,8 @@ class BookingCalendar extends React.Component {
         let startTime = this.state.selectedStart.getHours();
         let endTime = value.getHours();
         if (endTime <= startTime) {
-            toast.error('Invalid time selected!')
+            toast.error('Invalid time selected!');
+            this.setState({selectedEnd: undefined});
         } else {
             let duration = endTime - startTime;
             this.setState({duration: duration});
@@ -189,6 +193,7 @@ class BookingCalendar extends React.Component {
                         excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay)}
                         isClearable
                         minDate={this.state.minDate}
+                        //   minTime={new Date()}
                         onChange={this.handleChangeEnd}
                         showTimeSelect
                         showTimeSelectOnly
@@ -199,14 +204,19 @@ class BookingCalendar extends React.Component {
                     />
 
                 </div>
-
                 <div style={{display: "flex", alignItems: "center"}}>
-
                     <TextIconSpacing icon={<AccessAlarmFontIcon style={{opacity: 0.6}}/>}> Selected
-                        time </TextIconSpacing>
-
-                    <p> {this.getTime(this.state.selectedStart)}</p>
-                    <p> - {this.getTime(this.state.selectedEnd)}</p>
+                        time: </TextIconSpacing>
+                    <p style={{
+                        verticalAlign: "baseline",
+                        marginTop: 12,
+                        marginLeft: 5
+                    }}> {this.getTime(this.state.selectedStart)}</p>
+                    <p style={{
+                        verticalAlign: "baseline",
+                        marginTop: 12,
+                        marginLeft: 5
+                    }}> - {this.getTime(this.state.selectedEnd)}</p>
                 </div>
                 <PaymentDialog totalPrice={this.state.totalPrice}
                                duration={this.state.duration}
