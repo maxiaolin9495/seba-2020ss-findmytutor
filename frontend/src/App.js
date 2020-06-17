@@ -5,6 +5,7 @@ import {HashRouter as Router, Route, Switch} from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {SearchPageView} from "./ViewController/SearchPageView";
+import {SearchResultView} from "./ViewController/SearchResultView";
 import {LoginView} from "./ViewController/LoginView";
 // import {ProjectView} from "./ViewController/ProjectView";
 import {RegisterView} from "./ViewController/RegisterView";
@@ -20,6 +21,7 @@ export default class App extends React.Component {
             title: 'FindMyTutor',
             routes: [
                 {component: SearchPageView, path: '/', exact: true},
+                {component: SearchResultView, path: '/searchresult', exact: true},
                 {component: LoginView, path: '/login', exact: true},
                 // {component: ProjectView, path: '/projects', exact: true},
                 {component: RegisterView, path: '/register', exact: true},
