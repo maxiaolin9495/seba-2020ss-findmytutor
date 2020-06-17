@@ -177,6 +177,10 @@ const getTutorialsForTutor = (req, res) => {
         })
 };
 
+const getReviews = (req, res) => {
+
+};
+
 module.exports = {
     getTutorProfile,
     getTutorProfileById,

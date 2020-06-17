@@ -25,6 +25,10 @@ const CustomerSchema = new mongoose.Schema({
     },
     bookedTutorialSessionIds: [{
         type: [String]
+    }],
+    reviewIds: [{
+        type: [String],
+        required: false
     }]
 });
 
