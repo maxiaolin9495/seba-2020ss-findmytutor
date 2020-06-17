@@ -77,6 +77,7 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
 };
 
 const findUser = (req, res, dataModel) => {
+
     dataModel.findOne({ email: req.body.email }).exec()//customerModel schema
         .then(user => {//user object
             // check if the password is valid
@@ -187,7 +188,9 @@ const createTutorial = (req, res) => {
             bookedTime: req.body.bookedTime,
             price: req.body.price,
             tutorialStatus: 'notConfirmed',
-            transactionStatus: 'transferred'
+            transactionStatus: 'transferred',
+            startTime:req.body.startTime,
+            endTime:req.body.endTime
         });
         tutorialModel.create(tutorial).then(tutorial => {
             let tutorialId = tutorial._id;
@@ -203,7 +206,9 @@ const createTutorial = (req, res) => {
                         bookedTime: req.body.bookedTime,
                         price: req.body.price,
                         tutorialStatus: 'notConfirmed',
-                        transactionStatus: 'transferred'
+                        transactionStatus: 'transferred',
+                        startTime:req.body.startTime,
+                        endTime:req.body.endTime
                     });
                 }
             }

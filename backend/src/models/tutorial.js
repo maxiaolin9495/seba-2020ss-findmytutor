@@ -31,6 +31,14 @@ const TutorialSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['transferred', 'cancelled', 'paid'],
+    },
+    startTime:{
+        type: String,
+        required: true,
+    },
+    endTime:{
+        type: String,
+        required: true,
     }
 });
 
