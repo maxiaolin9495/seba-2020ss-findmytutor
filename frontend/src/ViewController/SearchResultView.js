@@ -1,4 +1,4 @@
 import React from 'react';
-import SearchResultPage from '../UIcomponents/Search/SearchResultPage';
+import SearchResultPage from '../UIcomponents/search/SearchResultPage';
 import Background from '../Images/searchresultbg.jpg';
-import Navigation from '../UIcomponents/PageDesign/Navigation.js';
+import Navigation from '../UIcomponents/pageDesign/Navigation.js';
