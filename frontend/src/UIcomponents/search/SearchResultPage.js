@@ -6,11 +6,11 @@ export const history = createHashHistory();
 
 const universities = {
     university: [],
-}
+};
 
 const prices = {
     Price: []
-}
+};
 
 class SearchResultPage extends Component {
 

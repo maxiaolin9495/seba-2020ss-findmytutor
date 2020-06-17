@@ -52,7 +52,6 @@ class ContactUs extends React.Component {
                     />
                     <TextField
                         id="message"
-                        placeholder="Body"
                         block
                         rows={4}
                         paddedBlock

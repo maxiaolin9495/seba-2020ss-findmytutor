@@ -21,7 +21,7 @@ export class SearchPageView extends React.Component {
             return;
         }
         this.props.history.push(`/searchresult?query=${this.state.searchValue}`)
-    }
+    };
 
     render() {
         return (

@@ -13,7 +13,7 @@ const stylePicker = {
     display: "contents",
     marginTop: 50,
     marginLeft: 50
-}
+};
 
 class BookingCalendar extends React.Component {
     constructor(props) {
