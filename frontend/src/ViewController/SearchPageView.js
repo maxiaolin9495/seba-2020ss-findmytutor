@@ -4,7 +4,6 @@ import React from 'react';
 import Background from '../Images/Homepage.jpg';//https://www.umc.edu/Research/Centers-and-Institutes/Centers/Center-for-Informatics-and-Analytics/Center-for-Informatics-and-Analytics-Home.html
 import SearchBarComponent from "../UIcomponents/search/SearchBarComponent";
 import '../css/bg.css';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
 import {Button} from 'react-md';
 
 export class SearchPageView extends React.Component {
@@ -16,8 +15,8 @@ export class SearchPageView extends React.Component {
         }
     }
 
-    searchBySearchBar =() =>{
-        if(this.state.searchValue === 'city') {
+    searchBySearchBar = () => {
+        if (this.state.searchValue === 'city') {
             alert('Please input a city name');
             return;
         }
@@ -25,13 +24,12 @@ export class SearchPageView extends React.Component {
     }
 
     render() {
-        return <div>
-            <Navigation />
+        return (
             <section>
-                <div style={{ marginTop: '20%', position: 'relative', marginLeft: '35%' }}>
-                    <div className="md-grid" style={{ verticalAlign: 'bottom' }}>
+                <div style={{marginTop: '20%', position: 'relative', marginLeft: '35%'}}>
+                    <div className="md-grid" style={{verticalAlign: 'bottom'}}>
 
-                        {<SearchBarComponent />}
+                        {<SearchBarComponent/>}
                         <Button raised primary swapTheming style={{
                             height: '53.63px',
                             fontSize: '15px',
@@ -42,12 +40,11 @@ export class SearchPageView extends React.Component {
                         >Search</Button>
                     </div>
                 </div>
-                <img src={Background} alt={"A Background Picture"} className="bg" />
-
+                <img src={Background} alt={"A Background Picture"} className="bg"/>
 
 
             </section>
-        </div>
+        )
     }
 
 }

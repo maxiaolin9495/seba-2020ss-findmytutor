@@ -7,11 +7,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import {SearchPageView} from "./ViewController/SearchPageView";
 import {SearchResultView} from "./ViewController/SearchResultView";
 import {LoginView} from "./ViewController/LoginView";
-// import {ProjectView} from "./ViewController/ProjectView";
 import {RegisterView} from "./ViewController/RegisterView";
 import {AboutUsView} from "./ViewController/AboutUsView";
+import {ContactUsView} from "./ViewController/ContactUsView";
 import { EditProfileView } from "./ViewController/EditProfileView";
 import { TutorPageView } from "./ViewController/TutorPageView";
+import Navigation from "./UIcomponents/pageDesign/Navigation";
 
 export default class App extends React.Component {
 
@@ -23,9 +24,9 @@ export default class App extends React.Component {
                 {component: SearchPageView, path: '/', exact: true},
                 {component: SearchResultView, path: '/searchresult', exact: true},
                 {component: LoginView, path: '/login', exact: true},
-                // {component: ProjectView, path: '/projects', exact: true},
                 {component: RegisterView, path: '/register', exact: true},
                 {component: AboutUsView, path: '/about-us', exact: true},
+                {component: ContactUsView, path: '/contact-us', exact: true},
                 {component: EditProfileView, path: '/me', exact: true},
                 {component: TutorPageView, path: '/tutor/:id'}
             ]
@@ -41,7 +42,10 @@ export default class App extends React.Component {
             <div>
                 <Router>
                     <Switch>
-                        {this.state.routes.map((route, i) => (<Route key={i} {...route}/>))}
+                        <div>
+                            <Navigation/>
+                            {this.state.routes.map((route, i) => (<Route key={i} {...route}/>))}
+                        </div>
                     </Switch>
                 </Router>
                 <ToastContainer
@@ -54,7 +58,7 @@ export default class App extends React.Component {
                     pauseOnFocusLoss
                     draggable
                     pauseOnHover
-            />
+                />
             </div>
         );
     }

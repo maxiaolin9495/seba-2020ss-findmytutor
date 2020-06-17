@@ -2,7 +2,7 @@ import React from "react";
 import {withRouter} from "react-router-dom";
 import AvailableTimes from "react-available-times";
 import EditProfileService from "../../Services/EditProfileService";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 
 class TutorCalendar extends React.Component {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {TextField, Button, CardTitle, SelectField} from 'react-md';
 import {withRouter} from "react-router-dom";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 const USER_TYPE = ['customer', 'tutor'];
 

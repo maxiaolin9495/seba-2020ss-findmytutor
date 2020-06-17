@@ -51,7 +51,7 @@ const defaultNavItems = [
         label: 'About us',
         to: '/about-us',
         icon: 'book'
-    },
+    }
 ];
 
 const logInNavItemsCustomer = [
@@ -76,6 +76,11 @@ const logInNavItemsCustomer = [
         to: '/about-us',
         icon: 'book'
     },
+    {
+        label: 'Contact us',
+        to: '/contact-us',
+        icon: 'send'
+    }
 ];
 
 const logInNavItemsTutor = [
@@ -100,6 +105,11 @@ const logInNavItemsTutor = [
         to: '/about-us',
         icon: 'book'
     },
+    {
+        label: 'Contact us',
+        to: '/contact-us',
+        icon: 'send'
+    }
    
 ];
 
@@ -148,7 +158,6 @@ class NavigationMenu extends React.Component {
         return (
             <div className={this.props.className}>
                 <NavigationDrawer
-                    focusOnMount={false}
                     style={NavigationMenuStyle}
                     desktopDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY}
                     className="NavigationMenuStyle"

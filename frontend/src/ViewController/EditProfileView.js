@@ -3,7 +3,6 @@
 import React from 'react';
 
 import EditProfile from './../UIcomponents/pageDesign/EditProfile';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
 import Background from '../Images/Homepage.jpg';
 
 import UserService from '../Services/UserService';
@@ -93,12 +92,11 @@ export class EditProfileView extends React.Component {
         }
 
         return (
-            <div>
-                <Navigation />
-                <section>
-                    <img src={Background} alt={"A Background Picture"} className="bg" />
-                    <EditProfile userType={this.state.userType} userProfile={this.state.userProfile} onSubmit={(userProfile) => this.updateProfile(userProfile)} error={this.state.error} />
-                </section>
-            </div>);
+            <section>
+                <img src={Background} alt={"A Background Picture"} className="bg"/>
+                <EditProfile userType={this.state.userType} userProfile={this.state.userProfile}
+                             onSubmit={(userProfile) => this.updateProfile(userProfile)} error={this.state.error}/>
+            </section>
+        )
     }
 }
