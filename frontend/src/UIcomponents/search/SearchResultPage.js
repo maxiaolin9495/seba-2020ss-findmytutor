@@ -1,26 +1,49 @@
-import React, {Component} from 'react';
-import {Checkbox, Button, Divider, TextField} from 'react-md';
+import React, { Component } from 'react';
+import { Checkbox, Button, Divider, TextField } from 'react-md';
 import { createHashHistory } from 'history'
-import {withRouter} from "react-router-dom";
-export const history = createHashHistory();
+import { withRouter } from "react-router-dom";
+import SearchResultCard from "./SearchResultCard";
+// export const history = createHashHistory();
 
-const universities = {
-    university: [],
-}
+// const universities = {
+//     university: [],
+// }
 
-const prices = {
-    Price: []
-}
+// const prices = {
+//     Price: []
+// }
+
 
 class SearchResultPage extends Component {
-
-    searchBySearchBar =() =>{
-        if(this.state.searchValue === '') {
-            alert('Please input a city name');
-            return;
+    constructor(props) {
+        super(props);
+        this.state = {
+            cards:[]
         }
-        this.props.history.push(`/searchresult?query=${this.state.searchValue}`);
-        window.location.reload();
+    }
+    componentWillReceiveProps(props) {
+        this.setState({
+            cards: props.filteredData.map(d => {
+                console.log(d);
+                return(<SearchResultCard
+                    key={d.id}
+                    tutor={d} />)
+            })
+        })
+    }
+    renderCards = () => {
+        this.props.data.map(d => {
+            return (<SearchResultCard
+                key={d.id}
+                tutor={d} />
+            )
+        })
+    }
+
+    render() {
+        return (<div>
+            {this.state.cards}
+        </div>);
     }
 }
 
