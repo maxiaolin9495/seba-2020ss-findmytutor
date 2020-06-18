@@ -227,7 +227,7 @@ class EditProfile extends React.Component {
                                 type="text"
                                 className="md-row"
                                 required={true}
-                                rows={2}
+                                rows={1}
                                 value={this.state.description}
                                 onChange={value => this.handleChangeDescription(value)}
                                 placeholder="Write some text to describe yourself"
