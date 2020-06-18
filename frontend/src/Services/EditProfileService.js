@@ -31,7 +31,7 @@ export default class EditProfileService {
                     resolve(data);
                 }
                 else {
-                    reject('Error while retrieving movie');
+                    reject('Error while retrieving customer profile');
                 }
             }, function (textStatus) {
                 reject(textStatus);
@@ -61,7 +61,7 @@ export default class EditProfileService {
                     resolve(data);
                 }
                 else {
-                    reject('Error while retrieving movie');
+                    reject('Error while retrieving tutor profile');
                 }
             }, function (textStatus) {
                 reject(textStatus);

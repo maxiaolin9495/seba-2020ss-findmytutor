@@ -110,10 +110,10 @@ class SearchResultCard extends Component {
                             fontSize: '22px',
                             fontFamily: 'San Francisco'
                         }} onClick={() => {
-                            this.props.history.push(`/tutor/${this.props.tutor.id}`);
+                            this.props.history.push(`/tutor/${this.props.tutor._id}`);
                             window.location.reload()
                             setTimeout(() => window.scrollTo(0, 0), 150);
-                        }}>Select</Button>
+                        }}>Book</Button>
                     </div>
                 </div>
             </div>

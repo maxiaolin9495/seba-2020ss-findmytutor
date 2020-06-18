@@ -1,87 +1,60 @@
-// *https://www.registers.service.gov.uk/registers/country/use-the-api*
-import fetch from 'cross-fetch';
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Autocomplete, Button } from 'react-md';
+import SearchService from "../../Services/SearchService";
+import { withRouter } from 'react-router-dom'
+import { toast } from 'react-toastify';
+class SearchBarComponent extends React.Component {
 
-
-
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
-
-export default function Asynchronous() {
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState([]);
-  const loading = open && options.length === 0;
-
-  React.useEffect(() => {
-    let active = true;
-
-    if (!loading) {
-      return undefined;
+    constructor(props) {
+        super(props);
+        this.state = {
+            filterType: Autocomplete.fuzzyFilter,
+            data: [],
+            searchValue: ""
+        }
+    }
+    componentDidMount() {
+        SearchService.getAllTutorsAndCourses().then((data) => {
+            console.log(data)
+            this.setState({
+                data: [...data]
+            });
+        }).catch((e) => {
+            console.error(e);
+        });
     }
 
-    (async () => {
-      const response = await fetch('https://country.register.gov.uk/records.json?page-size=5000');
-      await sleep(1e3); // For demo purposes.
-      const countries = await response.json();
-
-      if (active) {
-        setOptions(Object.keys(countries).map((key) => countries[key].item[0]));
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [loading]);
-
-  React.useEffect(() => {
-    if (!open) {
-      setOptions([]);
+    searchBySearchBar =() =>{
+        if(this.state.searchValue === '') {
+            toast.error('Please input a tutor or course name');
+            return;
+        }
+        this.props.history.push(`/searchResult?query=${this.state.searchValue}`)
     }
-  }, [open]);
+    render() {
+        const { filterType } = this.state;
 
-  return (
-
-    <Autocomplete
-    className="md-cell"
-      id="asynchronous-demo"
-      style={{ width: 600,
-         background: 'white' }}
-      open={open}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      onClose={() => {
-        setOpen(false);
-      }}
-      onInputChange={(value) => this.setState({searchValue: value})}
-      getOptionSelected={(option, value) => option.name === value.name}
-      getOptionLabel={(option) => option.name}
-      options={options}
-      loading={loading}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Tutor or Course name"
-          variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <React.Fragment>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                {params.InputProps.endAdornment}
-              </React.Fragment>
-            ),
-          }}
-        />
-      )}
-    />
-    
-  );
+        return (
+            <div className="md-grid " style={{background:'white', opacity:'90%',marginLeft:'300px'}}>
+                <Autocomplete style={{width:'300px'}}
+                    onChange
+                    id="search-bar"
+                    label="Search Tutor or Course Name"
+                    placeholder="SEBA"
+                    data={this.state.data}
+                    onAutocomplete={(value) => this.setState({searchValue: value})}
+                    onChange={(value) => this.setState({searchValue: value})}
+                    filter={this.state.filterType}
+                />
+                <Button raised primary  style={{
+                            height: '53.63px',
+                            fontSize: '15px',
+                            color: 'white',
+                            marginTop: '8px'
+                        }} onClick={() => this.searchBySearchBar()}
+                        >Search</Button>
+            </div>
+        );
+    }
 }
+export default withRouter(SearchBarComponent);

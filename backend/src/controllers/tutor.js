@@ -212,8 +212,8 @@ const autoCompleteForSearch = async (req, res) => {
             error: 'Bad Request',
             message: 'The request query must contain a q property'
         });
-    if (!req.query.q)
-        return res.status(200).json({});
+    // if (!req.query.q)
+    //     return res.status(200).json({});
     const queryString = req.query.q;
     const pattern = new RegExp(`${queryString}`, 'i');
     const length = queryString.length;

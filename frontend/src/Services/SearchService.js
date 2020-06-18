@@ -13,7 +13,21 @@ export default class SearchService {
                     resolve(data);
                 }
                 else {
-                    reject('Error while retrieving movie');
+                    reject('Error while retrieving tutors');
+                }
+            }, function (textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+    static getAllTutorsAndCourses() {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${this.baseURL()}/tutor/autoComplete?` + new URLSearchParams({q:''}).toString(), function (data) {
+                if (data !== undefined || Object.keys(data).length !== 0) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving tutors and courses');
                 }
             }, function (textStatus) {
                 reject(textStatus);

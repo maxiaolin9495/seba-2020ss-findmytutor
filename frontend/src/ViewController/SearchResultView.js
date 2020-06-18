@@ -16,11 +16,12 @@ export class SearchResultView extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.setState({
             loading: true
         });
-        SearchService.getTutorsByKeyword("info").then((data) => {
+        console.log(this.props)
+        SearchService.getTutorsByKeyword(this.props.location.search.split('=')[1]).then((data) => {
             this.setState({
                 data: [...data],
                 filteredData: [...data],

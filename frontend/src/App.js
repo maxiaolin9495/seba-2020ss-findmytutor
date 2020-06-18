@@ -21,7 +21,7 @@ export default class App extends React.Component {
             title: 'FindMyTutor',
             routes: [
                 {component: SearchPageView, path: '/', exact: true},
-                {component: SearchResultView, path: '/searchresult', exact: true},
+                {component: SearchResultView, path: '/searchResult', exact: true},
                 {component: LoginView, path: '/login', exact: true},
                 // {component: ProjectView, path: '/projects', exact: true},
                 {component: RegisterView, path: '/register', exact: true},
