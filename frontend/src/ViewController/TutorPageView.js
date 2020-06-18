@@ -15,7 +15,7 @@ export class TutorPageView extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.setState({
             loading: true
         });

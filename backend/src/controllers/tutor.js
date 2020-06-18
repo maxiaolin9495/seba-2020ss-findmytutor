@@ -1,6 +1,7 @@
 const tutorialModel = require('../models/tutorial');
 const tutorModel = require('../models/tutor');
 const emailService = require('../services/emailService');
+const tutor = require('../models/tutor');
 
 const getTutorProfile = (req, res) => {
     if (req.userType === 'tutor') {
@@ -189,21 +190,37 @@ const searchTutor = (req, res) => {
         });
     if (!req.query.q)
         return res.status(200).json({});
-    const queryString = req.query.q;
-    const pattern = new RegExp(`${queryString}`, 'i'); // Regex find all value match the query string starting from the first position
-    const l = queryString.length;
-    // const filteredData = await 
-    tutorModel.find(
-        { $or: [{ 'firstName': pattern }, { 'lastName': pattern }, { 'courses': pattern }] }
-    ).then(tutors => {
-        return res.status(200).json(tutors);
-    }).catch(error => {
-        console.log('internal server error by searching');
-        return res.status(400).json({
-            error: 'Internal Server Error',
-            message: 'Error in search function: ' + error.message
-        });
-    })
+    if (decodeURI(req.query.q).includes(',')) {
+        // Find tutor
+        const [lastName, firstName] = decodeURI(req.query.q).split(/[ ,]+/);
+        tutorModel.find(
+            { $and: [{ 'firstName': firstName }, { 'lastName': lastName }] }
+        ).then(tutors => {
+            return res.status(200).json(tutors);
+        }).catch(error => {
+            console.log('internal server error by searching');
+            return res.status(400).json({
+                error: 'Internal Server Error',
+                message: 'Error in search function: ' + error.message
+            });
+        })
+    } else {
+        const queryString = req.query.q;
+        const pattern = new RegExp(`${queryString}`, 'i'); // Regex find all value match the query string starting from the first position
+        const l = queryString.length;
+        // const filteredData = await 
+        tutorModel.find(
+            { $or: [{ 'firstName': pattern }, { 'lastName': pattern }, { 'courses': pattern }] }
+        ).then(tutors => {
+            return res.status(200).json(tutors);
+        }).catch(error => {
+            console.log('internal server error by searching');
+            return res.status(400).json({
+                error: 'Internal Server Error',
+                message: 'Error in search function: ' + error.message
+            });
+        })
+    }
 };
 
 const autoCompleteForSearch = async (req, res) => {
@@ -240,8 +257,8 @@ const autoCompleteForSearch = async (req, res) => {
             return matches;
         }, []);
         filteredTutorName = filteredTutorName = tutorNames.reduce((matches, tN) => {
-            const {firstName, lastName} = tN;
-            matches.push(firstName + ', ' + lastName);
+            const { firstName, lastName } = tN;
+            matches.push(lastName + ', ' + firstName);
             return matches;
         }, []);
         return res.status(200).json([...filteredCourses, ...filteredTutorName]);
