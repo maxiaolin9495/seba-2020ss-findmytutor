@@ -15,7 +15,7 @@ class SearchBarComponent extends React.Component {
     }
     componentDidMount() {
         SearchService.getAllTutorsAndCourses().then((data) => {
-            console.log(data)
+            console.log(data);
             this.setState({
                 data: [...data]
             });
@@ -30,14 +30,13 @@ class SearchBarComponent extends React.Component {
             return;
         }
         this.props.history.push(`/searchResult?query=${this.state.searchValue}`)
-    }
+    };
     render() {
         const { filterType } = this.state;
 
         return (
             <div className="md-grid " style={{background:'white', opacity:'90%',marginLeft:'300px'}}>
                 <Autocomplete style={{width:'300px'}}
-                    onChange
                     id="search-bar"
                     label="Search Tutor or Course Name"
                     placeholder="SEBA"
