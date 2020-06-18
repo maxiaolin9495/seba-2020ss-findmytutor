@@ -228,6 +228,11 @@ const createTutorial = (req, res) => {
             }
         });
        
+    }else{
+        return res.status(401).json({
+            error: 'Unauthorized',
+            message: 'The request body must contain a tutorFirstName property'
+        });
     }
 };
 
