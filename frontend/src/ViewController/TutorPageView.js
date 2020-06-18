@@ -3,6 +3,7 @@ import TutorPageService from "../Services/TutorPageService";
 import TutorPersonalPage from '../UIcomponents/search/TutorPersonalPage';
 import { toast } from "react-toastify";
 import Background from '../Images/Homepage.jpg';
+import Navigation from "../UIcomponents/pageDesign/Navigation";
 
 export class TutorPageView extends React.Component {
 
@@ -42,13 +43,16 @@ export class TutorPageView extends React.Component {
             return <h2>Loading</h2>
         }
         return (
-            <section>
-                <img src={Background} alt={"A Background Picture"} className="bg"/>
-                <TutorPersonalPage
-                    loading={this.state.loading}
-                    tutor={this.state.tutor}
-                    reviews={this.state.reviews}/>
-            </section>
+            <div>
+                <Navigation/>
+                <section>
+                    <img src={Background} alt={"A Background Picture"} className="bg"/>
+                    <TutorPersonalPage
+                        loading={this.state.loading}
+                        tutor={this.state.tutor}
+                        reviews={this.state.reviews}/>
+                </section>
+            </div>
         );
     }
 }

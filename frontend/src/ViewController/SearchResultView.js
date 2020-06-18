@@ -2,6 +2,7 @@ import React from 'react';
 import SearchResultPage from '../UIcomponents/search/SearchResultPage';
 import Background from '../Images/searchresultbg.jpg';
 import SearchService from "../Services/SearchService.js"
+import Navigation from "../UIcomponents/pageDesign/Navigation";
 
 export class SearchResultView extends React.Component {
 
@@ -37,6 +38,7 @@ export class SearchResultView extends React.Component {
         //}
         return (
             <div>
+                <Navigation/>
                 <img src={Background} className="bg"/>
                 <section>
                     <SearchResultPage

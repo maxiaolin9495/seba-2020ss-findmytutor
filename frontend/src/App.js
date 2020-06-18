@@ -42,10 +42,7 @@ export default class App extends React.Component {
             <div>
                 <Router>
                     <Switch>
-                        <div>
-                            <Navigation/>
-                            {this.state.routes.map((route, i) => (<Route key={i} {...route}/>))}
-                        </div>
+                        {this.state.routes.map((route, i) => (<Route key={i} {...route}/>))}
                     </Switch>
                 </Router>
                 <ToastContainer
