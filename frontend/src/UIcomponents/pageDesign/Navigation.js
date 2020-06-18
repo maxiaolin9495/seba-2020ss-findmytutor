@@ -151,7 +151,9 @@ class NavigationMenu extends React.Component {
 
     logout = () => {
         LoginService.logout();
-        this.props.history.push('/');
+        this.setState({navItems: LoginService.isAuthenticated() ? (UserService.getCurrentUser().userType === 'customer'? logInNavItemsCustomer : logInNavItemsTutor) :defaultNavItems}, ()=>{
+            this.props.history.push('/');
+        });
     };
 
     render() {
