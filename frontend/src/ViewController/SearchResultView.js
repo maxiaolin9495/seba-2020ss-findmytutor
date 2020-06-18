@@ -1,7 +1,6 @@
 import React from 'react';
 import SearchResultPage from '../UIcomponents/search/SearchResultPage';
 import Background from '../Images/searchresultbg.jpg';
-import Navigation from '../UIcomponents/pageDesign/Navigation.js';
 import SearchService from "../Services/SearchService.js"
 
 export class SearchResultView extends React.Component {
@@ -11,7 +10,7 @@ export class SearchResultView extends React.Component {
         this.state = {
             loading: false,
             data: [],
-            filteredData:[],
+            filteredData: [],
             error: undefined
         };
     }
@@ -33,18 +32,17 @@ export class SearchResultView extends React.Component {
     }
 
     render() {
-       // if (this.state.loading) {
-         //   return <h2>Loading</h2>
+        // if (this.state.loading) {
+        //   return <h2>Loading</h2>
         //}
         return (
             <div>
-                <Navigation />
                 <img src={Background} className="bg"/>
                 <section>
                     <SearchResultPage
-                    data={this.state.data}
-                    filteredData={this.state.filteredData}
-                    error={this.state.error}/>       
+                        data={this.state.data}
+                        filteredData={this.state.filteredData}
+                        error={this.state.error}/>
                 </section>
             </div>
         );

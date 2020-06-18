@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {withRouter} from "react-router-dom";
 import {DialogContainer, Button} from 'react-md';
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import TutorPageService from "../Services/TutorPageService";
 import TutorialService from "../Services/TutorialService";
 import UserService from "../Services/UserService";

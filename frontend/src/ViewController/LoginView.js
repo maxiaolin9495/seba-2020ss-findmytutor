@@ -1,5 +1,4 @@
 import React from "react";
-import Navigation from "../UIcomponents/pageDesign/Navigation";
 import Background from "../Images/Homepage.jpg";
 import LoginTab from "../UIcomponents/pageDesign/Login";
 import LoginService from "../Services/LoginService";
@@ -11,7 +10,7 @@ export class LoginView extends React.Component {
         this.state = {};
     }
 
-    login=(user) =>{
+    login = (user) => {
         LoginService.login(user.email, user.password, user.userType).then(() => {
             toast.success('Login succeeded');
             this.props.history.push('/');
@@ -25,16 +24,13 @@ export class LoginView extends React.Component {
         });
     };
 
-    render(){
-        setTimeout(() => window.scrollTo(0,0), 150);
+    render() {
+        setTimeout(() => window.scrollTo(0, 0), 150);
         return (
-            <div>
-                <Navigation/>
-                <section>
-                    <img src={Background} alt={"A Background Picture"} className="bg"/>
-                    <LoginTab  onSubmit={(user) => this.login(user)} error={this.state.error}/>
-                </section>
-            </div>
+            <section>
+                <img src={Background} alt={"A Background Picture"} className="bg"/>
+                <LoginTab onSubmit={(user) => this.login(user)} error={this.state.error}/>
+            </section>
 
         )
     }

@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom";
 import DatePicker from "react-datepicker";
 import '../../css/react-datepicker.css';
 import PaymentDialog from "../PaymentDialog";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import TutorPageService from "../../Services/TutorPageService";
 import TutorialService from "../../Services/TutorialService";
 import {TextIconSpacing} from "@react-md/icon";
@@ -13,7 +13,7 @@ const stylePicker = {
     display: "contents",
     marginTop: 50,
     marginLeft: 50
-}
+};
 
 class BookingCalendar extends React.Component {
     constructor(props) {

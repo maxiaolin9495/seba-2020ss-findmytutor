@@ -2,7 +2,7 @@ import React from "react";
 import {withRouter} from "react-router-dom";
 import AvailableTimes from "react-available-times";
 import EditProfileService from "../../Services/EditProfileService";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 
 class TutorCalendar extends React.Component {
@@ -18,13 +18,13 @@ class TutorCalendar extends React.Component {
     componentWillMount() {
         let tmp = [];
         EditProfileService.getTutorProfile().then((data) => {
-            console.log(data)
+            console.log(data);
             data.timeSlotIds.forEach((times) => {
                 tmp.push({
                     start: new Date(parseInt(times.start)),
                     end: new Date(parseInt(times.end))
                 })
-            })
+            });
             let result = this.verifySelectionsWithInvalidDate(tmp);
             this.setState({initialTimes: result.selections}, () => {
                 this.setState({timeSlots: this.createTimeSlots()})
@@ -69,10 +69,10 @@ class TutorCalendar extends React.Component {
             this.setState({timeSlots: <div/>}, () => {
                 this.setState({timeSlots: this.createTimeSlots()})
             })
-        })
+        });
         this.props.sendTimeSlots(arr);
 
-    }
+    };
 
 
     //calendar

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Checkbox, Button, Divider, TextField } from 'react-md';
-import { createHashHistory } from 'history'
 import { withRouter } from "react-router-dom";
 import SearchResultCard from "./SearchResultCard";
 // export const history = createHashHistory();
@@ -37,8 +35,8 @@ class SearchResultPage extends Component {
                 key={d.id}
                 tutor={d} />
             )
-        })
-    }
+        });
+    };
 
     render() {
         return (<div>

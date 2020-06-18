@@ -252,6 +252,7 @@ const updateRatingForTutor = (email) => {
     tutorModel.findOne({ email: email }).exec().then(
         tutor => {
             let reviewIds = tutor.reviewIds;
+            let sumOverallRating = 0;
             reviewModel.find().where('_id').in(reviewIds).exec().then(reviews => {
                 for ( let i = 0; i < reviews.length; i++){
                     sumOverallRating += reviews[i].overallRating;

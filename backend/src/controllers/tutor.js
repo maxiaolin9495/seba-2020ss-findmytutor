@@ -252,7 +252,7 @@ const autoCompleteForSearch = async (req, res) => {
             message: 'Error in auto complete function: ' + error.message
         });
     }
-}
+};
 
 module.exports = {
     getTutorProfile,

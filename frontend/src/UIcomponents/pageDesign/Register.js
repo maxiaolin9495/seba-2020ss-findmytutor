@@ -94,7 +94,7 @@ class RegisterTab extends React.Component {
     }
 
     isEmail = () => {
-        if (this.state.email.search(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) !== -1) {
+        if (this.state.email.search(/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+(([.\-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) !== -1) {
             return true;
         } else {
             document.getElementById('floating-center-email').value = "Please input valid Email Address";
