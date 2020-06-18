@@ -88,6 +88,15 @@ class LoginTab extends React.Component{
         })
     };
 
+    isEmail = () => {
+        if (this.state.email.search(/^\w+((-\w+)|(\.\w+))*@[A-Za-z0-9]+(([.\-])[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/) !== -1) {
+            return true;
+        } else {
+            document.getElementById('floating-center-email').value = "Please input valid Email Address";
+            document.getElementById('floating-center-email').focus();
+            return false;
+        }
+    };
 
     handleSubmit =(event) =>{
         if(event)
@@ -98,9 +107,14 @@ class LoginTab extends React.Component{
             return
         }
 
+        if (!this.isEmail()) {
+            return;
+        }
+
         if (this.state.password.length < 8 ){
             document.getElementById('floating-password').label = "Password length must larger than 8";
             document.getElementById('floating-password').value = "";
+            toast.error("Password length must larger than 8");
             return false;
         }
 
