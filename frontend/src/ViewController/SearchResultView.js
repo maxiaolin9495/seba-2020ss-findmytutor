@@ -19,7 +19,7 @@ export class SearchResultView extends React.Component {
         this.setState({
             loading: true
         });
-        console.log(this.props)
+        console.log(this.props);
         SearchService.getTutorsByKeyword(this.props.location.search.split('=')[1]).then((data) => {
             this.setState({
                 data: [...data],
