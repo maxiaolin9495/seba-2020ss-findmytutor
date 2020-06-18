@@ -3,6 +3,7 @@ import ContactUs from '../UIcomponents/pageDesign/ContactUs';
 import Background from "../Images/Homepage.jpg";
 import UserService from "../Services/UserService";
 import { toast } from 'react-toastify';
+import Navigation from "../UIcomponents/pageDesign/Navigation";
 
 export class ContactUsView extends React.Component {
     validateInputs = (email) => {
@@ -49,11 +50,13 @@ export class ContactUsView extends React.Component {
     render() {
         setTimeout(() => window.scrollTo(0, 0), 150);
         return (
-
-            <section>
-                <img src={Background} className="bg"/>
-                <ContactUs onSubmit={(contactForm) => this.send(contactForm)} error={this.state.error}/>
-            </section>
+            <div>
+                <Navigation/>
+                <section>
+                    <img src={Background} className="bg"/>
+                    <ContactUs onSubmit={(contactForm) => this.send(contactForm)} error={this.state.error}/>
+                </section>
+            </div>
         );
     }
 }
