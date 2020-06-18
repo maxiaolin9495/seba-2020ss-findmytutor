@@ -94,6 +94,7 @@ class LoginTab extends React.Component{
         } else {
             document.getElementById('floating-center-email').value = "Please input valid Email Address";
             document.getElementById('floating-center-email').focus();
+            toast.error("Please input valid Email Address");
             return false;
         }
     };
