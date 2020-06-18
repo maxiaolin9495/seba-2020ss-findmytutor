@@ -63,7 +63,7 @@ export class EditProfileView extends React.Component {
         if (this.state.userType === 'tutor') {
             EditProfileService.updateTutorProfile(userProfile).then((data) => {
                 toast.success('Update profile succeeded');
-                this.props.history.push('/');
+                // this.props.history.push('/');
             }).catch((e) => {
                 toast.error('Please input correct information');
                 this.setState({
@@ -73,7 +73,7 @@ export class EditProfileView extends React.Component {
         } else {
             EditProfileService.updateCustomerProfile(userProfile).then((data) => {
                 toast.success('Update profile succeeded');
-                this.props.history.push('/');
+                // this.props.history.push('/');
             }).catch((e) => {
                 toast.error('Please input correct information');
                 this.setState({

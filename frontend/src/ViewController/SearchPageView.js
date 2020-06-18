@@ -19,9 +19,9 @@ export class SearchPageView extends React.Component {
     render() {
         return (
             <section>
-                <div className="md-grid md-block-centered" style={{marginTop:"20%",marginLeft:"20%"}}>
+                <div className="md-grid" style={{ marginTop: "20%", marginLeft: "0%" }}>
 
-                        {<SearchBarComponent />}
+                    {<SearchBarComponent />}
 
                 </div>
                 <img src={Background} alt={"A Background Picture"} className="bg" />

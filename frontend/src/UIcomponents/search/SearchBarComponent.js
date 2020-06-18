@@ -35,7 +35,7 @@ class SearchBarComponent extends React.Component {
         const { filterType } = this.state;
 
         return (
-            <div className="md-grid " style={{background:'white', opacity:'90%',marginLeft:'300px'}}>
+            <div className="md-grid md-block-centered" style={{background:'white', opacity:'90%'}}>
                 <Autocomplete style={{width:'300px'}}
                     id="search-bar"
                     label="Search Tutor or Course Name"

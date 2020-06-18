@@ -1,5 +1,5 @@
 import React from 'react';
-import ContactUs from '../UIcomponents/PageDesign/ContactUs';
+import ContactUs from '../UIcomponents/pageDesign/ContactUs';
 import Background from "../Images/Homepage.jpg";
 import UserService from "../Services/UserService";
 import { toast } from 'react-toastify';
