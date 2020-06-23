@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { Checkbox, Button, Divider, TextField } from 'react-md';
+import { createHashHistory } from 'history'
+import SearchBarComponent  from "../search/SearchBarComponent";
 import { withRouter } from "react-router-dom";
 import SearchResultCard from "./SearchResultCard";
 import { MultiSelect } from '@progress/kendo-react-dropdowns';
@@ -13,6 +16,7 @@ import '@progress/kendo-theme-default/dist/all.css';
 // const prices = {
 //     Price: []
 // }
+const priceRange = ["€ 0 - 25", "€ 25 - 50", "€ 50 - 75", "€ 75 - 100"]
 
 class SearchResultPage extends Component {
     constructor(props) {
@@ -20,12 +24,27 @@ class SearchResultPage extends Component {
         this.state = {
             cards: [],
             value:[],
+            price:[],
             universities: []
         }
     }
     onChange = (event) => {
         this.setState({
             value: [ ...event.target.value ]
+        });
+        this.setState({
+            cards: this.props.filteredData.map(d => {
+                if (this.state.value !== [] && this.state.value.includes(d.university)){
+                return (<SearchResultCard
+                    key={d.id}
+                    tutor={d} />)}
+            })
+        })
+    }
+
+    onPriceChange = (event) => {
+        this.setState({
+            price: [ ...event.target.value ]
         });
     }
 
@@ -34,7 +53,6 @@ class SearchResultPage extends Component {
     componentWillReceiveProps(props) {
         this.setState({
             cards: props.filteredData.map(d => {
-                console.log(d);
                 return (<SearchResultCard
                     key={d.id}
                     tutor={d} />)
@@ -65,9 +83,9 @@ class SearchResultPage extends Component {
                 <div className="md-block-centered" style={{
                     flexDirection: 'row',
                     width: '70%',
-                    height: '300px',
+                    height: '150px',
                     background: 'white',
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    backgroundColor: 'rgba(255, 255, 255, 1.0)',
                     padding: '20px',
                     paddingBottom: '20px'
                 }}>
@@ -80,6 +98,15 @@ class SearchResultPage extends Component {
                         value={this.state.value}
                     />
                 </div>
+                <div>
+                    <div>Price:</div>
+                    <MultiSelect
+                        data={priceRange}
+                        onChange={this.onPriceChange}
+                        value={this.state.price}
+                    />
+                </div>
+                        
             </div>
                 </div>
                 
