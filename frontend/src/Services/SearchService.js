@@ -20,6 +20,8 @@ export default class SearchService {
             });
         });
     }
+
+
     static getAllTutorsAndCourses() {
         return new Promise((resolve, reject) => {
             HttpService.get(`${this.baseURL()}/tutor/autoComplete?` + new URLSearchParams({q:''}).toString(), function (data) {
