@@ -8,29 +8,19 @@ import { toast } from "react-toastify";
 class TutorCalendar extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            initialTimes: [],
-            timeSlots: <div/>
-        };
-    }
-
-//upload initial selected time slots
-    componentWillMount() {
         let tmp = [];
-        EditProfileService.getTutorProfile().then((data) => {
-            console.log(data);
-            data.timeSlotIds.forEach((times) => {
-                tmp.push({
-                    start: new Date(parseInt(times.start)),
-                    end: new Date(parseInt(times.end))
-                })
-            });
-            let result = this.verifySelectionsWithInvalidDate(tmp);
-            this.setState({initialTimes: result.selections}, () => {
-                this.setState({timeSlots: this.createTimeSlots()})
+        props.timeSlotIds.forEach((times) => {
+            tmp.push({
+                start: new Date(parseInt(times.start)),
+                end: new Date(parseInt(times.end))
             })
-
-        })
+        });
+        let result = this.verifySelectionsWithInvalidDate(tmp);
+        this.state = {
+            initialTimes: result.selections,
+            timeSlots: <div/>,
+            finalTimes: []
+        };
     }
 
     isDateBeforeToday = (date) => {
@@ -48,7 +38,6 @@ class TutorCalendar extends React.Component {
             } else {
                 tmpSelections[tmpSelections.length] = selections[i];
             }
-
         }
         return {selections: tmpSelections, valid: valid};
     };
@@ -65,38 +54,31 @@ class TutorCalendar extends React.Component {
                 end: data.end.getTime()
             })
         });
-        this.setState({initialTimes: selections}, () => {
-            this.setState({timeSlots: <div/>}, () => {
-                this.setState({timeSlots: this.createTimeSlots()})
-            })
+        this.setState({
+            initialTimes: selections
         });
         this.props.sendTimeSlots(arr);
-
     };
-
-
-    //calendar
-    createTimeSlots = () => <AvailableTimes
-        weekStartsOn="monday"
-        //save selected time slots
-        onChange={this.handleChange}
-        width={500}
-        height={600}
-        timeConvention="24h"
-        start={new Date()}
-        recurring={false}
-        initialSelections={
-            this.state.initialTimes
-        }
-        availableDays={['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']}
-        availableHourRange={{start: 6, end: 24}}
-    />;
 
 
     render() {
         return (
             <div>
-                {this.state.timeSlots}
+                <AvailableTimes
+                    weekStartsOn="monday"
+                    //save selected time slots
+                    onChange={this.handleChange}
+                    width={500}
+                    height={600}
+                    timeConvention="24h"
+                    start={new Date()}
+                    recurring={false}
+                    initialSelections={
+                        this.state.initialTimes
+                    }
+                    availableDays={['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']}
+                    availableHourRange={{ start: 6, end: 24 }}
+                />
             </div>
 
         );

@@ -39,6 +39,10 @@ const TutorialSchema = new mongoose.Schema({
     endTime:{
         type: String,
         required: true,
+    },
+    reviewId:{
+        type: String,
+        required: true,
     }
 });
 

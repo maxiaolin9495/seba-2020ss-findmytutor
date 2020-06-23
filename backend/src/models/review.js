@@ -7,7 +7,7 @@ const ReviewSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    reviewerName: {
+    customerEmail: {
         type: String,
         required: true
     },

@@ -16,7 +16,7 @@ export default class EditProfileService {
             userType: 'customer'
         };
         return new Promise((resolve, reject) => {
-            HttpService.post(`${this.baseURL()}/customer/uploadCustomerProfile`, profile, function (data) {
+            HttpService.put(`${this.baseURL()}/customer/uploadCustomerProfile`, profile, function (data) {
                 resolve(data);
             }, function (textStatus) {
                 reject(textStatus);
@@ -61,7 +61,7 @@ export default class EditProfileService {
         };
         // TODO: remove above, should done by check authentication
         return new Promise((resolve, reject) => {
-            HttpService.post(`${this.baseURL()}/tutor/uploadTutorProfile`, profile, function (data) {
+            HttpService.put(`${this.baseURL()}/tutor/uploadTutorProfile`, profile, function (data) {
                 resolve(data);
             }, function (textStatus) {
                 reject(textStatus);
