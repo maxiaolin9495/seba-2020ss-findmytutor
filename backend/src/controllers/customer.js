@@ -5,7 +5,7 @@ const reviewModel = require('../models/review');
 const emailService = require('../services/emailService');
 
 const getTutorialsForCustomer = (req, res) =>{
-    const email = req.query.email;
+    const email = req.email;
     tutorialModel.find({customerEmail: email})
         .then(tutorials =>{
             return res.status(200).json(tutorials);
@@ -32,6 +32,32 @@ const getCustomerProfile = (req, res) => {
             error: 'Bad Request',
             message: 'Wrong user type'
         });
+};
+
+const searchCustomerByEmail=(req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
+        return res.status(200).json({
+            error: 'Bad Request',
+            message: 'The request query must contain a q property'
+        });
+    if (!req.query.q)
+        return res.status(200).json({});
+    const customerEmail = decodeURI(req.query.q);
+    customerModel.findOne({ email: customerEmail }).exec()
+        .then(customer => {
+            return res.status(200).json({
+                email: customer.email,
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+                university: customer.university,
+                avatar: customer.avatar
+            })
+        }).catch(error => {
+            return res.status(404).json({
+                error: 'Customer not found',
+                message: error.message
+            })
+        })
 };
 
 const uploadCustomerProfile = (req, res) => {
@@ -279,5 +305,6 @@ module.exports = {
     getCustomerProfile,
     uploadCustomerProfile,
     createReview,
-    updateReview
+    updateReview,
+    searchCustomerByEmail,
 };

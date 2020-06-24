@@ -12,7 +12,7 @@ export default class TutorialService {
 
             HttpService.post(this.baseURL() + '/user/createTutorial',
                 {
-                    tutorFirstName:booking.tutorFirstName,
+                    tutorFirstName: booking.tutorFirstName,
                     tutorEmail: booking.tutorEmail,
                     customerEmail: booking.customerEmail,
                     sessionTopic: booking.sessionTopic,
@@ -20,8 +20,8 @@ export default class TutorialService {
                     price: booking.price,
                     tutorialStatus: booking.tutorialStatus,
                     transactionStatus: booking.transactionStatus,
-                    startTime:booking.startTime,
-                    endTime:booking.endTime
+                    startTime: booking.startTime,
+                    endTime: booking.endTime
                 }, function (data) {
                     resolve(data);
                 }, function (textStatus) {
@@ -47,5 +47,72 @@ export default class TutorialService {
                 reject(textStatus);
             });
         });
+    }
+
+    static getTutorByTutorEmail(email) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${this.baseURL()}/tutor/searchTutorByEmail?` + new URLSearchParams({ q: email }).toString(), function (data) {
+                if (data !== undefined) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving tutors');
+                }
+            }, function (textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+
+    static getAllTutorialsForCustomer() {
+        return new Promise((resolve, reject) => {
+            HttpService.get(
+                `${this.baseURL()}/customer/tutorialForCustomer`,
+                function (data) {
+                    resolve(data);
+                }, function (textStatus) {
+                    reject(textStatus);
+                });
+        });
+    }
+
+    static getAllTutorialsForTutor() {
+        return new Promise((resolve, reject) => {
+            HttpService.get(
+                `${this.baseURL()}/tutor/tutorialForTutor`,
+                function (data) {
+                    resolve(data);
+                }, function (textStatus) {
+                    reject(textStatus);
+                });
+        });
+    }
+
+    static confirmTutorial(tutorialInfo) {
+        return new Promise((resolve, reject) => {
+            HttpService.put(
+                `${this.baseURL()}/tutor/confirmTutorial`,
+                tutorialInfo,
+                function (data) {
+                    resolve(data);
+                },
+                function (textStatus) {
+                    reject(textStatus);
+                });
+        })
+    }
+
+    static cancelTutorial(tutorialInfo) {
+        return new Promise((resolve, reject) => {
+            HttpService.put(
+                `${this.baseURL()}/user/cancelTutorial`,
+                tutorialInfo,
+                function (data) {
+                    resolve(data);
+                },
+                function (textStatus) {
+                    reject(textStatus);
+                });
+        })
     }
 }

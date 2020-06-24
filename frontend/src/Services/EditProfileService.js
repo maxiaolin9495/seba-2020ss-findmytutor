@@ -39,6 +39,21 @@ export default class EditProfileService {
         });
     }
 
+    static getCustomerByCustomerEmail(email) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${this.baseURL()}/customer/searchCustomerByEmail?` + new URLSearchParams({ q: email }).toString(), function (data) {
+                if (data !== undefined) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving customers');
+                }
+            }, function (textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+
     static updateTutorProfile(profile) {
         profile = {
             ...profile,

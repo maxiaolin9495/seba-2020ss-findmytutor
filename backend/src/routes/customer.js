@@ -8,4 +8,5 @@ router.post('/uploadCustomerProfile', middleWares.checkAuthentication, customerC
 router.get('/customerProfile', middleWares.checkAuthentication, customerController.getCustomerProfile);
 router.post('/createReview', middleWares.checkAuthentication, customerController.createReview);
 router.put('/updateReview/:reviewId', middleWares.checkAuthentication, customerController.updateReview);
+router.get('/searchCustomerByEmail', customerController.searchCustomerByEmail);
 module.exports = router;
