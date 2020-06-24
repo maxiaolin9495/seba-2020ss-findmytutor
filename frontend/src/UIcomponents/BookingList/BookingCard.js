@@ -39,7 +39,6 @@ export default class BookingCard extends React.Component {
     showLastButton = () => {
         switch (this.props.tutorial.tutorialStatus) {
             case 'finished':
-            case 'reviewed':
                 if(this.props.userType === 'customer')
                 return (
                     <Button
@@ -48,6 +47,25 @@ export default class BookingCard extends React.Component {
                         primary
                         style={{
                             // background: '#555',
+                            borderRadius: '10px',
+                            marginTop: '32px',
+                            color: 'white',
+                            fontSize: '18px',
+                            fontFamily: 'San Francisco',
+                        }}
+                        onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)} >
+                        REVIEW
+                    </Button>)
+                else
+                    return '';
+            case 'reviewed':
+                if(this.props.userType === 'customer')
+                return (
+                    <Button
+                        raised
+                        className="md-cell md-cell--2"
+                        style={{
+                            background: '#555',
                             borderRadius: '10px',
                             marginTop: '32px',
                             color: 'white',
@@ -142,6 +160,8 @@ export default class BookingCard extends React.Component {
                             fontFamily: 'cursive'
                         }}>{this.showDuration(this.props.tutorial.startTime, this.props.tutorial.endTime)}</h3>
                     </div>
+                    {this.props.userType === 'tutor' &&
+                        <div className="md-cell md-cell--2" /> }
                     {this.props.userType === 'customer' ?
                         <Button
                             raised
@@ -162,7 +182,7 @@ export default class BookingCard extends React.Component {
                                 <Button
                                     raised
                                     primary
-                                    className="md-cell md-cell--2"
+                                    className="md-cell md-cell--3"
                                     style={{
                                         // background: '#333',
                                         // color: 'white',

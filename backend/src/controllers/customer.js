@@ -50,7 +50,6 @@ const searchCustomerByEmail=(req, res) => {
                 firstName: customer.firstName,
                 lastName: customer.lastName,
                 university: customer.university,
-                avatar: customer.avatar
             })
         }).catch(error => {
             return res.status(404).json({

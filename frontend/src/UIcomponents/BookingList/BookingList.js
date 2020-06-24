@@ -11,6 +11,10 @@ class BookingList extends React.Component {
             tutor: {
                 firstName: "TutorFirstName",
                 lastName: "TutorLastName"
+            },
+            customer: {
+                firstName: "CustomerFirstName",
+                lastName: "CustomerLastName"
             }
         }
     }

@@ -4,6 +4,7 @@ import Background from '../Images/Homepage.jpg';
 import TutorialService from "../Services/TutorialService.js"
 import UserService from "../Services/UserService";
 import { toast } from 'react-toastify';
+import Navigation from "../UIcomponents/pageDesign/Navigation";
 
 export class BookingListView extends React.Component {
 
@@ -60,7 +61,7 @@ export class BookingListView extends React.Component {
         }
         let tutorial = {
             tutorEmail: "1.2@3.cc",
-            customerEmail: "ga26piq@mytum.de",
+            customerEmail: "3.4@5.cc",
             sessionTopic: "Regression analysis",
             bookedTime: "Tue Jun 23 2020 21:14:43 GMT+0200 (Central European Summer Time)",
             price: "16",
@@ -73,21 +74,26 @@ export class BookingListView extends React.Component {
         // TODO: sort tutorials
         return (
             <div>
-                <img src={Background} className="bg" />
+                <Navigation />
+
                 <section>
+
                     {this.state.tutorials.map((t) => {
                         return (
                             <BookingList
                                 key={t._id}
-                                tutorial={t} 
+                                tutorial={t}
                                 userType={this.state.userType}
                                 handleReview={this.handleReview} />
                         )
                     })}
                     <BookingList
                         tutorial={tutorial}
-                        userType={this.state.userType} 
+                        userType={this.state.userType}
                         handleReview={this.handleReview} />
+                    <img src={Background} alt={"A Background Picture"} className="bg" />
+
+
                 </section>
             </div>
         );
