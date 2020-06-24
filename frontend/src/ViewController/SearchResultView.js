@@ -32,6 +32,23 @@ export class SearchResultView extends React.Component {
         });
     }
 
+    filterTutor =(universities, price) => {
+        let filteredTutor = [];
+        this.state.data.map(d => {
+            if (universities !== [] &&
+                price !== [] && 
+                universities.includes(d.university) &&
+                d.price>=price[0] && d.price<=price[1]) {
+                    filteredTutor.push(d)
+                
+            }
+        });
+        this.setState({
+            filteredData: filteredTutor,
+            loading: false
+        });
+    }
+
     render() {
         // if (this.state.loading) {
         //   return <h2>Loading</h2>
@@ -44,6 +61,7 @@ export class SearchResultView extends React.Component {
                     <SearchResultPage
                         data={this.state.data}
                         filteredData={this.state.filteredData}
+                        onFilter={(universities, price) => this.filterTutor(universities, price)}
                         error={this.state.error}/>
                 </section>
             </div>
