@@ -267,7 +267,7 @@ const cancelTutorial = async (req, res) => {
         message: 'The request body must contain a customerEmail property'
     });
 
-    if (req.body.status === 'canceled') {
+    if (req.body.status === 'cancelled') {
         tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status, transactionStatus: 'inProgress' }).then(tutorial => {
             emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
             emailService.emailNotification(req.body.customerEmail, req.body.customerFirstName, 'Tutorial Session Canceled', emailService.cancelTutorial);
@@ -296,7 +296,8 @@ const closeTutorial = async (req, res) => {
     });
 
     if (req.body.status === 'closed') {
-        tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status }).then(tutorial => {
+        var ObjectID = require('mongodb').ObjectID;
+        tutorialModel.updateOne({ _id: ObjectID(req.body._id) }, { tutorialStatus: req.body.status }).then(tutorial => {
             return res.status(200).json({
                 tutorial: tutorial,
             })

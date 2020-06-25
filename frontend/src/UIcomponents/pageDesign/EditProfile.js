@@ -138,8 +138,8 @@ class EditProfile extends React.Component {
         if (this.props.userType === 'tutor') {
             return (
                 <Card style={style} className="md-block-centered">
-                    <div className="md-grid">  
-                    {/* onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}> */}
+                    <div className="md-grid">
+                        {/* onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}> */}
                         <div className='md-grid md-cell md-cell--7' style={{ padding: '0px' }}>
                             <TextField
                                 style={{ padding: 0, margin: 0 }}
@@ -252,10 +252,10 @@ class EditProfile extends React.Component {
                                 <Button id="saveButton"
                                     disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university || !this.state.price || !this.state.description}
                                     raised
-                                     primary 
-                                     className="md-cell md-cell--2"
-                                     onClick={() => this.handleSubmit()}
-                                     >Save</Button>
+                                    primary
+                                    className="md-cell md-cell--2"
+                                    onClick={() => this.handleSubmit()}
+                                >Save</Button>
                                 <Button id="dismissButton" raised secondary
                                     className="md-cell md-cell--2"
                                     onClick={() => this.props.history.goBack()}>Dismiss</Button>
@@ -269,7 +269,7 @@ class EditProfile extends React.Component {
         } else if (this.props.userType === 'customer') {
             return (
                 <Card style={style} className="md-block-centered">
-                    <div className="md-grid" onSubmit={this.handleSubmit} onReset={() => this.props.history.goBack()}>
+                    <div className="md-grid" >
                         <TextField
                             label="FirstName"
                             leftIcon={<FontIcon>person</FontIcon>}
@@ -308,10 +308,18 @@ class EditProfile extends React.Component {
                             value={this.state.university}
                             onChange={this.handleChangeUniversity}
                             errorText="University is required" />
-                        <Button id="submit" type="submit"
+                        <Button id="submit"
                             disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university}
-                            raised primary className="md-cell md-cell--2">Save</Button>
-                        <Button id="reset" type="reset" raised secondary className="md-cell md-cell--2">Dismiss</Button>
+                            raised
+                            primary
+                            className="md-cell md-cell--2"
+                            onClick={() => this.handleSubmit()}>Save</Button>
+                        <Button
+                            id="reset"
+                            raised
+                            secondary
+                            className="md-cell md-cell--2"
+                            onClick={() => this.props.history.goBack()}>Dismiss</Button>
                     </div>
                 </Card>
             );

@@ -1,5 +1,5 @@
 import React from 'react';
-import BookingList from '../UIcomponents/BookingList/BookingList';
+import BookingCard from '../UIcomponents/BookingList/BookingCard';
 import Background from '../Images/Homepage.jpg';
 import TutorialService from "../Services/TutorialService.js"
 import UserService from "../Services/UserService";
@@ -55,20 +55,37 @@ export class BookingListView extends React.Component {
         this.props.history.push(url);
     }
 
+    cancelTutorial = (tutorialInfo) => {
+        TutorialService.cancelTutorial(tutorialInfo).then((data) => {
+            toast.success('Successfully cancel tutorial')
+            this.setState({
+                tutorials: this.state.tutorials.map(t => (
+                    t._id === tutorialInfo._id ?
+                        Object.assign({}, t, { tutorialStatus: 'cancelled' }) :
+                        t))
+            })
+        }).catch(() => {
+            toast.error('Failed to cancel tutorial');
+        });
+    }
+
+    confirmTutorial = (tutorialInfo) => {
+        TutorialService.confirmTutorial(tutorialInfo).then((data) => {
+            toast.success('Successfully confirm tutorial')
+            this.setState({
+                tutorials: this.state.tutorials.map(t => (
+                    t._id === tutorialInfo._id ?
+                        Object.assign({}, t, { tutorialStatus: 'confirmed' }) :
+                        t))
+            })
+        }).catch(() => {
+            toast.error('Failed to confirm tutorial');
+        });
+    }
+
     render() {
         if (this.state.loading) {
             return <h2>Loading</h2>
-        }
-        let tutorial = {
-            tutorEmail: "1.2@3.cc",
-            customerEmail: "3.4@5.cc",
-            sessionTopic: "Regression analysis",
-            bookedTime: "Tue Jun 23 2020 21:14:43 GMT+0200 (Central European Summer Time)",
-            price: "16",
-            tutorialStatus: 'confirmed',
-            transactionStatus: 'transferred',
-            startTime: "Tue Jun 23 2020 22:00:00 GMT+0200 (Central European Summer Time)",
-            endTime: "Tue Jun 23 2020 23:00:00 GMT+0200 (Central European Summer Time)"
         }
 
         // TODO: sort tutorials
@@ -80,17 +97,22 @@ export class BookingListView extends React.Component {
 
                     {this.state.tutorials.map((t) => {
                         return (
-                            <BookingList
-                                key={t._id}
-                                tutorial={t}
-                                userType={this.state.userType}
-                                handleReview={this.handleReview} />
+                            this.state.userType === 'customer' ?
+                                <BookingCard
+                                    key={t._id}
+                                    tutorial={t}
+                                    userType={this.state.userType}
+                                    handleReview={this.handleReview}
+                                    cancelTutorial={this.cancelTutorial} /> :
+                                <BookingCard
+                                    key={t._id}
+                                    tutorial={t}
+                                    userType={this.state.userType}
+                                    handleReview={this.handleReview}
+                                    cancelTutorial={this.cancelTutorial}
+                                    confirmTutorial={this.confirmTutorial} />
                         )
                     })}
-                    <BookingList
-                        tutorial={tutorial}
-                        userType={this.state.userType}
-                        handleReview={this.handleReview} />
                     <img src={Background} alt={"A Background Picture"} className="bg" />
 
 
