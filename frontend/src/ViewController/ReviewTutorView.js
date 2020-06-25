@@ -6,7 +6,7 @@ import TutorialService from '../Services/TutorialService';
 import TutorPageService  from "../Services/TutorPageService";
 import ReviewService from "../Services/ReviewService";
 import ReviewPage from "../UIcomponents/pageDesign/ReviewPage";
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 
 export class ReviewTutorView extends React.Component {
 
@@ -20,15 +20,13 @@ export class ReviewTutorView extends React.Component {
 
     componentDidMount() {
         let tutorialId = this.props.match.params.id;
-        TutorPageService.getTutorProfileById(tutorialId).then((data) => {
-            this.setState({tutorial: data});
-        }).catch((e) => {
-            console.error(e);
-        });
-        TutorialService.getTutorByTutorEmail(this.state.tutorial.tutorEmail).then((data) => {
-            this.setState({
-                tutor: data,
-            });
+        TutorialService.getTutorial(tutorialId).then((data) => {
+            TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
+                this.setState({
+                    tutor: tutor,
+                    tutorial: data
+                });
+            })
         }).catch((e) => {
             console.error(e);
         });
@@ -60,9 +58,9 @@ export class ReviewTutorView extends React.Component {
         }
     }
 
-    createReview(review) {
+    createReview = (review) => {
         ReviewService.createReview(review).then((data) => {
-            toast.message('Successfully submited');
+            toast.success('Successfully submited');
             this.props.history.goBack();
         }).catch((e) => {
             console.error(e);
@@ -73,8 +71,9 @@ export class ReviewTutorView extends React.Component {
     render(){
         return (
           <div className = "ReviewPage">
+              {console.log("here")}
               <Navigation/>
-              <ReviewPage onSubmit={(review) => this.createReview(review)} tutor={this.state.tutor}/>
+              {<ReviewPage onSubmit={this.createReview} tutor={this.state.tutor} tutorial={this.state.tutorial}/>}
   
               <div className = "img-container">
                   <img src={Background} className="bg"/>    

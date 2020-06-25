@@ -130,7 +130,7 @@ const createReview = (req, res) => {
         text: req.body.text,
         overallRating: overallRating,
         tutorEmail: req.body.tutorEmail,
-        reviewerName: req.body.reviewerName
+        customerEmail: req.body.customerEmail
     });
 
     reviewModel.create(review).then(
@@ -152,7 +152,14 @@ const createReview = (req, res) => {
                 message: 'Internal server error happened when create a new review ' + error.message
             });
         }
-    )
+    ).catch(error => {
+        console.log(error);
+        return res.status(404).json({
+            error: 'Review Not Created',
+            message: error.message
+        });
+    })
+
 
 };
 
@@ -182,7 +189,7 @@ const updateReview = (req, res) => {
         text: req.body.text,
         overallRating: overallRating,
         tutorEmail: req.body.tutorEmail,
-        reviewerName: req.body.reviewerName
+        customerEmail: req.body.customerEmail
     });
 
     reviewModel.updateOne({_id: reviewId}, review).then(

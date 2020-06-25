@@ -353,6 +353,26 @@ const getAllTutorialsByTutorId = async (req, res) => {
     }
 };
 
+
+const getTutorialById = async (req, res) => {
+    const {
+        tutorialId,
+    } = req.params;
+    if(tutorialId){
+        tutorialModel.findById(tutorialId).exec().then(tutorial => {  
+                return res.status(200).json(tutorial);
+        }).catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: error.message
+            })
+        });
+    } else {
+        return res.status(200).json({});
+    }
+};
+
 const getAllReviewsByTutorId = async (req, res) => {
     const {
         tutorId,
@@ -398,5 +418,6 @@ module.exports = {
     closeTutorial,
     getAllTutorials,
     getAllTutorialsByTutorId,
-    getAllReviewsByTutorId
+    getAllReviewsByTutorId,
+    getTutorialById
 };

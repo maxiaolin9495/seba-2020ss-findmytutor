@@ -9,6 +9,7 @@ router.post('/createTutorial', middleWares.checkAuthentication, userController.c
 router.post('/cancelTutorial', middleWares.checkAuthentication, userController.cancelTutorial);
 router.post('/closeTutorial', middleWares.checkAuthentication, userController.closeTutorial);
 router.post('/getAllTutorials', middleWares.checkAuthentication, userController.getAllTutorials);
+router.get('/getTutorial/:tutorialId', userController.getTutorialById);
 router.get('/getAllTutorials/:tutorId', userController.getAllTutorialsByTutorId);
 router.get('/getAllReviews/:tutorId', userController.getAllReviewsByTutorId);
 module.exports = router;

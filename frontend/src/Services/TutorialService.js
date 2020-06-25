@@ -76,6 +76,21 @@ export default class TutorialService {
         });
     }
 
+    static getTutorial(id) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${this.baseURL()}/user/getTutorial/${id}`, function (data) {
+                if (data !== undefined) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving tutorial');
+                }
+            }, function (textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
+
     static getAllTutorialsForTutor() {
         return new Promise((resolve, reject) => {
             HttpService.get(

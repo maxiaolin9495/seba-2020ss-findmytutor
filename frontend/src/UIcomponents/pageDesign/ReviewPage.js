@@ -2,8 +2,9 @@ import React from 'react'
 import StarRatingComponent from 'react-star-rating-component';
 import { Button, TextField, } from 'react-md';
 import { toast } from 'react-toastify';
+import {withRouter} from "react-router-dom";
 
-export class TutorReviewPage extends React.Component {
+export class ReviewPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,13 +31,13 @@ export class TutorReviewPage extends React.Component {
         this.setState({ friendlinessRating: nextValue });
     }
 
-    handleChangeText(value) {
-        this.setState(Object.assign({}, this.state, { text: value }));
-    }
+    handleChangeText = (value) => {
+        this.setState({ text:value });
+    };
 
     handleSubmit = () => {
         if (this.state.text == '') {
-            toast.error('Please input a tutor or course name');
+            toast.error('Please input your comment');
             return;
         }
         let review = this.props.review;
@@ -44,13 +45,11 @@ export class TutorReviewPage extends React.Component {
             review = {};
         }
         review.time = this.state.time
-        review.tutorEmail = this.state.tutorEmail;
-        review.customerEmail = this.state.customerEmail;
+        review.tutorEmail = this.props.tutor.email;
+        review.customerEmail = this.props.tutorial.customerEmail;
         review.comprehensionRating = this.state.comprehensionRating;
         review.friendlinessRating = this.state.friendlinessRating;
         review.teachingStyleRating = this.state.teachingStyleRating;
-        review.chefName = this.state.chefName;
-        review.title = this.state.title;
         review.text = this.state.text;
         review.overallRating = Math.round((this.state.comprehensionRating +
             this.state.friendlinessRating +

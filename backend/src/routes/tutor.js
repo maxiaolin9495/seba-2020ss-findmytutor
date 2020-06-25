@@ -11,4 +11,5 @@ router.get('/tutorProfileById',tutorController.getTutorProfileById);
 router.get('/autoComplete', tutorController.autoCompleteForSearch);
 router.get('/search', tutorController.searchTutor);
 router.get('/searchTutorByEmail', tutorController.searchTutorByEmail);
+
 module.exports = router;

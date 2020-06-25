@@ -14,6 +14,7 @@ import { EditProfileView } from "./ViewController/EditProfileView";
 import { TutorPageView } from "./ViewController/TutorPageView";
 import { BookingListView } from "./ViewController/BookingListView";
 import Navigation from "./UIcomponents/pageDesign/Navigation";
+import {ReviewTutorView} from "./ViewController/ReviewTutorView";
 
 export default class App extends React.Component {
 
@@ -31,6 +32,8 @@ export default class App extends React.Component {
                 {component: EditProfileView, path: '/me', exact: true},
                 {component: TutorPageView, path: '/tutor/:id'},
                 {component: BookingListView, path: '/booking', exact: true},
+                {component: ReviewTutorView, path: '/review/:id',exact: true},
+
             ]
         };
     }

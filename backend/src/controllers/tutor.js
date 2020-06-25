@@ -53,36 +53,6 @@ const getTutorProfileById = (req, res) => {
         })
 };
 
-const searchTutorByEmail=(req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
-        return res.status(200).json({
-            error: 'Bad Request',
-            message: 'The request query must contain a q property'
-        });
-    if (!req.query.q)
-        return res.status(200).json({});
-    const tutorEmail = decodeURI(req.query.q);
-    tutorModel.findOne({ tutorEmail: tutorEmail }).exec()
-        .then(tutor => {
-            return res.status(200).json({
-                email: tutor.email,
-                firstName: tutor.firstName,
-                lastName: tutor.lastName,
-                university: tutor.university,
-                price: tutor.price,
-                description: tutor.description,
-                courses: tutor.courses,
-                timeSlotIds: tutor.timeSlotIds,
-                avatar: tutor.avatar
-            })
-        }).catch(error => {
-            return res.status(404).json({
-                error: 'Tutor not found',
-                message: error.message
-            })
-        })
-};
-
 const uploadTutorProfile = (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
         error: 'Bad Request',
