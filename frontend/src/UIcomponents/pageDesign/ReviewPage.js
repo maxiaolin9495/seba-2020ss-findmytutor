@@ -2,7 +2,7 @@ import React from 'react'
 import StarRatingComponent from 'react-star-rating-component';
 import { Button, TextField, } from 'react-md';
 import { toast } from 'react-toastify';
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 export class ReviewPage extends React.Component {
     constructor(props) {
@@ -15,11 +15,25 @@ export class ReviewPage extends React.Component {
             friendlinessRating: 0,
             teachingStyleRating: 0,
             overallRating: 0,
-            text: ""
+            text: "",
         }
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.review !== prevState.review) {
+            return ({
+                review: nextProps.review,
+                comprehensionRating: nextProps.review.comprehensionRating,
+                friendlinessRating: nextProps.review.friendlinessRating,
+                teachingStyleRating: nextProps.review.teachingStyleRating,
+                text: nextProps.review.text
+            })
+        }
+        return null
+    }
+
     onStarClickComprehensionRating(nextValue, prevValue, name) {
+        console.log(nextValue);
         this.setState({ comprehensionRating: nextValue });
     }
 
@@ -32,7 +46,7 @@ export class ReviewPage extends React.Component {
     }
 
     handleChangeText = (value) => {
-        this.setState({ text:value });
+        this.setState({ text: value });
     };
 
     handleSubmit = () => {

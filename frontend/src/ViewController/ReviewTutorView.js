@@ -3,18 +3,19 @@ import Navigation from "../UIcomponents/pageDesign/Navigation";
 import Background from '../Images/Homepage.jpg';
 import UserService from '../Services/UserService';
 import TutorialService from '../Services/TutorialService';
-import TutorPageService  from "../Services/TutorPageService";
+import TutorPageService from "../Services/TutorPageService";
 import ReviewService from "../Services/ReviewService";
 import ReviewPage from "../UIcomponents/pageDesign/ReviewPage";
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export class ReviewTutorView extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            tutor:[],
-            tutorial:[],
+            tutor: [],
+            tutorial: [],
+            review: {}
         };
     }
 
@@ -27,6 +28,12 @@ export class ReviewTutorView extends React.Component {
                     tutorial: data
                 });
             })
+            if (data.reviewId)
+                ReviewService.getReview(data.reviewId).then((review) => {
+                    this.setState({
+                        review
+                    })
+                });
         }).catch((e) => {
             console.error(e);
         });
@@ -50,35 +57,43 @@ export class ReviewTutorView extends React.Component {
                     loading: false,
                     error: "Tutor can't review tutor"
                 });
-            } else {
-               if (this.state.tutorial.reviewId !== ""){
-
-               }
             }
         }
     }
 
-    createReview = (review) => {
-        ReviewService.createReview(review).then((data) => {
-            toast.success('Successfully submited');
-            this.props.history.goBack();
-        }).catch((e) => {
-            console.error(e);
-            this.setState(Object.assign({}, this.state, {error: 'Error while creating review'}));
-        });  
+    handleReview = (review) => {
+        (this.state.tutorial.reviewId) ?
+            ReviewService.updateReview(this.state.tutorial.reviewId, review).then((data) => {
+                toast.success('Successfully updated');
+                this.props.history.goBack();
+            }).catch((e) => {
+                console.error(e);
+                this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
+            }) :
+            ReviewService.createReview(review).then((data) => {
+                toast.success('Successfully submited');
+                this.props.history.goBack();
+            }).catch((e) => {
+                console.error(e);
+                this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
+            });
     }
 
-    render(){
+    render() {
         return (
-          <div className = "ReviewPage">
-              {console.log("here")}
-              <Navigation/>
-              {<ReviewPage onSubmit={this.createReview} tutor={this.state.tutor} tutorial={this.state.tutorial}/>}
-  
-              <div className = "img-container">
-                  <img src={Background} className="bg"/>    
-              </div>
-          </div>
+            <div className="ReviewPage">
+                {console.log("here")}
+                <Navigation />
+                {<ReviewPage
+                    onSubmit={this.handleReview}
+                    tutor={this.state.tutor}
+                    tutorial={this.state.tutorial}
+                    review={this.state.review} />}
+
+                <div className="img-container">
+                    <img src={Background} className="bg" />
+                </div>
+            </div>
         )
-      }
+    }
 }
