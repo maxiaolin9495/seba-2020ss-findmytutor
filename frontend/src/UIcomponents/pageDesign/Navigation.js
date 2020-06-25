@@ -61,11 +61,12 @@ const logInNavItemsCustomer = [
         exact: true,
         icon: 'home',
     },
-    // {
-    //     label: 'Projects',
-    //     to: '/projects',
-    //     icon: 'store'
-    // },
+    {
+        label: 'Tutorial',
+        to: '/booking',
+        exact: true,
+        icon: 'store',
+    },
     {
         label: 'Profile',
         to: '/me',
@@ -90,11 +91,12 @@ const logInNavItemsTutor = [
         exact: true,
         icon: 'home',
     },
-    // {
-    //     label: 'Pojects',
-    //     to: '/projects',
-    //     icon: 'store'
-    // },
+    {
+        label: 'Tutorial',
+        to: '/booking',
+        exact: true,
+        icon: 'store',
+    },
     {
         label: 'Profile',
         to: '/me',
