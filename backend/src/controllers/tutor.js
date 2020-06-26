@@ -140,7 +140,7 @@ const confirmTutorial = async (req, res) => {
         message: 'The request body must contain a status property'
     });
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerFirstName')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a tutorFirstName property'
     });
@@ -152,7 +152,7 @@ const confirmTutorial = async (req, res) => {
 
     if (req.body.status === 'confirmed') {
         tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status }).then(tutorial => {
-            emailService.emailNotification(req.body.customerEmail, req.body.tutorFirstName, 'Tutorial Session Confirmed', emailService.confirmTutorial);
+            emailService.emailNotification(req.body.customerEmail, req.body.customerFirstName, 'Tutorial Session Confirmed', emailService.confirmTutorial);
             return res.status(200).json({
                 tutorial: tutorial,
             });
@@ -167,7 +167,7 @@ const confirmTutorial = async (req, res) => {
 };
 
 const getTutorialsForTutor = (req, res) => {
-    const email = req.query.email;
+    const email = req.email;
     tutorialModel.find({ tutorEmail: email })
         .then(tutorials => {
             return res.status(200).json(tutorials)
@@ -271,6 +271,37 @@ const autoCompleteForSearch = async (req, res) => {
     }
 };
 
+const searchTutorByEmail=(req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
+        return res.status(200).json({
+            error: 'Bad Request',
+            message: 'The request query must contain a q property'
+        });
+    if (!req.query.q)
+        return res.status(200).json({});
+    const tutorEmail = decodeURI(req.query.q);
+    tutorModel.findOne({ email: tutorEmail }).exec()
+        .then(tutor => {
+            return res.status(200).json({
+                email: tutor.email,
+                firstName: tutor.firstName,
+                lastName: tutor.lastName,
+                university: tutor.university,
+                price: tutor.price,
+                description: tutor.description,
+                courses: tutor.courses,
+                timeSlotIds: tutor.timeSlotIds,
+                avatar: tutor.avatar
+            })
+        }).catch(error => {
+            return res.status(404).json({
+                error: 'Tutor not found',
+                message: error.message
+            })
+        })
+};
+
+
 module.exports = {
     getTutorProfile,
     getTutorProfileById,
@@ -279,4 +310,5 @@ module.exports = {
     confirmTutorial,
     searchTutor,
     autoCompleteForSearch,
+    searchTutorByEmail,
 };

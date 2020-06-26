@@ -1,18 +1,18 @@
 const customerModel = require('../models/customer');
 const tutorialModel = require('../models/tutorial');
-const tutorModel =  require('../models/tutor');
+const tutorModel = require('../models/tutor');
 const reviewModel = require('../models/review');
 const emailService = require('../services/emailService');
 
-const getTutorialsForCustomer = (req, res) =>{
-    const email = req.query.email;
-    tutorialModel.find({customerEmail: email})
-        .then(tutorials =>{
+const getTutorialsForCustomer = (req, res) => {
+    const email = req.email;
+    tutorialModel.find({ customerEmail: email })
+        .then(tutorials => {
             return res.status(200).json(tutorials);
         })
         .catch(error => {
             console.log('internal server error by searching');
-            return req.status(400).json({error: error.message})
+            return req.status(400).json({ error: error.message })
         })
 };
 
@@ -32,6 +32,31 @@ const getCustomerProfile = (req, res) => {
             error: 'Bad Request',
             message: 'Wrong user type'
         });
+};
+
+const searchCustomerByEmail = (req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
+        return res.status(200).json({
+            error: 'Bad Request',
+            message: 'The request query must contain a q property'
+        });
+    if (!req.query.q)
+        return res.status(200).json({});
+    const customerEmail = decodeURI(req.query.q);
+    customerModel.findOne({ email: customerEmail }).exec()
+        .then(customer => {
+            return res.status(200).json({
+                email: customer.email,
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+                university: customer.university,
+            })
+        }).catch(error => {
+            return res.status(404).json({
+                error: 'Customer not found',
+                message: error.message
+            })
+        })
 };
 
 const uploadCustomerProfile = (req, res) => {
@@ -96,7 +121,7 @@ const createReview = (req, res) => {
     }
 
 
-    let overallRating = Math.round((req.body.comprehensionRating + req.body.friendlinessRating + req.body.teachingStyleRating)/3);
+    let overallRating = Math.round((req.body.comprehensionRating + req.body.friendlinessRating + req.body.teachingStyleRating) / 3);
 
     let review = Object.assign({
         comprehensionRating: req.body.comprehensionRating,
@@ -105,15 +130,15 @@ const createReview = (req, res) => {
         text: req.body.text,
         overallRating: overallRating,
         tutorEmail: req.body.tutorEmail,
-        reviewerName: req.body.reviewerName
+        customerEmail: req.body.customerEmail
     });
 
     reviewModel.create(review).then(
         review => {
             let error = updateReviewForCustomer(req.email, review._id);
-            if (!error){
+            if (!error) {
                 error = updateReviewForTutor(req.body.tutorEmail, review._id);
-                if(!error) {
+                if (!error) {
                     error = updateRatingForTutor(req.body.tutorEmail);
                     emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, "New Feedback Received", emailService.reviewTutorial);
                     if (!error) {
@@ -127,7 +152,14 @@ const createReview = (req, res) => {
                 message: 'Internal server error happened when create a new review ' + error.message
             });
         }
-    )
+    ).catch(error => {
+        console.log(error);
+        return res.status(404).json({
+            error: 'Review Not Created',
+            message: error.message
+        });
+    })
+
 
 };
 
@@ -148,7 +180,7 @@ const updateReview = (req, res) => {
         return res.status(400).json(verificationResult.message);
     }
 
-    let overallRating = Math.round((req.body.comprehensionRating + req.body.friendlinessRating + req.body.teachingStyleRating)/3);
+    let overallRating = Math.round((req.body.comprehensionRating + req.body.friendlinessRating + req.body.teachingStyleRating) / 3);
 
     let review = Object.assign({
         comprehensionRating: req.body.comprehensionRating,
@@ -157,10 +189,10 @@ const updateReview = (req, res) => {
         text: req.body.text,
         overallRating: overallRating,
         tutorEmail: req.body.tutorEmail,
-        reviewerName: req.body.reviewerName
+        customerEmail: req.body.customerEmail
     });
 
-    reviewModel.updateOne({_id: reviewId}, review).then(
+    reviewModel.updateOne({ _id: reviewId }, review).then(
         review => {
             let error = updateRatingForTutor(req.body.tutorEmail);
             if (!error) {
@@ -182,7 +214,31 @@ const updateReview = (req, res) => {
 
 };
 
-const verifyReviewBody = (req) =>{
+const getReview = (req, res) => {
+    const {
+        reviewId,
+    } = req.params;
+
+    if (!reviewId) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The path must contain a reviewId parameter'
+    });
+
+    reviewModel.findById(reviewId).then(
+        review => {
+            return res.status(200).json(review);
+        }
+    ).catch(error => {
+        console.log(error);
+        return res.status(404).json({
+            error: 'Review Not Found',
+            message: error.message
+        });
+    })
+
+};
+
+const verifyReviewBody = (req) => {
 
     if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) {
         return {
@@ -254,10 +310,10 @@ const updateRatingForTutor = (email) => {
             let reviewIds = tutor.reviewIds;
             let sumOverallRating = 0;
             reviewModel.find().where('_id').in(reviewIds).exec().then(reviews => {
-                for ( let i = 0; i < reviews.length; i++){
+                for (let i = 0; i < reviews.length; i++) {
                     sumOverallRating += reviews[i].overallRating;
                 }
-                tutorModel.updateOne({ email: email }, { $push: { rating: Math.round(sumOverallRating/reviews.length) } }).exec();
+                tutorModel.updateOne({ email: email }, { $push: { rating: Math.round(sumOverallRating / reviews.length) } }).exec();
             });
         }
     ).catch(error => {
@@ -279,5 +335,7 @@ module.exports = {
     getCustomerProfile,
     uploadCustomerProfile,
     createReview,
-    updateReview
+    updateReview,
+    getReview,
+    searchCustomerByEmail,
 };

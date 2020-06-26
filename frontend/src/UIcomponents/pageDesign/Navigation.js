@@ -61,11 +61,12 @@ const logInNavItemsCustomer = [
         exact: true,
         icon: 'home',
     },
-    // {
-    //     label: 'Projects',
-    //     to: '/projects',
-    //     icon: 'store'
-    // },
+    {
+        label: 'Tutorial',
+        to: '/booking',
+        exact: true,
+        icon: 'store',
+    },
     {
         label: 'Profile',
         to: '/me',
@@ -90,11 +91,12 @@ const logInNavItemsTutor = [
         exact: true,
         icon: 'home',
     },
-    // {
-    //     label: 'Pojects',
-    //     to: '/projects',
-    //     icon: 'store'
-    // },
+    {
+        label: 'Tutorial',
+        to: '/booking',
+        exact: true,
+        icon: 'store',
+    },
     {
         label: 'Profile',
         to: '/me',
@@ -179,7 +181,7 @@ class NavigationMenu extends React.Component {
                     toolbarTitle={
 
                         <Item label="FindMyTutor">
-                            <Button onClick={() => this.props.history.push('/')}><Avatar src={imgURL}
+                            <Button flat onClick={() => this.props.history.push('/')}><Avatar src={imgURL}
                                                                                          role="presentation"
                                                                                          suffix="green-400"/></Button>
                         </Item>
