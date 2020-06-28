@@ -108,42 +108,8 @@ const uploadTutorProfile = (req, res) => {
             timeSlotIds: req.body.timeSlotIds,
             avatar: req.body.avatar,
         });
-        let combinedTimeSlotIds = [];
-        console.log(tutor.timeSlotIds);
-        tutor.timeSlotIds = tutor.timeSlotIds.sort(function (x, y) {
-            return x.start - y.start;
-        });
-        console.log(tutor.timeSlotIds);
-        let tempTimeSlot = {};
 
-        if (tutor.timeSlotIds.length > 1) {
-            tempTimeSlot = tutor.timeSlotIds[0];
-        }
-        for (let i = 0; i < tutor.timeSlotIds.length - 1; i++) {
-            console.log(" i = " + i + " length = " + tutor.timeSlotIds.length);
-
-            if (tutor.timeSlotIds[i].end === tutor.timeSlotIds[i + 1].start
-                && tutor.timeSlotIds[i].ifBooked === tutor.timeSlotIds[i + 1].ifBooked) {
-
-                console.log('yes');
-                tempTimeSlot.end = tutor.timeSlotIds[i + 1].end
-
-            } else {
-                console.log('no');
-                combinedTimeSlotIds.push(tempTimeSlot);
-
-                tempTimeSlot = tutor.timeSlotIds[i + 1];
-
-            }
-
-            if (i === tutor.timeSlotIds.length - 2) {
-                console.log(i);
-                combinedTimeSlotIds.push(tempTimeSlot);
-            }
-        }
-
-        tutor.timeSlotIds = combinedTimeSlotIds;
-        console.log(tutor);
+        tutor.timeSlotIds = sortOnTimeSlots(tutor.timeSlotIds);
         tutorModel.updateOne({email: tutor.email}, tutor)
             .then(
                 () => {
@@ -168,6 +134,34 @@ const uploadTutorProfile = (req, res) => {
                     }
                 });
     }
+};
+
+const sortOnTimeSlots = (timeSlotIds) => {
+    let combinedTimeSlotIds = [];
+    timeSlotIds = timeSlotIds.sort(function (x, y) {
+        return x.start - y.start;
+    });
+
+    let tempTimeSlot = {};
+
+    if (timeSlotIds.length > 1) {
+        tempTimeSlot = timeSlotIds[0];
+    }
+    for (let i = 0; i < timeSlotIds.length - 1; i++) {
+
+        if (timeSlotIds[i].end === timeSlotIds[i + 1].start
+            && timeSlotIds[i].ifBooked === timeSlotIds[i + 1].ifBooked) {
+            tempTimeSlot.end = timeSlotIds[i + 1].end
+        } else {
+            combinedTimeSlotIds.push(tempTimeSlot);
+            tempTimeSlot = timeSlotIds[i + 1];
+        }
+
+        if (i === timeSlotIds.length - 2) {
+            combinedTimeSlotIds.push(tempTimeSlot);
+        }
+    }
+    return combinedTimeSlotIds;
 };
 
 const confirmTutorial = async (req, res) => {
