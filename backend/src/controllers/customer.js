@@ -325,7 +325,6 @@ const updateRatingForTutor = (email) => {
 
 const createTutorial = (req, res) => {
 
-    //todo this create logic is far from perfect, further work needed
     if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) {
         return res.status(400).json({
             error: 'Bad Request',
@@ -342,60 +341,77 @@ const createTutorial = (req, res) => {
             price: req.body.price,
             tutorialStatus: 'notConfirmed',
             transactionStatus: 'transferred',
-            startTime:req.body.startTime,
-            endTime:req.body.endTime
+            startTime: req.body.startTime,
+            endTime: req.body.endTime
         });
 
-        tutorModel.findOne({ email: email }).exec()
+        tutorModel.findOne({email: tutorial.tutorEmail}).exec()
             .then(
                 tutor => {
-                    for ( let i = 0; i < tutor.timeSlotIds; i ++){
+                    let newTimeSlots = updateTimeSlots(tutor.timeSlotIds, tutorial);
+                    if (newTimeSlots.invalidTimeSpan) {
+                        return res.status(400).json({
+                            error: 'Bad Request',
+                            message: 'The request body contains an invalid time span'
+                        });
+                    } else {
+                        console.log(newTimeSlots.timeSlotIds);
+                        tutorialModel.create(tutorial).then(tutorial => {
+                            console.log(tutorial);
+                            let tutorialId = tutorial._id;
+                            console.log(1);
+                            let error = updateTutorialForTutor(req.body.tutorEmail, tutorialId);
+                            if (!error) {
+                                error = updateTutorialForCustomer(req.body.customerEmail, tutorialId);
+                                if (!error) {
+                                    emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
+                                    tutorModel.updateOne(
+                                        {email: tutor.email},
+                                        {timeSlotIds: newTimeSlots.timeSlotIds}
+                                    ).then(
+                                        tutor => {
+                                            console.log(tutor)
+                                        }
+                                    );
+                                    return res.status(200).json({
+                                        tutorEmail: req.body.tutorEmail,
+                                        customerEmail: req.body.customerEmail,
+                                        sessionTopic: req.body.sessionTopic,
+                                        bookedTime: req.body.bookedTime,
+                                        price: req.body.price,
+                                        tutorialStatus: 'notConfirmed',
+                                        transactionStatus: 'transferred',
+                                        startTime: req.body.startTime,
+                                        endTime: req.body.endTime
+                                    });
+                                }
+                            }
+                        }).catch(error => {
+                            console.log('error by creating a Tutorial');
+                            if (error.code === 11000) {
+                                return res.status(400).json({
+                                    error: 'Internal server error happens by add Tutorial',
+                                    message: error.message
+                                })
+                            }
+                            else {
+                                return res.status(500).json({
+                                    error: 'Internal server error happens by add Tutorial',
+                                    message: error.message
+                                })
+                            }
+                        });
 
                     }
                 }
             )
             .catch(
                 error => {
-                console.log('error by adding a tutorial id to the tutor');
-            return error;
-        });
-        tutorialModel.create(tutorial).then(tutorial => {
-            let tutorialId = tutorial._id;
-            let error = updateTutorialForTutor(req.body.tutorEmail, tutorialId);
-            if (!error) {
-                error = updateTutorialForCustomer(req.body.customerEmail, tutorialId);
-                if (!error) {
-                    emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
-                    return res.status(200).json({
-                        tutorEmail: req.body.tutorEmail,
-                        customerEmail: req.body.customerEmail,
-                        sessionTopic: req.body.sessionTopic,
-                        bookedTime: req.body.bookedTime,
-                        price: req.body.price,
-                        tutorialStatus: 'notConfirmed',
-                        transactionStatus: 'transferred',
-                        startTime:req.body.startTime,
-                        endTime:req.body.endTime
-                    });
+                    console.log('error by adding a tutorial id to the tutor');
+                    return error;
                 }
-            }
-        }).catch(error => {
-            console.log('error by creating a Tutorial');
-            if (error.code === 11000) {
-                return res.status(400).json({
-                    error: 'Internal server error happens by add Tutorial',
-                    message: error.message
-                })
-            }
-            else {
-                return res.status(500).json({
-                    error: 'Internal server error happens by add Tutorial',
-                    message: error.message
-                })
-            }
-        });
-
-    }else{
+            );
+    } else {
         return res.status(401).json({
             error: 'Unauthorized',
             message: 'The request body must contain a tutorFirstName property'
@@ -403,27 +419,102 @@ const createTutorial = (req, res) => {
     }
 };
 
-const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
-    tutorModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().catch(error => {
-        console.log('error by adding a tutorial id to the tutor');
-        return error;
-    });
+const updateTimeSlots = (timeSlotIds, tutorial) => {
+    let newTimeSlots = [];
+    for (let i = 0; i < timeSlotIds.length; i++) {
+        if (timeSlotIds[i].end <= tutorial.startTime ||
+            timeSlotIds[i].start >= tutorial.endTime) {
+            newTimeSlots.push(timeSlotIds[i]);
+        } else {
+            if (timeSlotIds[i].end < tutorial.endTime ||
+                timeSlotIds[i].start > tutorial.startTime) {
+                return {
+                    invalidTimeSpan: true
+                };
+            } else {
+                //time before booking
+                if (timeSlotIds[i].start < tutorial.startTime) {
+                    newTimeSlots.push(
+                        {
+                            start: timeSlotIds[i].start,
+                            end: tutorial.startTime,
+                            ifBooked: false
+                        }
+                    );
+                }
 
+                //the tutorial time span
+                newTimeSlots.push(
+                    {
+                        start: tutorial.startTime,
+                        end: tutorial.endTime,
+                        ifBooked: true
+                    }
+                );
+
+                if (timeSlotIds[i].end > tutorial.endTime) {
+                    newTimeSlots.push(
+                        {
+                            start: tutorial.endTime,
+                            end: timeSlotIds[i].end,
+                            ifBooked: false
+                        }
+                    )
+                }
+
+
+            }
+        }
+    }
+
+    return {
+      invalidTimeSpan: false,
+      timeSlotIds: newTimeSlots
+    };
+
+};
+
+const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
+    console.log(2);
+    tutorModel.updateOne(
+        { email: email },
+        { $push: { bookedTutorialSessionIds: bookedTutorialSessionId }
+        })
+        .exec()
+        .catch(
+            error => {
+                console.log('error by adding a tutorial id to the tutor');
+                return error;
+            });
+    console.log(3);
 };
 
 const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
-    customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().catch(error => {
-        console.log('error by adding a tutorial id to the customer');
-        return error;
-    });
+    customerModel.updateOne(
+        { email: email },
+        { $push: { bookedTutorialSessionIds: bookedTutorialSessionId }
+        })
+        .exec()
+        .catch(
+            error => {
+                console.log('error by adding a tutorial id to the customer');
+                return error;
+            });
 };
 
 const updateReviewForCustomer = (email, reviewId) => {
-    customerModel.updateOne({ email: email }, { $push: { reviewIds: reviewId } }).exec().catch(error => {
-        console.log('error by adding a review id to the customer');
-        return error;
-    });
+    customerModel.updateOne(
+        { email: email },
+        { $push: { reviewIds: reviewId }
+        })
+        .exec()
+        .catch(
+            error => {
+                console.log('error by adding a review id to the customer');
+                return error;
+            });
 };
+
 module.exports = {
     getTutorialsForCustomer,
     getCustomerProfile,
