@@ -172,70 +172,6 @@ const verifyRequestBody = (req) => {
 
 };
 
-const createTutorial = (req, res) => {
-
-    //todo this create logic is far from perfect, further work needed
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a tutorFirstName property'
-    });
-
-    if (req.userType === 'customer') {
-        const tutorial = Object.assign({
-            tutorEmail: req.body.tutorEmail,
-            customerEmail: req.body.customerEmail,
-            sessionTopic: req.body.sessionTopic,
-            bookedTime: req.body.bookedTime,
-            price: req.body.price,
-            tutorialStatus: 'notConfirmed',
-            transactionStatus: 'transferred',
-            startTime:req.body.startTime,
-            endTime:req.body.endTime
-        });
-        tutorialModel.create(tutorial).then(tutorial => {
-            let tutorialId = tutorial._id;
-            let error = updateTutorialForTutor(req.body.tutorEmail, tutorialId);
-            if (!error) {
-                error = updateTutorialForCustomer(req.body.customerEmail, tutorialId);
-                if (!error) {
-                    emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
-                    return res.status(200).json({
-                        tutorEmail: req.body.tutorEmail,
-                        customerEmail: req.body.customerEmail,
-                        sessionTopic: req.body.sessionTopic,
-                        bookedTime: req.body.bookedTime,
-                        price: req.body.price,
-                        tutorialStatus: 'notConfirmed',
-                        transactionStatus: 'transferred',
-                        startTime:req.body.startTime,
-                        endTime:req.body.endTime
-                    });
-                }
-            }
-        }).catch(error => {
-            console.log('error by creating a Tutorial');
-            if (error.code === 11000) {
-                return res.status(400).json({
-                    error: 'Internal server error happens by add Tutorial',
-                    message: error.message
-                })
-            }
-            else {
-                return res.status(500).json({
-                    error: 'Internal server error happens by add Tutorial',
-                    message: error.message
-                })
-            }
-        });
-       
-    }else{
-        return res.status(401).json({
-            error: 'Unauthorized',
-            message: 'The request body must contain a tutorFirstName property'
-        });
-    }
-};
-
 const cancelTutorial = async (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
         error: 'Bad Request',
@@ -396,25 +332,9 @@ const getAllReviewsByTutorId = async (req, res) => {
     }
 };
 
-const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
-    tutorModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().catch(error => {
-        console.log('error by adding a tutorial id to the tutor');
-        return error;
-    });
-
-};
-
-const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
-    customerModel.updateOne({ email: email }, { $push: { bookedTutorialSessionIds: bookedTutorialSessionId } }).exec().catch(error => {
-        console.log('error by adding a tutorial id to the customer');
-        return error;
-    });
-};
-
 module.exports = {
     login,
     register,
-    createTutorial,
     cancelTutorial,
     closeTutorial,
     getAllTutorials,
