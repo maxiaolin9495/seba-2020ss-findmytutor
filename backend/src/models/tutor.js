@@ -30,6 +30,9 @@ const TutorSchema = new mongoose.Schema({
         end: {
             type: String
         },
+        ifBooked: {
+            type: Boolean
+        },
         required: false
     }],
     bookedTutorialSessionIds: [{

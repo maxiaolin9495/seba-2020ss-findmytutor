@@ -5,7 +5,6 @@ const middleWares = require('../middleWares');
 
 router.post('/login', userController.login);
 router.post('/register', userController.register);
-router.post('/createTutorial', middleWares.checkAuthentication, userController.createTutorial);
 router.put('/cancelTutorial', middleWares.checkAuthentication, userController.cancelTutorial);
 router.put('/closeTutorial', middleWares.checkAuthentication, userController.closeTutorial);
 router.post('/getAllTutorials', middleWares.checkAuthentication, userController.getAllTutorials);

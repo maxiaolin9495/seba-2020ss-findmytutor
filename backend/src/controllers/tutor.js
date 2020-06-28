@@ -1,7 +1,6 @@
 const tutorialModel = require('../models/tutorial');
 const tutorModel = require('../models/tutor');
 const emailService = require('../services/emailService');
-const tutor = require('../models/tutor');
 
 const getTutorProfile = (req, res) => {
     if (req.userType === 'tutor') {
@@ -109,23 +108,65 @@ const uploadTutorProfile = (req, res) => {
             timeSlotIds: req.body.timeSlotIds,
             avatar: req.body.avatar,
         });
-        tutorModel.updateOne({ email: tutor.email }, tutor).then(tutor => {
-            return res.status(200).json({ message: "successfully updated" });
-        }).catch(error => {
-            console.log('error by creating a Tutor Profile');
-            if (error.code === 11000) {
-                return res.status(400).json({
-                    error: 'tutor Profile exists',
-                    message: error.message
-                })
-            }
-            else {
-                return res.status(500).json({
-                    error: 'Internal server error happens by add tutor Profile',
-                    message: error.message
-                })
-            }
+        let combinedTimeSlotIds = [];
+        console.log(tutor.timeSlotIds);
+        tutor.timeSlotIds = tutor.timeSlotIds.sort(function (x, y) {
+            return x.start - y.start;
         });
+        console.log(tutor.timeSlotIds);
+        let tempTimeSlot = {};
+
+        if (tutor.timeSlotIds.length > 1) {
+            tempTimeSlot = tutor.timeSlotIds[0];
+        }
+        for (let i = 0; i < tutor.timeSlotIds.length - 1; i++) {
+            console.log(" i = " + i + " length = " + tutor.timeSlotIds.length);
+
+            if (tutor.timeSlotIds[i].end === tutor.timeSlotIds[i + 1].start
+                && tutor.timeSlotIds[i].ifBooked === tutor.timeSlotIds[i + 1].ifBooked) {
+
+                console.log('yes');
+                tempTimeSlot.end = tutor.timeSlotIds[i + 1].end
+
+            } else {
+                console.log('no');
+                combinedTimeSlotIds.push(tempTimeSlot);
+
+                tempTimeSlot = tutor.timeSlotIds[i + 1];
+
+            }
+
+            if (i === tutor.timeSlotIds.length - 2) {
+                console.log(i);
+                combinedTimeSlotIds.push(tempTimeSlot);
+            }
+        }
+
+        tutor.timeSlotIds = combinedTimeSlotIds;
+        console.log(tutor);
+        tutorModel.updateOne({email: tutor.email}, tutor)
+            .then(
+                () => {
+                    return res.status(200).json({message: "successfully updated"});
+                }
+            )
+            .catch(
+                error => {
+                    console.log('error by creating a Tutor Profile');
+                    if (error.code === 11000) {
+                        return res.status(400).json({
+                                error: 'tutor Profile exists',
+                                message: error.message
+                            }
+                        )
+                    }
+                    else {
+                        return res.status(500).json({
+                            error: 'Internal server error happens by add tutor Profile',
+                            message: error.message
+                        })
+                    }
+                });
     }
 };
 

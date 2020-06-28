@@ -57,12 +57,6 @@ class EditProfile extends React.Component {
         })
     };
 
-    handleChangeEmail = (email) => {
-        this.setState({
-            email
-        })
-    };
-
     handleChangeUniversity = (university) => {
         this.setState({
             university

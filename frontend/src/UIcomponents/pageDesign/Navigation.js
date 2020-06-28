@@ -181,7 +181,7 @@ class NavigationMenu extends React.Component {
                     toolbarTitle={
 
                         <Item label="FindMyTutor">
-                            <Button flat onClick={() => this.props.history.push('/')}><Avatar src={imgURL}
+                            <Button onClick={() => this.props.history.push('/')}><Avatar src={imgURL}
                                                                                          role="presentation"
                                                                                          suffix="green-400"/></Button>
                         </Item>

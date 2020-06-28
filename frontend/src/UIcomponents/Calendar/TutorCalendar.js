@@ -1,7 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import AvailableTimes from "react-available-times";
-import EditProfileService from "../../Services/EditProfileService";
 import { toast } from "react-toastify";
 
 
@@ -41,19 +40,31 @@ class TutorCalendar extends React.Component {
         }
         return {selections: tmpSelections, valid: valid};
     };
+
     handleChange = (selections) => {
         let result = this.verifySelectionsWithInvalidDate(selections);
         if (!result.valid) {
             toast.error('Invalid date selected');
         }
+
         selections = result.selections;
         let arr = [];
         selections.forEach((data) => {
+
+            // if a timeSlot with the same startTime & endTime is found, then we use its ifBooked Value, else use the default value false
+            let a = this.props.timeSlotIds.find(
+                timeSlot => timeSlot.start === data.start.getTime()
+                    && timeSlot.end === data.end.getTime()
+            );
             arr.push({
                 start: data.start.getTime(),
-                end: data.end.getTime()
+                end: data.end.getTime(),
+                ifBooked: a ?
+                    a.ifBooked :
+                    false
             })
         });
+        console.log(arr);
         this.setState({
             initialTimes: selections
         });
