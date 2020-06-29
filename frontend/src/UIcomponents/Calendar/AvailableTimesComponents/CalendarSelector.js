@@ -1,4 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
+/*
+this class is copied from project react-available-times
+like: https://github.com/trotzig/react-available-times/
+ */
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
