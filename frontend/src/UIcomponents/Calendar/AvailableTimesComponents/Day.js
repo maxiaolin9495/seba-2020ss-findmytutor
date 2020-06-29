@@ -5,7 +5,7 @@ like: https://github.com/trotzig/react-available-times/
 
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-
+import { toast } from 'react-toastify';
 import { HOUR_IN_PIXELS, MINUTE_IN_PIXELS } from './Constants';
 import TimeSlot from './TimeSlot';
 import HelpFunctionCollections from './HelpFunctionCollections'
@@ -64,6 +64,11 @@ export default class Day extends PureComponent {
         this.setState(({ selections }) => {
             for (let i = 0; i < selections.length; i++) {
                 if (selections[i].start === start && selections[i].end === end) {
+                    // added to make sure, that booked timeSlots can not be deleted
+                    if(selections.ifBooked){
+                        toast.error('You can not delete a booked time slot');
+                        return;
+                    }
                     selections.splice(i, 1);
                     onChange(index, selections);
                     return { selections: selections.slice(0) };
@@ -77,9 +82,10 @@ export default class Day extends PureComponent {
         const position = this.relativeY(pageY);
         this.setState(({ selections }) => {
             for (let i = 0; i < selections.length; i++) {
-                if (selections[i].start === start && selections[i].end === end) {
+                if (selections[i].start === start && selections[i].end === end && !selections[i].ifBooked) {
                     return {
                         edge,
+                        //the index is new set at this step, and configure to the i selection, the target selection will be updated later in the function handleMouseMove
                         index: i,
                         lastKnownPosition: position,
                         minLengthInMinutes: 30,
@@ -128,6 +134,13 @@ export default class Day extends PureComponent {
 
         let end = HelpFunctionCollections.toDate(this.props.date, position + HOUR_IN_PIXELS, timeZone);
         end = HelpFunctionCollections.hasOverlap(this.state.selections, dateAtPosition, end) || end;
+
+        // added to avoid select an invalid timeSlot
+        if (dateAtPosition < new Date().getTime()){
+            toast.error('You have selected a too early time start');
+            return;
+        }
+
         if (end - dateAtPosition < 1800000) {
             // slot is less than 30 mins
             return;
@@ -140,6 +153,8 @@ export default class Day extends PureComponent {
             selections: selections.concat([{
                 start: dateAtPosition,
                 end,
+                // if a new selection is created, the status of ifBooked should be false;
+                ifBooked: false
             }]),
         }));
     }
@@ -154,6 +169,7 @@ export default class Day extends PureComponent {
         const { hourLimits } = this.props;
         return (offsetTop + offsetHeight) >= hourLimits.bottom;
     }
+
     handleMouseMove({ pageY }) {
         if (typeof this.state.index === 'undefined') {
             return;
@@ -161,6 +177,7 @@ export default class Day extends PureComponent {
         const { date, timeZone } = this.props;
         const position = this.relativeY(pageY);
         this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition, target }) => {
+
             const selection = selections[index];
             let newMinLength = minLengthInMinutes;
             if (edge === 'both') {
@@ -181,9 +198,20 @@ export default class Day extends PureComponent {
                     // if has reached bottom blocker and it is going downwards, fix.
                     newEnd = selection.end;
                 }
-
-                selection.start = newStart;
-                selection.end = newEnd;
+                //make sure the booked TimeSlot is not editable.
+                if(!selection.ifBooked) {
+                    // make sure the minimal time span is larger than an hour
+                    if(newEnd.getTime() - newStart.getTime() < 3600000){
+                        // too many duplicated error notifications
+//                        toast.error('The minimal time span must larget than an hour');
+                        return;
+                    }
+                    selection.start = newStart;
+                    selection.end = newEnd;
+                }else{
+                    toast.error('You can not update a booked time slot');
+                    return;
+                }
             } else {
                 // stretch element
                 const startPos = HelpFunctionCollections.positionInDay(date, selection.start, timeZone);
@@ -197,7 +225,18 @@ export default class Day extends PureComponent {
                     // Collision! Let
                     return {};
                 }
-                selection.end = newEnd;
+
+                if(!selection.ifBooked) {
+                    // make sure the minimal time span is larger than an hour
+                    if(newEnd.getTime() - selection.start.getTime() < 3600000){
+                        //toast.error('The minimal time span must larget than an hour');
+                        return;
+                    }
+                    selection.end = newEnd;
+                }else{
+                    toast.error('You can not update a booked time slot');
+                    return;
+                }
             }
             return {
                 lastKnownPosition: position,
@@ -304,7 +343,9 @@ export default class Day extends PureComponent {
                         }}
                     />
                 )}
-                {selections.map(({ start, end }, i) => (
+
+                {   // add ifBooked attribute into map
+                    selections.map(({ start, end, ifBooked }, i) => (
                     <TimeSlot
                         // eslint-disable-next-line react/no-array-index-key
                         key={i}

@@ -7,6 +7,15 @@
     cursor: grab;
 }
 
+:local(.bookedComponent) {
+    background-color: #ff0000;
+    position: absolute;
+    width: 100%;
+    color: #fff;
+    overflow: hidden;
+    cursor: grab;
+}
+
 :local(.active) {
     pointer-events: none;
 }
@@ -31,11 +40,7 @@
 }
 
 :local(.frozen) {
-    background-color: #d6dfe5;
-    border-left: 1px solid #acacac;
-    color: #3d464d;
-    opacity: 1;
-    cursor: default;
+    background-color: #ff0000;
 }
 
 :local(.handle) {
