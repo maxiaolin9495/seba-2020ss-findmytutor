@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Checkbox, Button, Divider, TextField } from 'react-md';
 import { createHashHistory } from 'history'
-import SearchBarComponent from "../search/SearchBarComponent";
+import SearchBarComponent from "./SearchBarComponent";
 import { withRouter } from "react-router-dom";
 import SearchResultCard from "./SearchResultCard";
 import { MultiSelect } from '@progress/kendo-react-dropdowns';
@@ -26,7 +26,7 @@ class SearchResultPage extends Component {
         this.setState({
             value: [...event.target.value]
         });
-    }
+    };
 
     valuetext(value) {
         return `${value}`;
@@ -42,10 +42,10 @@ class SearchResultPage extends Component {
                     key={d.id}
                     tutor={d} />)
             })
-        })
+        });
         let altUniversities = props.data.map(function (uni) {
             return uni.university
-        })
+        });
         this.setState({
             universities: altUniversities.filter(function (item, pos) {
                 return altUniversities.indexOf(item) == pos;

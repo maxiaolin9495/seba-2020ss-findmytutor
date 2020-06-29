@@ -4,7 +4,7 @@ import Background from '../Images/Homepage.jpg';
 import TutorialService from "../Services/TutorialService.js"
 import UserService from "../Services/UserService";
 import { toast } from 'react-toastify';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class BookingListView extends React.Component {
 
@@ -53,11 +53,11 @@ export class BookingListView extends React.Component {
 
     handleReview = (url) => {
         this.props.history.push(url);
-    }
+    };
 
     cancelTutorial = (tutorialInfo) => {
-        TutorialService.cancelTutorial(tutorialInfo).then((data) => {
-            toast.success('Successfully cancel tutorial')
+        TutorialService.cancelTutorial(tutorialInfo).then(() => {
+            toast.success('Successfully cancel tutorial');
             this.setState({
                 tutorials: this.state.tutorials.map(t => (
                     t._id === tutorialInfo._id ?
@@ -67,11 +67,11 @@ export class BookingListView extends React.Component {
         }).catch(() => {
             toast.error('Failed to cancel tutorial');
         });
-    }
+    };
 
     confirmTutorial = (tutorialInfo) => {
-        TutorialService.confirmTutorial(tutorialInfo).then((data) => {
-            toast.success('Successfully confirm tutorial')
+        TutorialService.confirmTutorial(tutorialInfo).then(() => {
+            toast.success('Successfully confirm tutorial');
             this.setState({
                 tutorials: this.state.tutorials.map(t => (
                     t._id === tutorialInfo._id ?
@@ -81,7 +81,7 @@ export class BookingListView extends React.Component {
         }).catch(() => {
             toast.error('Failed to confirm tutorial');
         });
-    }
+    };
 
     render() {
         if (this.state.loading) {

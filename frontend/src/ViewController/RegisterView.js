@@ -1,9 +1,9 @@
 import React from "react";
 import Background from "../Images/Homepage.jpg";
-import RegisterTab from "../UIcomponents/pageDesign/Register";
+import RegisterTab from "../UIcomponents/PageDesign/Register";
 import RegisterService from "../Services/RegisterService";
 import { toast } from 'react-toastify';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class RegisterView extends React.Component {
     constructor(props) {

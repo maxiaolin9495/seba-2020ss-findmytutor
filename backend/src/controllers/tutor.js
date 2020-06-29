@@ -236,13 +236,12 @@ const searchTutor = (req, res) => {
             console.log('internal server error by searching');
             return res.status(400).json({
                 error: 'Internal Server Error',
-                message: 'Error in search function: ' + error.message
+                message: 'Error in Search function: ' + error.message
             });
         })
     } else {
         const queryString = req.query.q;
         const pattern = new RegExp(`${queryString}`, 'i'); // Regex find all value match the query string starting from the first position
-        const l = queryString.length;
         // const filteredData = await 
         tutorModel.find(
             { $or: [{ 'firstName': pattern }, { 'lastName': pattern }, { 'courses': pattern }] }
@@ -252,7 +251,7 @@ const searchTutor = (req, res) => {
             console.log('internal server error by searching');
             return res.status(400).json({
                 error: 'Internal Server Error',
-                message: 'Error in search function: ' + error.message
+                message: 'Error in Search function: ' + error.message
             });
         })
     }
@@ -268,7 +267,6 @@ const autoCompleteForSearch = async (req, res) => {
     //     return res.status(200).json({});
     const queryString = req.query.q;
     const pattern = new RegExp(`${queryString}`, 'i');
-    const length = queryString.length;
     let filteredCourses = [];
     // TODO: Combine two queries to one
     try {

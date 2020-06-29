@@ -2,13 +2,13 @@
 
 import React from 'react';
 
-import EditProfile from './../UIcomponents/pageDesign/EditProfile';
+import EditProfile from '../UIcomponents/PageDesign/EditProfile';
 import Background from '../Images/Homepage.jpg';
 
 import UserService from '../Services/UserService';
 import EditProfileService from '../Services/EditProfileService';
 import { toast } from "react-toastify";
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 
 export class EditProfileView extends React.Component {

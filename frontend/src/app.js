@@ -13,7 +13,6 @@ import {ContactUsView} from "./ViewController/ContactUsView";
 import { EditProfileView } from "./ViewController/EditProfileView";
 import { TutorPageView } from "./ViewController/TutorPageView";
 import { BookingListView } from "./ViewController/BookingListView";
-import Navigation from "./UIcomponents/pageDesign/Navigation";
 import {ReviewTutorView} from "./ViewController/ReviewTutorView";
 
 export default class App extends React.Component {

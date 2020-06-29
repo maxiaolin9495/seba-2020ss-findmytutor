@@ -1,8 +1,7 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
-import AvailableTimes from "react-available-times";
 import { toast } from "react-toastify";
-
+import ModifiedAvailableTimes from "./AvailableTimes.js";
 
 class TutorCalendar extends React.Component {
     constructor(props) {
@@ -12,6 +11,7 @@ class TutorCalendar extends React.Component {
             tmp.push({
                 start: new Date(parseInt(times.start)),
                 end: new Date(parseInt(times.end))
+
             })
         });
         let result = this.verifySelectionsWithInvalidDate(tmp);
@@ -75,7 +75,7 @@ class TutorCalendar extends React.Component {
     render() {
         return (
             <div>
-                <AvailableTimes
+                <ModifiedAvailableTimes
                     weekStartsOn="monday"
                     //save selected time slots
                     onChange={this.handleChange}
