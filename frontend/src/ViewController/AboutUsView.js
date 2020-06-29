@@ -1,8 +1,7 @@
 import React from 'react';
-import AboutUs from '../UIcomponents/pageDesign/AboutUs';
+import AboutUs from '../UIcomponents/PageDesign/AboutUs';
 import Background from "../Images/Homepage.jpg";
-import Navigation from "../UIcomponents/pageDesign/Navigation";
-import {Switch} from "react-router-dom";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class AboutUsView extends React.Component {
 

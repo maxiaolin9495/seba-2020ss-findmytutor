@@ -1,7 +1,7 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import DatePicker from "react-datepicker";
-import '../../css/react-datepicker.css';
+import '../../Css/react-datepicker.css';
 import PaymentDialog from "../PaymentDialog";
 import { toast } from "react-toastify";
 import TutorPageService from "../../Services/TutorPageService";

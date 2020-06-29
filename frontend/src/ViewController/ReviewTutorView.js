@@ -1,11 +1,11 @@
 import React from "react";
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 import Background from '../Images/Homepage.jpg';
 import UserService from '../Services/UserService';
 import TutorialService from '../Services/TutorialService';
 import TutorPageService from "../Services/TutorPageService";
 import ReviewService from "../Services/ReviewService";
-import ReviewPage from "../UIcomponents/pageDesign/ReviewPage";
+import ReviewPage from "../UIcomponents/PageDesign/ReviewPage";
 import { toast } from 'react-toastify';
 
 export class ReviewTutorView extends React.Component {
@@ -27,7 +27,7 @@ export class ReviewTutorView extends React.Component {
                     tutor: tutor,
                     tutorial: data
                 });
-            })
+            });
             if (data.reviewId)
                 ReviewService.getReview(data.reviewId).then((review) => {
                     this.setState({
@@ -63,21 +63,21 @@ export class ReviewTutorView extends React.Component {
 
     handleReview = (review) => {
         (this.state.tutorial.reviewId) ?
-            ReviewService.updateReview(this.state.tutorial.reviewId, review).then((data) => {
+            ReviewService.updateReview(this.state.tutorial.reviewId, review).then(() => {
                 toast.success('Successfully updated');
                 this.props.history.goBack();
             }).catch((e) => {
                 console.error(e);
                 this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
             }) :
-            ReviewService.createReview(review).then((data) => {
+            ReviewService.createReview(review).then(() => {
                 toast.success('Successfully submited');
                 this.props.history.goBack();
             }).catch((e) => {
                 console.error(e);
                 this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
             });
-    }
+    };
 
     render() {
         return (

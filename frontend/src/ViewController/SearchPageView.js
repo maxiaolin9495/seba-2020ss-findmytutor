@@ -2,9 +2,9 @@
 
 import React from 'react';
 import Background from '../Images/Homepage.jpg';//https://www.umc.edu/Research/Centers-and-Institutes/Centers/Center-for-Informatics-and-Analytics/Center-for-Informatics-and-Analytics-Home.html
-import SearchBarComponent from "../UIcomponents/search/SearchBarComponent";
-import '../css/bg.css';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import SearchBarComponent from "../UIcomponents/Search/SearchBarComponent";
+import '../Css/bg.css';
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class SearchPageView extends React.Component {
 

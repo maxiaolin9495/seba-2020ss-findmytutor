@@ -1,9 +1,9 @@
 import React from 'react';
 import TutorPageService from "../Services/TutorPageService";
-import TutorPersonalPage from '../UIcomponents/search/TutorPersonalPage';
+import TutorPersonalPage from '../UIcomponents/Search/TutorPersonalPage';
 import { toast } from "react-toastify";
 import Background from '../Images/Homepage.jpg';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class TutorPageView extends React.Component {
 

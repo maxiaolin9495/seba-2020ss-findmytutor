@@ -389,11 +389,11 @@ paths:
     get:
       tags:
         - tutor
-      description: search Tutor with given parameter.
+      description: Search Tutor with given parameter.
       parameters:
         - name: q
           in: query
-          description: search query parameter
+          description: Search query parameter
           required: true
           schema:
             type: string
@@ -417,11 +417,11 @@ paths:
     get:
       tags:
         - tutor
-      description: auto complete result for search bar
+      description: auto complete result for Search bar
       parameters:
         - name: q
           in: query
-          description: search query parameter
+          description: Search query parameter
           required: true
           schema:
             type: string

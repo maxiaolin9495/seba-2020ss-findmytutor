@@ -178,7 +178,6 @@
     cursor: pointer;
     position: absolute;
     top: 10px;
-    width: 0;
     padding: 0;
     border: 0.45rem solid transparent;
     z-index: 1;
@@ -287,8 +286,8 @@
     margin: 0;
     height: 184px;
     overflow-y: scroll;
-    padding-right: 0px;
-    padding-left: 0px;
+    padding-right: 0;
+    padding-left: 0;
     width: 100%;
     box-sizing: content-box;
 }
@@ -572,7 +571,7 @@
     margin: -8px auto 0;
     padding: 2px;
     position: absolute;
-    right: 0px;
+    right: 0;
     text-align: center;
 }
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route, Link, withRouter} from 'react-router-dom';
 import {Avatar, FontIcon, ListItem, NavigationDrawer, Button, IconSeparator } from 'react-md';
-import imgURL from '../../Images/logoIcon.png';
-import NavigationMenuStyle from '../../css/Navigation.css';
+import imgURL from '../../Images/LogoIcon.png';
+import NavigationMenuStyle from '../../Css/navigation.css';
 import LoginService from '../../Services/LoginService';
 import UserService from '../../Services/UserService';
 import { upperFirst } from 'lodash/string';

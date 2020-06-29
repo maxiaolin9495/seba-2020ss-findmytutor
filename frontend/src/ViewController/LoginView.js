@@ -1,9 +1,9 @@
 import React from "react";
 import Background from "../Images/Homepage.jpg";
-import LoginTab from "../UIcomponents/pageDesign/Login";
+import LoginTab from "../UIcomponents/PageDesign/Login";
 import LoginService from "../Services/LoginService";
 import { toast } from 'react-toastify';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class LoginView extends React.Component {
     constructor(props) {

@@ -29,7 +29,7 @@ export default class ScrollingContentAndSizing extends PureComponent {
 
     ok = () => {
         this.props.onClick();
-    }
+    };
     hide = () => {
         this.setState({ visible: false });
     };
