@@ -311,7 +311,8 @@ export default class HelpFunctionCollections {
             timeZone,
         );
 
-        return selections.map(({ start, end }) => {
+        //add IfBooked Attribute in the seleciton object
+        return selections.map(({ start, end, ifBooked }) => {
             const startM = momentTimezone.tz(weekStart, timeZone);
             const endM = momentTimezone.tz(weekStart, timeZone);
             startM.week(midCurrentWeek.week());
@@ -321,6 +322,7 @@ export default class HelpFunctionCollections {
             return {
                 start: startM.toDate(),
                 end: endM.toDate(),
+                ifBooked: ifBooked
             };
         });
     }

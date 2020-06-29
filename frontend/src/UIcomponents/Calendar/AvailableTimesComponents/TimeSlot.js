@@ -80,6 +80,7 @@ export default class TimeSlot extends PureComponent {
             timeZone,
             title,
             touchToDelete,
+            ifBooked,
         } = this.props;
 
         const top = HelpFunctionCollections.positionInDay(date, start, timeZone);
@@ -90,14 +91,17 @@ export default class TimeSlot extends PureComponent {
             1,
         );
 
-        const classes = [styles.component];
+        // the booked time slot will be present in red, otherwise in green
+        const classes = ifBooked?
+            [styles.bookedComponent]:
+            [styles.component];
         if (frozen) {
             classes.push(styles.frozen);
         }
         if (active) {
             classes.push(styles.active);
         }
-
+        let secondFrozen = ifBooked;
         const style = {
             top,
             height,
@@ -113,8 +117,8 @@ export default class TimeSlot extends PureComponent {
             <div
                 className={classes.join(' ')}
                 style={style}
-                onMouseDown={frozen || touchToDelete ? undefined : this.handleMouseDown}
-                onClick={frozen || !touchToDelete ? undefined : this.handleDelete}
+                onMouseDown={secondFrozen || touchToDelete ? undefined : this.handleMouseDown}
+                onClick={secondFrozen || !touchToDelete ? undefined : this.handleDelete}
             >
                 <div
                     className={styles.title}
@@ -131,7 +135,7 @@ export default class TimeSlot extends PureComponent {
                     )}
                     {this.timespan()}
                 </div>
-                {!frozen && !touchToDelete && (
+                {!secondFrozen && !touchToDelete && (
                     <div>
                         <div
                             className={styles.handle}
