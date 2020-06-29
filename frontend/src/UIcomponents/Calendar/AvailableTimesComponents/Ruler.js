@@ -1,3 +1,8 @@
+/*
+this class is copied from project react-available-times
+like: https://github.com/trotzig/react-available-times/
+ */
+
 import PropTypes from 'prop-types';
 import React from 'react';
 
