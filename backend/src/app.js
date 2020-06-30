@@ -11,6 +11,7 @@ const middleWares = require('./middleWares');
 const user = require('./routes/user.js');
 const tutor = require('./routes/tutor.js');
 const customer = require('./routes/customer');
+const transaction=require('./routes/transaction');
 const app = express();
 /**
  * Connect to the database
@@ -46,6 +47,7 @@ app.use('/user', user);
 app.use('/contact', contact);
 app.use('/tutor', tutor);
 app.use('/customer', customer);
+app.use('/transaction',transaction);
 app.use('/api-docs', swaggerUi.serve);
 app.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
