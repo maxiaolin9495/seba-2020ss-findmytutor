@@ -62,25 +62,28 @@ class BookingCalendar extends React.Component {
     }
 
     //acquire time slots between start and end timestamp within one time period
-    getSingleTimes = (startTimestamp, endTimestamp) => {
+    getSingleTimes = (startTimestamp, endTimestamp,type) => {
         let arr = [];
         let current = startTimestamp;
-        while (current < endTimestamp) {
+        while (current < endTimestamp - 1000) {
             arr.push(new Date(parseInt(current)));
             current += 60 * 60 * 1000;
         }
-        arr.push(new Date(parseInt(endTimestamp)));
+        if(type!=='booking'){
+            arr.push(new Date(parseInt(endTimestamp)));
+        }
+
         return arr;
     };
 
     //get all time slots in time array
-    availableTimes = (initials) => {
+    availableTimes = (initials,type) => {
         let arr = [];
         initials.forEach((data) => {
             if (data.start !== undefined && data.end !== undefined) {
                 let startStp = data.start.getTime();
                 let endStp = data.end.getTime();
-                let newArr = this.getSingleTimes(startStp, endStp);
+                let newArr = this.getSingleTimes(startStp, endStp,type);
                 if (newArr !== null && newArr !== undefined) {
                     newArr.forEach((data) => {
                         if (arr.indexOf(data) === -1) {
@@ -110,10 +113,9 @@ class BookingCalendar extends React.Component {
             }
         });
         this.setState({selectedStart: value});
-        let tmpDate = new Date();
+        let tmpDate = new Date(value.getTime());
         tmpDate.setHours(0);
         tmpDate.setMinutes(0);
-        tmpDate.setDate(value.getDate());
         this.setState({selectedEnd: tmpDate});
         this.setState({initialTimesForSpecificDay: timeOnSpecificDay});
         this.setState({minDate: value});
@@ -168,9 +170,9 @@ class BookingCalendar extends React.Component {
                         id="newPickDate"
                         require
                         inline
-                        includeDates={this.availableTimes(this.state.initialTimes)}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay)}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay)}
+                        includeDates={this.availableTimes(this.state.initialTimes,'')}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay,'')}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay,'booking')}
                         timesShown={2}
                         style={stylePicker}
                         dateFormat='dd.MM.yyyy HH:mm'
@@ -195,9 +197,9 @@ class BookingCalendar extends React.Component {
                         dateFormat='dd.MM.yyyy HH:mm'
                         className="md-cell"
                         selected={this.state.selectedEnd}
-                        includeDates={this.availableTimes(this.state.initialTimes)}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay)}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay)}
+                        includeDates={this.availableTimes(this.state.initialTimes,'')}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay,'')}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay,'booking')}
                         isClearable
                         minDate={this.state.minDate}
                         //   minTime={new Date()}
