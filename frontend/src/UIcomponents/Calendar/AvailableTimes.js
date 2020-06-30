@@ -52,7 +52,13 @@ export default class AvailableTimes extends React.Component {
                     timeZone,
                     weekStartsOn,
                 }) {
-        super();
+        super({
+            calendars,
+            initialSelections,
+            recurring,
+            timeZone,
+            weekStartsOn,
+        });
         console.log(initialSelections);
         const selectedCalendars =
             calendars.filter(({ selected }) => selected).map(({ id }) => id);

@@ -8,10 +8,10 @@
 }
 
 :local(.bookedComponent) {
-    background-color: #ff0000;
+    background-color: #E0FFFF;
     position: absolute;
     width: 100%;
-    color: #fff;
+    color: #000000;
     overflow: hidden;
     cursor: grab;
 }

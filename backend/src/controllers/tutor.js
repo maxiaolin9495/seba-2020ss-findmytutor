@@ -113,7 +113,10 @@ const uploadTutorProfile = (req, res) => {
         tutorModel.updateOne({email: tutor.email}, tutor)
             .then(
                 () => {
-                    return res.status(200).json({message: "successfully updated"});
+                    return res.status(200)
+                        .json({
+                                message: "successfully updated"
+                        });
                 }
             )
             .catch(
@@ -148,11 +151,16 @@ const sortOnTimeSlots = (timeSlotIds) => {
         tempTimeSlot = timeSlotIds[0];
     }
     for (let i = 0; i < timeSlotIds.length - 1; i++) {
-
-        if (timeSlotIds[i].end === timeSlotIds[i + 1].start
-            && timeSlotIds[i].ifBooked === timeSlotIds[i + 1].ifBooked) {
-            tempTimeSlot.end = timeSlotIds[i + 1].end
+        if(!timeSlotIds[i].ifBooked) {
+            if (timeSlotIds[i].end === timeSlotIds[i + 1].start
+                && timeSlotIds[i].ifBooked === timeSlotIds[i+1].ifBooked) {
+                tempTimeSlot.end = timeSlotIds[i + 1].end
+            }else {
+                combinedTimeSlotIds.push(tempTimeSlot);
+                tempTimeSlot = timeSlotIds[i + 1];
+            }
         } else {
+            // if the time slot is booked, we push it directly in
             combinedTimeSlotIds.push(tempTimeSlot);
             tempTimeSlot = timeSlotIds[i + 1];
         }

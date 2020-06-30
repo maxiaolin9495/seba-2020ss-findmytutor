@@ -168,6 +168,7 @@ TimeSlot.propTypes = {
     end: PropTypes.instanceOf(Date).isRequired,
     title: PropTypes.string,
     frozen: PropTypes.bool,
+    ifBooked: PropTypes.bool,
 
     onSizeChangeStart: PropTypes.func,
     onMoveStart: PropTypes.func,

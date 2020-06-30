@@ -17,8 +17,7 @@ export class ContactUsView extends React.Component {
     };
     send = (contactForm) => {
         if (!this.validateInputs()) return;
-        UserService.uploadMessage(contactForm.message, contactForm.email).then(data => {
-            console.log(data);
+        UserService.uploadMessage(contactForm.message, contactForm.email).then( () => {
             toast.success("Message successfully sent out");
             this.props.history.push('/');
         }).catch(e => {

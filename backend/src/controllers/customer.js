@@ -355,11 +355,8 @@ const createTutorial = (req, res) => {
                             message: 'The request body contains an invalid time span'
                         });
                     } else {
-                        console.log(newTimeSlots.timeSlotIds);
                         tutorialModel.create(tutorial).then(tutorial => {
-                            console.log(tutorial);
                             let tutorialId = tutorial._id;
-                            console.log(1);
                             let error = updateTutorialForTutor(req.body.tutorEmail, tutorialId);
                             if (!error) {
                                 error = updateTutorialForCustomer(req.body.customerEmail, tutorialId);
@@ -475,7 +472,6 @@ const updateTimeSlots = (timeSlotIds, tutorial) => {
 };
 
 const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
-    console.log(2);
     tutorModel.updateOne(
         { email: email },
         { $push: { bookedTutorialSessionIds: bookedTutorialSessionId }
@@ -486,7 +482,6 @@ const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
                 console.log('error by adding a tutorial id to the tutor');
                 return error;
             });
-    console.log(3);
 };
 
 const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
