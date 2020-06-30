@@ -257,8 +257,13 @@ export default class HelpFunctionCollections {
             throw new Error('Missing timeZone');
         }
         const m = momentTimezone.tz(day, timeZone);
-        const hours = Math.floor(pixelsFromTop / HOUR_IN_PIXELS);
-        const minutes = Math.ceil(((pixelsFromTop % HOUR_IN_PIXELS) / HOUR_IN_PIXELS) * 60);
+        let hours = Math.floor(pixelsFromTop / HOUR_IN_PIXELS);
+        let minutes = Math.ceil(((pixelsFromTop % HOUR_IN_PIXELS) / HOUR_IN_PIXELS) * 60);
+        //the time span must a multiple of hours not 15 minutes
+        if(minutes >= 15){
+            hours += 1;
+            minutes = 0;
+        }
         m.hour(hours).minutes(minutes).seconds(0).milliseconds(0);
         return m.toDate();
     }
