@@ -25,6 +25,8 @@ tags:
     description: Access to do CRU operation on a tutorial session object or get all tutorial sessions with a tutor id.
   - name: review
     description: Access to do CRU operation on a review object or get all reviews with a tutor id.
+  - name: transaction
+    description: Access to do CR operation on a transaction object or get all transactions with payer.
 
 paths:
   /user/register:
@@ -523,7 +525,64 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
 
+  /transaction/getTransaction/{payer}:
+    get:
+      tags:
+        - transaction
+      summary: To get a list of transaction by payer
+      description: Only valid user can use this backend service
+      parameters:
+        - name: payer
+          in: path
+          description: the payer of related transaction
+          required: true
+          schema:
+            type: string
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      responses:
+        200:
+          content: []
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
 
+  /transaction/createTransaction:
+    summary: To create a new transaction.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - transaction
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transactionForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/schemas/transactionForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
 
 components:
   schemas:
@@ -674,7 +733,18 @@ components:
           type: string
         university:
           type: string
-        
+    transactionForms:
+      type: object
+      $ref: '#/components/schemas/transactionForms'
+      properties:
+        payer:
+          type: string
+        receiver:
+          type: string
+        transactionStatus:
+          type: string
+        transactionIds:
+          type: string
 
   securitySchemas:
     authenticationHeader:
