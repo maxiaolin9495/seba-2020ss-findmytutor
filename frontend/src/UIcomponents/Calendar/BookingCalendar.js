@@ -37,7 +37,6 @@ class BookingCalendar extends React.Component {
         let initials = [];
         TutorPageService.getTutorProfileById(this.props.match.params.id).then((data) => {
             this.setState({price: data.price});
-            console.log(data);
             data.timeSlotIds.forEach((times) => {
                 initials.push({
                     start: new Date(parseInt(times.start)),
@@ -120,13 +119,21 @@ class BookingCalendar extends React.Component {
         this.setState({minDate: value});
         this.setState({bookingTimesForSpecificDay: bookingOnSpecificDay});
 
-
     };
 
     handleChangeEnd = (value) => {
-        this.setState({selectedEnd: value});
+        let tmpSelectEnd;
+        if(this.state.selectedStart) {
+            tmpSelectEnd = new Date(this.state.selectedStart.getTime());
+            tmpSelectEnd.setHours(value.getHours());
+            tmpSelectEnd.setMinutes(value.getMinutes());
+        }else{
+            tmpSelectEnd = value;
+        }
+        this.setState({selectedEnd: tmpSelectEnd});
+
         let startTime = this.state.selectedStart.getHours();
-        let endTime = value.getHours();
+        let endTime = tmpSelectEnd.getHours();
         if (endTime <= startTime) {
             toast.error('Invalid time selected!');
             this.setState({selectedEnd: undefined});

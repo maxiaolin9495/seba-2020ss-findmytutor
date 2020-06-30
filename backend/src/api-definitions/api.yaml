@@ -330,7 +330,7 @@ paths:
   /tutor/uploadTutorProfile:
     summary: For tutor upload Tutor Profile.
     description: Only valid tutor can use this backend service
-    post:
+    put:
       tags:
         - tutor
       parameters:

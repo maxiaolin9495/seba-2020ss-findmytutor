@@ -15,7 +15,7 @@ const ROUND_TO_NEAREST_MINS = 15;
 
 export default class Day extends PureComponent {
     constructor({ initialSelections }) {
-        super( {initialSelections} );
+        super();
         this.state = {
             index: undefined,
             selections: initialSelections,
@@ -352,6 +352,7 @@ export default class Day extends PureComponent {
                         timeConvention={timeConvention}
                         timeZone={timeZone}
                         date={date}
+                        ifBooked={ifBooked}
                         start={start}
                         end={end}
                         active={typeof index !== 'undefined'}

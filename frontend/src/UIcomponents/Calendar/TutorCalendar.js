@@ -10,8 +10,8 @@ class TutorCalendar extends React.Component {
         props.timeSlotIds.forEach((times) => {
             tmp.push({
                 start: new Date(parseInt(times.start)),
-                end: new Date(parseInt(times.end))
-
+                end: new Date(parseInt(times.end)),
+                ifBooked: times.ifBooked
             })
         });
         let result = this.verifySelectionsWithInvalidDate(tmp);
@@ -30,7 +30,6 @@ class TutorCalendar extends React.Component {
         let tmpSelections = [];
         let valid = true;
         for (let i = 0; i < selections.length; i++) {
-            console.log(selections[i]);
             if (this.isDateBeforeToday(selections[i].start)) {
                 //   toast.error('Invalid date selected');
                 valid = false;
@@ -52,16 +51,10 @@ class TutorCalendar extends React.Component {
         selections.forEach((data) => {
 
             // if a timeSlot with the same startTime & endTime is found, then we use its ifBooked Value, else use the default value false
-            let a = this.props.timeSlotIds.find(
-                timeSlot => timeSlot.start === data.start.getTime()
-                    && timeSlot.end === data.end.getTime()
-            );
             arr.push({
                 start: data.start.getTime(),
                 end: data.end.getTime(),
-                ifBooked: a ?
-                    a.ifBooked :
-                    false
+                ifBooked: data.ifBooked
             })
         });
         console.log(arr);
