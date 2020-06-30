@@ -42,7 +42,7 @@ const TutorialSchema = new mongoose.Schema({
     },
     reviewId:{
         type: String,
-        required: true,
+        required: false,
     }
 });
 

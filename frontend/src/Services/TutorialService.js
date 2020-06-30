@@ -10,7 +10,7 @@ export default class TutorialService {
         console.log(booking);
         return new Promise((resolve, reject) => {
 
-            HttpService.post(this.baseURL() + '/user/createTutorial',
+            HttpService.post(this.baseURL() + '/customer/createTutorial',
                 {
                     tutorFirstName: booking.tutorFirstName,
                     tutorEmail: booking.tutorEmail,

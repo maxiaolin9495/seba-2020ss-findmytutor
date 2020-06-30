@@ -2,13 +2,13 @@
 
 import React from 'react';
 
-import EditProfile from './../UIcomponents/pageDesign/EditProfile';
+import EditProfile from '../UIcomponents/PageDesign/EditProfile';
 import Background from '../Images/Homepage.jpg';
 
 import UserService from '../Services/UserService';
 import EditProfileService from '../Services/EditProfileService';
 import { toast } from "react-toastify";
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 
 export class EditProfileView extends React.Component {
@@ -38,6 +38,21 @@ export class EditProfileView extends React.Component {
             // get customer profile
             if (user.userType === 'tutor') {
                 EditProfileService.getTutorProfile().then((data) => {
+                    if (data.timeSlotIds){
+                        console.log(data.timeSlotIds);
+                        let arr = [];
+                        //make sure we only present valid timeSlot on the calendar
+                        data.timeSlotIds.forEach(
+                            timeSlot => {
+                                if (timeSlot && timeSlot.start && timeSlot.end) {
+                                    arr.push(timeSlot);
+                                }
+                        });
+                        console.log(arr);
+                        data.timeSlotIds = arr;
+
+                    }
+
                     this.setState({
                         userProfile: data,
                         loading: false,
@@ -62,20 +77,20 @@ export class EditProfileView extends React.Component {
 
     updateProfile = (userProfile) => {
         if (this.state.userType === 'tutor') {
-            EditProfileService.updateTutorProfile(userProfile).then((data) => {
+            EditProfileService.updateTutorProfile(userProfile).then(() => {
                 toast.success('Update profile succeeded');
                 // this.props.history.push('/');
-            }).catch((e) => {
+            }).catch(() => {
                 toast.error('Please input correct information');
                 this.setState({
                     error: 'Error while updating user profile'
                 });
             });
         } else {
-            EditProfileService.updateCustomerProfile(userProfile).then((data) => {
+            EditProfileService.updateCustomerProfile(userProfile).then(() => {
                 toast.success('Update profile succeeded');
                 // this.props.history.push('/');
-            }).catch((e) => {
+            }).catch(() => {
                 toast.error('Please input correct information');
                 this.setState({
                     error: 'Error while updating customer profile'

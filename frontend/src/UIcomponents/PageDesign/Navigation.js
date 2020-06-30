@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route, Link, withRouter} from 'react-router-dom';
 import {Avatar, FontIcon, ListItem, NavigationDrawer, Button, IconSeparator } from 'react-md';
-import imgURL from '../../Images/logoIcon.png';
-import NavigationMenuStyle from '../../css/Navigation.css';
+import imgURL from '../../Images/LogoIcon.png';
+import NavigationMenuStyle from '../../Css/navigation.css';
 import LoginService from '../../Services/LoginService';
 import UserService from '../../Services/UserService';
 import { upperFirst } from 'lodash/string';
@@ -181,7 +181,7 @@ class NavigationMenu extends React.Component {
                     toolbarTitle={
 
                         <Item label="FindMyTutor">
-                            <Button flat onClick={() => this.props.history.push('/')}><Avatar src={imgURL}
+                            <Button onClick={() => this.props.history.push('/')}><Avatar src={imgURL}
                                                                                          role="presentation"
                                                                                          suffix="green-400"/></Button>
                         </Item>

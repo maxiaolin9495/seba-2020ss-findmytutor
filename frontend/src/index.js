@@ -2,10 +2,10 @@
 
 import React from 'react'
 import { render } from 'react-dom'
-import App from './App'
+import App from './app'
 
 import WebFontLoader from 'webfontloader';
-import './css/react-md.css';
+import './Css/react-md.css';
 
 
 

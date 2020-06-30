@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-md';
-import Dialog from "../pageDesign/Dialog"
+import Dialog from "../PageDesign/Dialog"
 import TutorialService from "../../Services/TutorialService";
 import EditProfileService from "../../Services/EditProfileService";
 
@@ -45,13 +45,13 @@ export default class BookingCard extends React.Component {
             (mm > 9 ? '' : '0') + mm,
             (dd > 9 ? '' : '0') + dd
         ].join('-');
-    }
+    };
 
     showDuration = (startTime, endTime) => {
         let startTimeObj = new Date(parseInt(startTime));
         let endTimeObj = new Date(parseInt(endTime));
         return `${String(startTimeObj.getHours()).padStart(2, '0')}:${String(startTimeObj.getMinutes()).padStart(2, '0')} - ${String(endTimeObj.getHours()).padStart(2, '0')}:${String(endTimeObj.getMinutes()).padStart(2, '0')}`
-    }
+    };
 
     cancelTutorial = () => {
         let tutorialInfo = {
@@ -61,9 +61,9 @@ export default class BookingCard extends React.Component {
             tutorEmail: this.props.tutorial.tutorEmail,
             customerEmail: this.props.tutorial.customerEmail,
             customerFirstName: this.state.customer.firstName
-        }
+        };
         this.props.cancelTutorial(tutorialInfo);
-    }
+    };
 
     confirmTutorial = () => {
         let tutorialInfo = {
@@ -71,9 +71,9 @@ export default class BookingCard extends React.Component {
             status: 'confirmed',
             customerEmail: this.props.tutorial.customerEmail,
             customerFirstName: this.state.customer.firstName
-        }
+        };
         this.props.confirmTutorial(tutorialInfo);
-    }
+    };
 
     showLastButton = () => {
         switch (this.props.tutorial.tutorialStatus) {
@@ -94,7 +94,7 @@ export default class BookingCard extends React.Component {
                             }}
                             onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)} >
                             REVIEW
-                        </Button>)
+                        </Button>);
                 else
                     return '';
             case 'reviewed':
@@ -113,17 +113,17 @@ export default class BookingCard extends React.Component {
                             }}
                             onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)} >
                             REVIEW
-                        </Button>)
+                        </Button>);
                 else
                     return '';
             case 'notConfirmed':
             case 'confirmed':
                 return (
-                    <Dialog actionName='cancel' onClick={() => this.cancelTutorial()} />)
+                    <Dialog actionName='cancel' onClick={() => this.cancelTutorial()} />);
             default:
                 return '';
         }
-    }
+    };
 
     render() {
         return (

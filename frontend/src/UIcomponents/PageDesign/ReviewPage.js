@@ -50,7 +50,7 @@ export class ReviewPage extends React.Component {
     };
 
     handleSubmit = () => {
-        if (this.state.text == '') {
+        if (this.state.text === '') {
             toast.error('Please input your comment');
             return;
         }
@@ -58,7 +58,7 @@ export class ReviewPage extends React.Component {
         if (review == undefined) {
             review = {};
         }
-        review.time = this.state.time
+        review.time = this.state.time;
         review.tutorEmail = this.props.tutor.email;
         review.customerEmail = this.props.tutorial.customerEmail;
         review.comprehensionRating = this.state.comprehensionRating;
@@ -69,7 +69,7 @@ export class ReviewPage extends React.Component {
             this.state.friendlinessRating +
             this.state.teachingStyleRating) / 3);
         this.props.onSubmit(review);
-    }
+    };
 
     render() {
         const { comprehensionRating } = this.state;

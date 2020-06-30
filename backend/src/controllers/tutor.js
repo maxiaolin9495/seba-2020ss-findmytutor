@@ -1,7 +1,6 @@
 const tutorialModel = require('../models/tutorial');
 const tutorModel = require('../models/tutor');
 const emailService = require('../services/emailService');
-const tutor = require('../models/tutor');
 
 const getTutorProfile = (req, res) => {
     if (req.userType === 'tutor') {
@@ -109,24 +108,68 @@ const uploadTutorProfile = (req, res) => {
             timeSlotIds: req.body.timeSlotIds,
             avatar: req.body.avatar,
         });
-        tutorModel.updateOne({ email: tutor.email }, tutor).then(tutor => {
-            return res.status(200).json({ message: "successfully updated" });
-        }).catch(error => {
-            console.log('error by creating a Tutor Profile');
-            if (error.code === 11000) {
-                return res.status(400).json({
-                    error: 'tutor Profile exists',
-                    message: error.message
-                })
-            }
-            else {
-                return res.status(500).json({
-                    error: 'Internal server error happens by add tutor Profile',
-                    message: error.message
-                })
-            }
-        });
+
+        tutor.timeSlotIds = sortOnTimeSlots(tutor.timeSlotIds);
+        tutorModel.updateOne({email: tutor.email}, tutor)
+            .then(
+                () => {
+                    return res.status(200)
+                        .json({
+                                message: "successfully updated"
+                        });
+                }
+            )
+            .catch(
+                error => {
+                    console.log('error by creating a Tutor Profile');
+                    if (error.code === 11000) {
+                        return res.status(400).json({
+                                error: 'tutor Profile exists',
+                                message: error.message
+                            }
+                        )
+                    }
+                    else {
+                        return res.status(500).json({
+                            error: 'Internal server error happens by add tutor Profile',
+                            message: error.message
+                        })
+                    }
+                });
     }
+};
+
+const sortOnTimeSlots = (timeSlotIds) => {
+    let combinedTimeSlotIds = [];
+    timeSlotIds = timeSlotIds.sort(function (x, y) {
+        return x.start - y.start;
+    });
+
+    let tempTimeSlot = {};
+
+    if (timeSlotIds.length > 1) {
+        tempTimeSlot = timeSlotIds[0];
+    }
+    for (let i = 0; i < timeSlotIds.length - 1; i++) {
+        if(!timeSlotIds[i].ifBooked) {
+            if (timeSlotIds[i].end === timeSlotIds[i + 1].start
+                && timeSlotIds[i].ifBooked === timeSlotIds[i+1].ifBooked) {
+                tempTimeSlot.end = timeSlotIds[i + 1].end
+            }else {
+                combinedTimeSlotIds.push(tempTimeSlot);
+                tempTimeSlot = timeSlotIds[i + 1];
+            }
+        } else {
+            // if the time slot is booked, we push it directly in
+            combinedTimeSlotIds.push(tempTimeSlot);
+            tempTimeSlot = timeSlotIds[i + 1];
+        }
+
+        if (i === timeSlotIds.length - 2) {
+            combinedTimeSlotIds.push(tempTimeSlot);
+        }
+    }
+    return combinedTimeSlotIds;
 };
 
 const confirmTutorial = async (req, res) => {
@@ -201,13 +244,12 @@ const searchTutor = (req, res) => {
             console.log('internal server error by searching');
             return res.status(400).json({
                 error: 'Internal Server Error',
-                message: 'Error in search function: ' + error.message
+                message: 'Error in Search function: ' + error.message
             });
         })
     } else {
         const queryString = req.query.q;
         const pattern = new RegExp(`${queryString}`, 'i'); // Regex find all value match the query string starting from the first position
-        const l = queryString.length;
         // const filteredData = await 
         tutorModel.find(
             { $or: [{ 'firstName': pattern }, { 'lastName': pattern }, { 'courses': pattern }] }
@@ -217,7 +259,7 @@ const searchTutor = (req, res) => {
             console.log('internal server error by searching');
             return res.status(400).json({
                 error: 'Internal Server Error',
-                message: 'Error in search function: ' + error.message
+                message: 'Error in Search function: ' + error.message
             });
         })
     }
@@ -233,7 +275,6 @@ const autoCompleteForSearch = async (req, res) => {
     //     return res.status(200).json({});
     const queryString = req.query.q;
     const pattern = new RegExp(`${queryString}`, 'i');
-    const length = queryString.length;
     let filteredCourses = [];
     // TODO: Combine two queries to one
     try {

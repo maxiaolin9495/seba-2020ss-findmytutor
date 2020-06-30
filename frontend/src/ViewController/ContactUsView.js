@@ -1,9 +1,9 @@
 import React from 'react';
-import ContactUs from '../UIcomponents/pageDesign/ContactUs';
+import ContactUs from '../UIcomponents/PageDesign/ContactUs';
 import Background from "../Images/Homepage.jpg";
 import UserService from "../Services/UserService";
 import { toast } from 'react-toastify';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class ContactUsView extends React.Component {
     validateInputs = (email) => {
@@ -17,8 +17,7 @@ export class ContactUsView extends React.Component {
     };
     send = (contactForm) => {
         if (!this.validateInputs()) return;
-        UserService.uploadMessage(contactForm.message, contactForm.email).then(data => {
-            console.log(data);
+        UserService.uploadMessage(contactForm.message, contactForm.email).then( () => {
             toast.success("Message successfully sent out");
             this.props.history.push('/');
         }).catch(e => {

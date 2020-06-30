@@ -1,9 +1,7 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
-import AvailableTimes from "react-available-times";
-import EditProfileService from "../../Services/EditProfileService";
 import { toast } from "react-toastify";
-
+import ModifiedAvailableTimes from "./AvailableTimes.js";
 
 class TutorCalendar extends React.Component {
     constructor(props) {
@@ -12,7 +10,8 @@ class TutorCalendar extends React.Component {
         props.timeSlotIds.forEach((times) => {
             tmp.push({
                 start: new Date(parseInt(times.start)),
-                end: new Date(parseInt(times.end))
+                end: new Date(parseInt(times.end)),
+                ifBooked: times.ifBooked
             })
         });
         let result = this.verifySelectionsWithInvalidDate(tmp);
@@ -31,7 +30,6 @@ class TutorCalendar extends React.Component {
         let tmpSelections = [];
         let valid = true;
         for (let i = 0; i < selections.length; i++) {
-            console.log(selections[i]);
             if (this.isDateBeforeToday(selections[i].start)) {
                 //   toast.error('Invalid date selected');
                 valid = false;
@@ -41,19 +39,25 @@ class TutorCalendar extends React.Component {
         }
         return {selections: tmpSelections, valid: valid};
     };
+
     handleChange = (selections) => {
         let result = this.verifySelectionsWithInvalidDate(selections);
         if (!result.valid) {
             toast.error('Invalid date selected');
         }
+
         selections = result.selections;
         let arr = [];
         selections.forEach((data) => {
+
+            // if a timeSlot with the same startTime & endTime is found, then we use its ifBooked Value, else use the default value false
             arr.push({
                 start: data.start.getTime(),
-                end: data.end.getTime()
+                end: data.end.getTime(),
+                ifBooked: data.ifBooked
             })
         });
+        console.log(arr);
         this.setState({
             initialTimes: selections
         });
@@ -64,7 +68,7 @@ class TutorCalendar extends React.Component {
     render() {
         return (
             <div>
-                <AvailableTimes
+                <ModifiedAvailableTimes
                     weekStartsOn="monday"
                     //save selected time slots
                     onChange={this.handleChange}
