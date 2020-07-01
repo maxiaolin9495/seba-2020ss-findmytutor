@@ -13,11 +13,16 @@ const login = (req, res) => {
     if (!verificationResult.ifValid) {
         return res.status(400).json(verificationResult.message);
     }
-    tutorModel.findOne({ email: req.body.email }).exec()//customerModel schema
-        .then(user => {//user object
+    tutorModel.findOne({ email: req.body.email }).exec()
+        .then(user => {
+            //user object
             if(!user){
-                customerModel.findOne({ email: req.body.email }).exec()//customerModel schema
-                    .then(user => {//user object
+                customerModel.findOne({
+                    email: req.body.email
+                })
+                    .exec()
+                    .then(user => {
+                        //user object
                         // check if the password is valid
                         if (!(req.body.password === user.password)){
 
@@ -29,7 +34,12 @@ const login = (req, res) => {
                     })
             }else {
                 // check if the password is valid
-                if (!(req.body.password === user.password)) return res.status(401).send({token: null});
+                if (!(req.body.password === user.password)) {
+                    return res.status(401)
+                        .send({
+                            token: null
+                        });
+                }
 
                 return createTokenResponse(req, res, user);
 
