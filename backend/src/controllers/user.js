@@ -13,13 +13,35 @@ const login = (req, res) => {
     if (!verificationResult.ifValid) {
         return res.status(400).json(verificationResult.message);
     }
+    tutorModel.findOne({ email: req.body.email }).exec()//customerModel schema
+        .then(user => {//user object
+            if(!user){
+                customerModel.findOne({ email: req.body.email }).exec()//customerModel schema
+                    .then(user => {//user object
+                        // check if the password is valid
+                        if (!(req.body.password === user.password)){
 
-    if (req.body.userType === "customer") {
-        return findUser(req, res, customerModel);
-    } else {
-        return findUser(req, res, tutorModel);
-    }
+                            return res.status(401).send({ token: null });
 
+                        }
+                        return createTokenResponse(req, res, user);
+
+                    })
+            }else {
+                // check if the password is valid
+                if (!(req.body.password === user.password)) return res.status(401).send({token: null});
+
+                return createTokenResponse(req, res, user);
+
+            }
+        })
+        .catch(error => {
+            console.log('error by searching user');
+            return res.status(500).json({
+                error: 'Internal Error happened',
+                message: error.message
+            })
+        });
 };
 
 const register = (req, res) => {
@@ -69,25 +91,6 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
             }
         }).catch(error => {
             console.log('error by searching user ' + error.message);
-            return res.status(404).json({
-                error: 'User Not Found',
-                message: error.message
-            })
-        });
-};
-
-const findUser = (req, res, dataModel) => {
-
-    dataModel.findOne({ email: req.body.email }).exec()//customerModel schema
-        .then(user => {//user object
-            // check if the password is valid
-            if (!(req.body.password === user.password)) return res.status(401).send({ token: null });
-
-            return createTokenResponse(req, res, user);
-
-        })
-        .catch(error => {
-            console.log('error by searching user');
             return res.status(404).json({
                 error: 'User Not Found',
                 message: error.message
@@ -145,18 +148,8 @@ const verifyRequestBody = (req) => {
         };
     }
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'userType')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message: 'The request body must contain a userType property'
-            }
-        };
-    }
-
     // only 2 valid userType values
-    if (req.body.userType !== "tutor" && req.body.userType !== "customer") {
+    if (req.body.userType && req.body.userType !== "tutor" && req.body.userType !== "customer") {
         return {
             ifValid: false,
             message: {
