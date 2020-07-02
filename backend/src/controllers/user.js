@@ -29,7 +29,7 @@ const login = (req, res) => {
                             return res.status(401).send({ token: null });
 
                         }
-                        return createTokenResponse(req, res, user);
+                        return createTokenResponse(req, res, user, 'customer');
 
                     })
             }else {
@@ -41,7 +41,7 @@ const login = (req, res) => {
                         });
                 }
 
-                return createTokenResponse(req, res, user);
+                return createTokenResponse(req, res, user, 'tutor');
 
             }
         })
@@ -109,12 +109,12 @@ const registerUser = (user, dataModel1, dataModel2, req, res) => {
 };
 
 
-const createTokenResponse = (req, res, user) => {
+const createTokenResponse = (req, res, user, userType) => {
 
     // sign a token
     const token = jwt.sign({
         email: user.email,
-        userType: req.body.userType
+        userType: userType?userType:req.body.userType
     }, config.JwtSecret, {
         expiresIn: 999999,
     });
