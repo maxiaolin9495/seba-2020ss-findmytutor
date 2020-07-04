@@ -47,7 +47,7 @@ const createTransaction = (req, res) => {
                             transactionModel.create(transaction)
                                 .then(transaction => {
                                     return res.status(200).json({
-                                        transaction
+                                        transactionId:transaction._id
                                     })
                                 }).catch(error => {
                                 console.log('error by creating a transaction');
