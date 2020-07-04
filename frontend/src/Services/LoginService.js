@@ -9,13 +9,12 @@ export default class LoginService {
     static baseURL() {
         return config.backendUri + "/user/login"
     }
-    static login(email, pass, userType) {
+    static login(email, pass) {
         return new Promise((resolve, reject) => {
             let hashedPass = MD5.hex_md5(pass);
             HttpService.post(this.baseURL(), {
                 email: email,
-                password: hashedPass,
-                userType: userType
+                password: hashedPass
             }, function(data){
                 resolve(data);
             }, function (textStatus) {

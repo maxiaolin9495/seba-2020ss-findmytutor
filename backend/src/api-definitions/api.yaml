@@ -604,8 +604,6 @@ components:
           type: string
         password: # length must greater than 8
           type: string
-        userType:
-          type: string
     contactForms:
       type: object
       $ref: '#/components/schemas/contactForms'

@@ -44,13 +44,6 @@ class PaymentDialog extends PureComponent {
 
 
         TransactionService.createTransaction(transaction).then((data)=>{
-           // console.log(id)
-            console.log(data.transactionId)
-         //   let transactionIds=[];
-         //   TransactionService.getTransactions(UserService.getCurrentUser().email).then((transaction)=>{
-         //       transactionIds=transaction._id;
-          //  })
-         //   transactionIds.push(id);
             let booking = {
                 tutorFirstName: this.state.tutor.firstName,
                 tutorEmail: this.state.tutor.email,

@@ -12,7 +12,7 @@ export class LoginView extends React.Component {
     }
 
     login = (user) => {
-        LoginService.login(user.email, user.password, user.userType).then(() => {
+        LoginService.login(user.email, user.password).then(() => {
             toast.success('Login succeeded');
             this.props.history.push('/');
 
