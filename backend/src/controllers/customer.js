@@ -6,19 +6,19 @@ const emailService = require('../services/emailService');
 
 const getTutorialsForCustomer = (req, res) => {
     const email = req.email;
-    tutorialModel.find({ customerEmail: email })
+    tutorialModel.find({customerEmail: email})
         .then(tutorials => {
             return res.status(200).json(tutorials);
         })
         .catch(error => {
             console.log('internal server error by searching');
-            return req.status(400).json({ error: error.message })
+            return req.status(400).json({error: error.message})
         })
 };
 
 const getCustomerProfile = (req, res) => {
     if (req.userType === 'customer') {
-        customerModel.findOne({ email: req.email }).exec()
+        customerModel.findOne({email: req.email}).exec()
             .then(customer => {
                 return res.status(200).json({
                     email: customer.email,
@@ -43,7 +43,7 @@ const searchCustomerByEmail = (req, res) => {
     if (!req.query.q)
         return res.status(200).json({});
     const customerEmail = decodeURI(req.query.q);
-    customerModel.findOne({ email: customerEmail }).exec()
+    customerModel.findOne({email: customerEmail}).exec()
         .then(customer => {
             return res.status(200).json({
                 email: customer.email,
@@ -52,11 +52,11 @@ const searchCustomerByEmail = (req, res) => {
                 university: customer.university,
             })
         }).catch(error => {
-            return res.status(404).json({
-                error: 'Customer not found',
-                message: error.message
-            })
+        return res.status(404).json({
+            error: 'Customer not found',
+            message: error.message
         })
+    })
 };
 
 const uploadCustomerProfile = (req, res) => {
@@ -91,8 +91,8 @@ const uploadCustomerProfile = (req, res) => {
             lastName: req.body.lastName,
             university: req.body.university,
         });
-        customerModel.updateOne({ email: customer.email }, customer).then(() => {
-            return res.status(200).json({ message: "successfully updated" });
+        customerModel.updateOne({email: customer.email}, customer).then(() => {
+            return res.status(200).json({message: "successfully updated"});
         }).catch(error => {
             console.log('error by creating a customer Profile');
             if (error.code === 11000) {
@@ -100,8 +100,7 @@ const uploadCustomerProfile = (req, res) => {
                     error: 'customer Profile exists',
                     message: error.message
                 })
-            }
-            else {
+            } else {
                 return res.status(500).json({
                     error: 'Internal server error happens by add customer Profile',
                     message: error.message
@@ -192,7 +191,7 @@ const updateReview = (req, res) => {
         customerEmail: req.body.customerEmail
     });
 
-    reviewModel.updateOne({ _id: reviewId }, review).then(
+    reviewModel.updateOne({_id: reviewId}, review).then(
         review => {
             let error = updateRatingForTutor(req.body.tutorEmail);
             if (!error) {
@@ -297,7 +296,7 @@ const verifyReviewBody = (req) => {
 };
 
 const updateReviewForTutor = (email, reviewId) => {
-    tutorModel.updateOne({ email: email }, { $push: { reviewIds: reviewId } }).exec().catch(error => {
+    tutorModel.updateOne({email: email}, {$push: {reviewIds: reviewId}}).exec().catch(error => {
         console.log('error by adding a review id to the tutor');
         return error;
     });
@@ -305,7 +304,7 @@ const updateReviewForTutor = (email, reviewId) => {
 };
 
 const updateRatingForTutor = (email) => {
-    tutorModel.findOne({ email: email }).exec().then(
+    tutorModel.findOne({email: email}).exec().then(
         tutor => {
             let reviewIds = tutor.reviewIds;
             let sumOverallRating = 0;
@@ -313,7 +312,7 @@ const updateRatingForTutor = (email) => {
                 for (let i = 0; i < reviews.length; i++) {
                     sumOverallRating += reviews[i].overallRating;
                 }
-                tutorModel.updateOne({ email: email }, { $push: { rating: Math.round(sumOverallRating / reviews.length) } }).exec();
+                tutorModel.updateOne({email: email}, {$push: {rating: Math.round(sumOverallRating / reviews.length)}}).exec();
             });
         }
     ).catch(error => {
@@ -342,7 +341,8 @@ const createTutorial = (req, res) => {
             tutorialStatus: 'notConfirmed',
             transactionStatus: 'transferred',
             startTime: req.body.startTime,
-            endTime: req.body.endTime
+            endTime: req.body.endTime,
+            transactionId: req.body.transactionId
         });
 
         tutorModel.findOne({email: tutorial.tutorEmail}).exec()
@@ -357,9 +357,10 @@ const createTutorial = (req, res) => {
                     } else {
                         tutorialModel.create(tutorial).then(tutorial => {
                             let tutorialId = tutorial._id;
-                            let error = updateTutorialForTutor(req.body.tutorEmail, tutorialId);
+                            let transactionId = tutorial.transactionId;
+                            let error = updateTutorialAndTransactionForTutor(req.body.tutorEmail, tutorialId, transactionId);
                             if (!error) {
-                                error = updateTutorialForCustomer(req.body.customerEmail, tutorialId);
+                                error = updateTutorialAndTransactionForCustomer(req.body.customerEmail, tutorialId, transactionId);
                                 if (!error) {
                                     emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
                                     tutorModel.updateOne(
@@ -390,8 +391,7 @@ const createTutorial = (req, res) => {
                                     error: 'Internal server error happens by add Tutorial',
                                     message: error.message
                                 })
-                            }
-                            else {
+                            } else {
                                 return res.status(500).json({
                                     error: 'Internal server error happens by add Tutorial',
                                     message: error.message
@@ -465,16 +465,20 @@ const updateTimeSlots = (timeSlotIds, tutorial) => {
     }
 
     return {
-      invalidTimeSpan: false,
-      timeSlotIds: newTimeSlots
+        invalidTimeSpan: false,
+        timeSlotIds: newTimeSlots
     };
 
 };
 
-const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
+const updateTutorialAndTransactionForTutor = (email, bookedTutorialSessionId, transactionIds) => {
     tutorModel.updateOne(
-        { email: email },
-        { $push: { bookedTutorialSessionIds: bookedTutorialSessionId }
+        {email: email},
+        {
+            $push: {
+                bookedTutorialSessionIds: bookedTutorialSessionId,
+                transactionIds: transactionIds
+            }
         })
         .exec()
         .catch(
@@ -484,10 +488,14 @@ const updateTutorialForTutor = (email, bookedTutorialSessionId) => {
             });
 };
 
-const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
+const updateTutorialAndTransactionForCustomer = (email, bookedTutorialSessionId, transactionIds) => {
     customerModel.updateOne(
-        { email: email },
-        { $push: { bookedTutorialSessionIds: bookedTutorialSessionId }
+        {email: email},
+        {
+            $push: {
+                bookedTutorialSessionIds: bookedTutorialSessionId,
+                transactionIds: transactionIds
+            }
         })
         .exec()
         .catch(
@@ -499,8 +507,9 @@ const updateTutorialForCustomer = (email, bookedTutorialSessionId) => {
 
 const updateReviewForCustomer = (email, reviewId) => {
     customerModel.updateOne(
-        { email: email },
-        { $push: { reviewIds: reviewId }
+        {email: email},
+        {
+            $push: {reviewIds: reviewId}
         })
         .exec()
         .catch(

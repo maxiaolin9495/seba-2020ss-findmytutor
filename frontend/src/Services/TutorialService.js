@@ -21,7 +21,8 @@ export default class TutorialService {
                     tutorialStatus: booking.tutorialStatus,
                     transactionStatus: booking.transactionStatus,
                     startTime: booking.startTime,
-                    endTime: booking.endTime
+                    endTime: booking.endTime,
+                    transactionId:booking.transactionId
                 }, function (data) {
                     resolve(data);
                 }, function (textStatus) {

@@ -6,6 +6,7 @@ import TutorPageService from "../Services/TutorPageService";
 import TutorialService from "../Services/TutorialService";
 import UserService from "../Services/UserService";
 import {PayPalButton} from "react-paypal-button";
+import TransactionService from "../Services/TransactionService";
 
 class PaymentDialog extends PureComponent {
     constructor(props) {
@@ -30,25 +31,34 @@ class PaymentDialog extends PureComponent {
     };
 
     paymentSuccess = (res) => {
-        console.log(res);
         toast.success('Successful payment');
         this.hide();
-        let booking = {
-            tutorFirstName: this.state.tutor.firstName,
-            tutorEmail: this.state.tutor.email,
-            customerEmail: UserService.getCurrentUser().email,
-            sessionTopic: 'topic',
-            bookedTime: this.props.duration,
-            price: this.props.totalPrice,
-            tutorialStatus: 'notConfirmed',
-            transactionStatus: 'paid',
-            startTime: this.props.startTime.getTime(),
-            endTime: this.props.endTime.getTime()
 
+        let transaction ={
+            payer:UserService.getCurrentUser().email,
+            receiver:this.state.tutor.email,
+            transactionStatus: 'transferred',
         };
 
-        console.log(booking);
-        TutorialService.createBooking(booking);
+
+
+
+        TransactionService.createTransaction(transaction).then((data)=>{
+            let booking = {
+                tutorFirstName: this.state.tutor.firstName,
+                tutorEmail: this.state.tutor.email,
+                customerEmail: UserService.getCurrentUser().email,
+                sessionTopic: 'topic',
+                bookedTime: new Date(res.create_time).getTime(),
+                price: this.props.totalPrice,
+                tutorialStatus: 'notConfirmed',
+                transactionStatus: 'paid',
+                startTime: this.props.startTime.getTime(),
+                endTime: this.props.endTime.getTime(),
+                transactionId:data.transactionId
+            };
+            TutorialService.createBooking(booking);
+        })
         // this.props.history.push('tutor/' + this.props.match.params.id);
     };
 
