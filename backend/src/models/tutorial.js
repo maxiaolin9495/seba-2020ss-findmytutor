@@ -43,7 +43,11 @@ const TutorialSchema = new mongoose.Schema({
     reviewId:{
         type: String,
         required: false,
-    }
+    },
+    transactionId: [{
+        type: String,
+        required: false
+    }]
 });
 
 module.exports = mongoose.model('tutorial', TutorialSchema);

@@ -24,9 +24,14 @@ const CustomerSchema = new mongoose.Schema({
         required: false
     },
     bookedTutorialSessionIds: [{
-        type: [String]
+        type: [String],
+        required: false
     }],
     reviewIds: [{
+        type: [String],
+        required: false
+    }],
+    transactionIds: [{
         type: [String],
         required: false
     }]

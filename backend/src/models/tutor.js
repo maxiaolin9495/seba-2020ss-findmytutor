@@ -70,7 +70,11 @@ const TutorSchema = new mongoose.Schema({
     reviewIds: [{
         type: [String],
         required: false
-    }]
+    }],
+    transactionIds: [{
+        type: [String],
+        required: false
+    }],
 });
 
 module.exports = mongoose.model('tutors', TutorSchema);
