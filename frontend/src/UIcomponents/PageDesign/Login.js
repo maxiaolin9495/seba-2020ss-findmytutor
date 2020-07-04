@@ -1,23 +1,16 @@
 import React from 'react';
-import {TextField, Button, CardTitle, SelectField} from 'react-md';
+import {TextField, Button, CardTitle} from 'react-md';
 import {withRouter} from "react-router-dom";
 import { toast } from "react-toastify";
-
-const USER_TYPE = ['customer', 'tutor'];
 
 class LoginTab extends React.Component{
     constructor(props) {
         super(props);
         this.state={
             email: '',
-            password: '',
-            userType: ''
+            password: ''
         }
     }
-
-    handleUserType=(value)=>{
-        this.state.userType = value
-    };
 
     render() {
         return (
@@ -32,20 +25,6 @@ class LoginTab extends React.Component{
                         marginLeft: 'auto',
                         marginRight: 'auto'
                     }}/>
-                    <SelectField
-                        id="select-field-styling-1"
-                        label="userType"
-                        placeholder="Please choose your userType"
-                        itemLabel="userType"
-                        menuItems={USER_TYPE}
-                        className="md-cell"
-                        required
-                        onChange={this.handleUserType}
-                        errorText="This field is required"
-                        style={{
-                            width: '100%'
-                        }}
-                    />
                     <TextField
                         id="floating-center-email"
                         label="Email"
@@ -103,11 +82,6 @@ class LoginTab extends React.Component{
         if(event)
             event.preventDefault();
 
-        if(this.state.userType === ''){
-            toast.error('You need first choose a userType');
-            return
-        }
-
         if (!this.isEmail()) {
             return;
         }
@@ -121,8 +95,7 @@ class LoginTab extends React.Component{
 
         let user = {
             email: this.state.email,
-            password: this.state.password,
-            userType: this.state.userType
+            password: this.state.password
         };
         this.props.onSubmit(user);
     }
