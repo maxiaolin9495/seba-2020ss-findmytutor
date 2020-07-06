@@ -22,20 +22,21 @@ export class TutorPageView extends React.Component {
         });
         let tutorId = this.props.match.params.id;
 
-        TutorPageService.getTutorProfileById(tutorId).then((data) => {
-            this.setState({
-                tutor: data,
-                loading: false
+        TutorPageService.getTutorProfileById(tutorId)
+            .then((data) => {
+                this.setState({
+                    tutor: data,
+                    loading: false
+                });
+                console.log(data);
+            }).catch((e) => {
+                console.error(e);
+                toast.error('Error by getting tutor profile');
+                this.setState({
+                    loading: false
+                });
+                this.props.history.goBack();
             });
-            console.log(data);
-        }).catch((e) => {
-            console.error(e);
-            toast.error('Error by getting tutor profile');
-            this.setState({
-                loading: false
-            });
-            this.props.history.goBack();
-        });
     }
 
     render() {
@@ -44,13 +45,13 @@ export class TutorPageView extends React.Component {
         }
         return (
             <div>
-                <Navigation/>
+                <Navigation />
                 <section>
-                    <img src={Background} alt={"A Background Picture"} className="bg"/>
+                    <img src={Background} alt={"A Background Picture"} className="bg" />
                     <TutorPersonalPage
                         loading={this.state.loading}
                         tutor={this.state.tutor}
-                        reviews={this.state.reviews}/>
+                        reviews={this.state.reviews} />
                 </section>
             </div>
         );
