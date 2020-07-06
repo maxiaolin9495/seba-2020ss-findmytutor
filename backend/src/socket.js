@@ -14,7 +14,7 @@ chatNamespace.on('connection', (socket) => {
 
         socket.emit('notification', {
             user: 'Admin',
-            text: `${user.name}, welcome to room ${user.room}.`,
+            text: `${user.name}, welcome to this tutorial.`,
             timestamp: +new Date()
         });
         socket.broadcast

@@ -224,7 +224,26 @@ export default class BookingCard extends React.Component {
                     {this.showLastButton()}
                 </div>
                 <hr style={{ marginLeft: 0, marginRight: 0 }} />
-                <h4 style={{ marginLeft: '8px' }}>Topics: {this.props.tutorial.sessionTopic}</h4>
+                        <h4 style={{ marginLeft: '8px',marginBottom: 0 }}>Topics: {this.props.tutorial.sessionTopic}</h4>
+                    {/* </div> */}
+
+
+
+                {/* </div> */}
+                <hr style={{ marginLeft: 0, marginRight: 0 }} />
+                <Button
+                            raised
+                            className="md-cell md-cell--2"
+                            style={{
+                                background: '#696969',
+                                marginBottom: '10px',
+                                color: 'white',
+                                fontSize: '18px',
+                                marginTop: '0px',
+                                paddingBottom: '5px',
+                                fontFamily: 'cursive',
+                            }} onClick={() => this.props.handleChatRoom(`/chat/${this.props.tutorial._id}`)} >Tutorial
+                                </Button>
             </div>
         );
     }

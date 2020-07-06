@@ -55,6 +55,10 @@ export class BookingListView extends React.Component {
         this.props.history.push(url);
     };
 
+    handleChatRoom = (url) => {
+        this.props.history.push(url);
+    };
+
     cancelTutorial = (tutorialInfo) => {
         TutorialService.cancelTutorial(tutorialInfo).then(() => {
             toast.success('Successfully cancel tutorial');
@@ -103,6 +107,7 @@ export class BookingListView extends React.Component {
                                     tutorial={t}
                                     userType={this.state.userType}
                                     handleReview={this.handleReview}
+                                    handleChatRoom={this.handleChatRoom}
                                     cancelTutorial={this.cancelTutorial} /> :
                                 <BookingCard
                                     key={t._id}
@@ -110,6 +115,7 @@ export class BookingListView extends React.Component {
                                     userType={this.state.userType}
                                     handleReview={this.handleReview}
                                     cancelTutorial={this.cancelTutorial}
+                                    handleChatRoom={this.handleChatRoom}
                                     confirmTutorial={this.confirmTutorial} />
                         )
                     })}

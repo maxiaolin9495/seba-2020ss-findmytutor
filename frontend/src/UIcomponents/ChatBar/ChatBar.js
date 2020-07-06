@@ -65,7 +65,7 @@ export class ChatBar extends React.Component {
         socket.emit('join',
             {
                 name: UserService.getCurrentUser().email,
-                room: 'room1'
+                room: tutorialId
             },
             (error) => {
                 if (error) {
