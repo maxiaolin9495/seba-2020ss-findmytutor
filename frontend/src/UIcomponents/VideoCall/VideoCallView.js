@@ -5,6 +5,7 @@ import PeerConnection from './PeerConnection';
 import MainWindow from './MainWindow';
 import CallWindow from './CallWindow';
 import CallModal from './CallModal';
+import './app.scss';
 
 class VideoCallView extends Component {
   constructor() {
