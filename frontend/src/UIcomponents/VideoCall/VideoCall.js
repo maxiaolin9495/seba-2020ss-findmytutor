@@ -5,8 +5,7 @@ import PeerConnection from './PeerConnection';
 import MainWindow from './MainWindow';
 import CallWindow from './CallWindow';
 import CallModal from './CallModal';
-
-class VideoCallView extends Component {
+class VideoCall extends Component {
   constructor() {
     super();
     this.state = {
@@ -104,4 +103,4 @@ class VideoCallView extends Component {
   }
 }
 
-export default VideoCallView;
+export default VideoCall;

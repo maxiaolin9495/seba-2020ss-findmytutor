@@ -14,6 +14,7 @@ import { EditProfileView } from "./ViewController/EditProfileView";
 import { TutorPageView } from "./ViewController/TutorPageView";
 import { BookingListView } from "./ViewController/BookingListView";
 import {ReviewTutorView} from "./ViewController/ReviewTutorView";
+import {VideoCallView} from "./ViewController/VideoCallView";
 
 export default class App extends React.Component {
 
@@ -32,6 +33,7 @@ export default class App extends React.Component {
                 {component: TutorPageView, path: '/tutor/:id'},
                 {component: BookingListView, path: '/booking', exact: true},
                 {component: ReviewTutorView, path: '/review/:id',exact: true},
+                {component: VideoCallView, path: '/video',exact: true},
 
             ]
         };
