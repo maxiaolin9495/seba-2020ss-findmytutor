@@ -1,6 +1,6 @@
 const sockets = {};
 
-exports.create = async (socket, id) => {
+exports.create = (socket, id) => {
     sockets[id] = socket;
     return id;
 };

@@ -1,6 +1,7 @@
 const app = require('./app');
 const config = require('./config');
 const sockets = require('./services/socketStore');
+const emails = require('./services/socketIdForEmail');
 const http = require('http').createServer(app);
 const io = require('socket.io');
 
@@ -11,12 +12,11 @@ let wsServer = io.listen(http, {
 });
 
 wsServer.on('connection', (socket) => {
-    console.log(socket.id);
-
     socket
-        .on('init', async () => {
-            id = await sockets.create(socket, socket.id);
-            socket.emit('init', {id});
+        .on('init', (data)=> {
+            sockets.create(socket, data.clientId);
+            emails.create(data.clientId, socket.id);
+            socket.emit('init', {clientId: data.clientId});
         })
         .on('request', (data) => {
             const receiver = sockets.get(data.to);
@@ -39,8 +39,10 @@ wsServer.on('connection', (socket) => {
             }
         })
         .on('disconnect', () => {
-            sockets.remove(socket.id);
-            console.log(socket.id, 'disconnected');
+            console.log(emails.getAll());
+            sockets.remove(emails.get(socket.id));
+            emails.remove(socket.id);
+            console.log(emails.get(socket.id), 'disconnected');
         });
 
 });

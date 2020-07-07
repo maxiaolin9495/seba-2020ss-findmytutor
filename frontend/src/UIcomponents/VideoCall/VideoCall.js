@@ -27,7 +27,8 @@ class VideoCall extends Component {
 
     componentDidMount() {
         socket
-            .on('init', {id: '1234'}, ({id: clientId}) => {
+            .emit('init', ({clientId: '1234'}))
+            .on('init', ({clientId: clientId}) => {
                 console.log(clientId);
                 document.title = `${clientId} - VideoCall`;
                 this.setState({clientId});
@@ -42,7 +43,6 @@ class VideoCall extends Component {
                 } else this.pc.addIceCandidate(data.candidate);
             })
             .on('end', this.endCall.bind(this, false))
-            .emit('init');
     }
 
     startCall(isCaller, friendID, config) {
