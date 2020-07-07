@@ -11,12 +11,11 @@ let wsServer = io.listen(http, {
 });
 
 wsServer.on('connection', (socket) => {
-    console.log('connected');
     console.log(socket.id);
 
     socket
         .on('init', async () => {
-            id = await sockets.create(socket);
+            id = await sockets.create(socket, socket.id);
             socket.emit('init', {id});
         })
         .on('request', (data) => {
@@ -40,8 +39,8 @@ wsServer.on('connection', (socket) => {
             }
         })
         .on('disconnect', () => {
-            sockets.remove(id);
-            console.log(id, 'disconnected');
+            sockets.remove(socket.id);
+            console.log(socket.id, 'disconnected');
         });
 
 });
