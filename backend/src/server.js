@@ -41,8 +41,8 @@ wsServer.on('connection', (socket) => {
         .on('disconnect', () => {
             console.log(emails.getAll());
             sockets.remove(emails.get(socket.id));
-            emails.remove(socket.id);
             console.log(emails.get(socket.id), 'disconnected');
+            emails.remove(socket.id);
         });
 
 });

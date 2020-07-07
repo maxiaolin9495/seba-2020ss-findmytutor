@@ -27,9 +27,9 @@ export default class VideoCall extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({caller: this.props.caller}, () => {console.log(this.state.caller)});
+        this.setState({caller: this.props.caller});
         socket
-            .emit('init', ({clientId: '1234'}))
+            .emit('init', ({clientId: this.props.caller}))
             .on('init', ({clientId: clientId}) => {
                 console.log(clientId);
                 document.title = `${clientId} - VideoCall`;
@@ -86,6 +86,7 @@ export default class VideoCall extends React.Component {
                 <MainWindow
                     clientId={clientId}
                     startCall={this.startCallHandler}
+                    friendId={this.props.caller}
                 />
                 {!_.isEmpty(this.config) && (
                     <CallWindow
