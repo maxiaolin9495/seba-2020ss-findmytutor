@@ -76,7 +76,6 @@ export default class BookingCard extends React.Component {
     };
 
     showLastButton = () => {
-        console.log(this.ifShouldRemind());
         switch (this.props.tutorial.tutorialStatus) {
             case 'finished':
                 if (this.props.userType === 'customer')
@@ -122,7 +121,7 @@ export default class BookingCard extends React.Component {
                 return (
                     <div>
                         <Dialog actionName='cancel' onClick={() => this.cancelTutorial()}/>
-                        {this.ifShouldRemind() ?
+                        {this.ifShouldRemind() && !this.ifPastVideo()?
                             <Button
                                 raised
                                 className="md-cell md-cell--3"
@@ -134,11 +133,15 @@ export default class BookingCard extends React.Component {
                                     paddingBottom: '5px',
                                     fontFamily: 'San Francisco',
                                 }}
-                                onClick={() => this.props.handleReview(`/video`)}
+                                onClick={() => this.props.handleReview(`/video/${this.props.tutorial.tutorEmail}`)}
                             >
                                 Video Call
                             </Button> :
-                            <p>Please wait</p>
+                            this.ifPastVideo()?
+                                <div/>:
+                                    <p>Please wait</p>
+
+
                         }
 
 
@@ -153,8 +156,12 @@ export default class BookingCard extends React.Component {
     ifShouldRemind = () => {
         let now = new Date().getTime();
         return !this.props.tutorial.ifHadVideo &&
-            this.props.tutorial.startTime - now < 300000;
+            this.props.tutorial.startTime - now < 1800000;
     };
+    ifPastVideo =()=>{
+        let now = new Date().getTime();
+         return  now - this.props.tutorial.endTime > 0;
+    }
 
 
     render() {

@@ -11,7 +11,7 @@ export class VideoCallView extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            data: [],
+            data: []
         };
     }
 
@@ -21,7 +21,7 @@ export class VideoCallView extends React.Component {
             <div>
                 <Navigation/>
                 <section>
-                   <VideoCall/>
+                   <VideoCall caller={this.props.match.params.email}/>
                 </section>
             </div>
         );
