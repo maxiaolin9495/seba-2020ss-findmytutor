@@ -15,8 +15,8 @@
 		}
 	}
 
-	.btn-action {
-		$height: 60px;
+	.phone {
+		$height: 64px;
 		height: $height;
 		width: $height;
 		margin: 20px 30px 0px 0px;
@@ -27,7 +27,24 @@
 		cursor: pointer;
 		transition-duration: 0.25s;
 		background-color: transparent;
-
+		background-image: url('../../Images/Phone.png');
+		&:hover {
+			background-color: rgba($main-color, 0.2);
+		}
+	}
+	.hangup {
+		$height: 64px;
+		height: $height;
+		width: $height;
+		margin: 20px 30px 0px 0px;
+		line-height: $height;
+		text-align: center;
+		border-radius: 50%;
+		border: solid 2px $main-color;
+		cursor: pointer;
+		transition-duration: 0.25s;
+		background-color: transparent;
+		background-image: url('../../Images/Phone2.png');
 		&:hover {
 			background-color: rgba($main-color, 0.2);
 		}
