@@ -14,7 +14,7 @@ function MainWindow({ startCall, clientId }) {
   };
 
   return (
-    <div className="container main-window">
+      /*
       <div>
         <h3>
           Hi, your ID is
@@ -27,23 +27,31 @@ function MainWindow({ startCall, clientId }) {
         </h3>
         <h4>Get started by calling a friend below</h4>
       </div>
-      <div>
-        <input
+          <input
           type="text"
           className="txt-clientId"
           spellCheck={false}
           placeholder="Your friend ID"
           onChange={(event) => setFriendID(event.target.value)}
-        />
-        <div>
+          />
+       */
+    <div className="container main-window">
+
+      <div>
+
+          <div style={{margin: "0px auto",
+              marginTop: "auto",
+              marginBottom: "auto",
+              float: "none",
+              display: "table"}}>
           <button
             type="button"
-            className="btn-action fa fa-video-camera"
+            className="phone"
             onClick={callWithVideo(true)}
           />
           <button
             type="button"
-            className="btn-action fa fa-phone"
+            className="hangup"
             onClick={callWithVideo(false)}
           />
         </div>
