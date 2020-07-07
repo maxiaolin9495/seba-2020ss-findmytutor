@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import socket from './socket';
 import PeerConnection from './PeerConnection';
@@ -7,16 +7,17 @@ import CallWindow from './CallWindow';
 import CallModal from './CallModal';
 import './app.scss';
 
-class VideoCall extends Component {
-    constructor() {
-        super();
+export default class VideoCall extends React.Component {
+    constructor(props) {
+        super(props);
         this.state = {
             clientId: '',
             callWindow: '',
             callModal: '',
             callFrom: '',
             localSrc: null,
-            peerSrc: null
+            peerSrc: null,
+            caller:''
         };
         this.pc = {};
         this.config = null;
@@ -26,6 +27,7 @@ class VideoCall extends Component {
     }
 
     componentDidMount() {
+        this.setState({caller: this.props.caller}, () => {console.log(this.state.caller)});
         socket
             .on('init', {id: '1234'}, ({id: clientId}) => {
                 console.log(clientId);
@@ -106,4 +108,3 @@ class VideoCall extends Component {
     }
 }
 
-export default VideoCall;

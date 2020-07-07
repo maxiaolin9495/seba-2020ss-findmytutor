@@ -33,7 +33,7 @@ export default class App extends React.Component {
                 {component: TutorPageView, path: '/tutor/:id'},
                 {component: BookingListView, path: '/booking', exact: true},
                 {component: ReviewTutorView, path: '/review/:id',exact: true},
-                {component: VideoCallView, path: '/video',exact: true},
+                {component: VideoCallView, path: '/video/:email',exact: true},
 
             ]
         };
