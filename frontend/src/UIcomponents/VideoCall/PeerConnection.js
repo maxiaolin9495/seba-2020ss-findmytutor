@@ -7,19 +7,22 @@ const PC_CONFIG = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };
 class PeerConnection extends Emitter {
   /**
      * Create a PeerConnection.
-     * @param {String} friendID - ID of the friend you want to call.
+     * @param {String} friendId - ID of the friend you want to call.
+   * * @param {String} clientId - ID of the client, who call the client.
      */
-  constructor(friendID) {
-    super();
-    this.pc = new RTCPeerConnection(PC_CONFIG);
-    this.pc.onicecandidate = (event) => socket.emit('call', {
-      to: this.friendID,
-      candidate: event.candidate
-    });
-    this.pc.ontrack = (event) => this.emit('peerStream', event.streams[0]);
+  constructor(friendId, clientId) {
+      super();
+      this.pc = new RTCPeerConnection(PC_CONFIG);
+      this.pc.onicecandidate = (event) => socket.emit('call', {
+          to: this.friendId,
+          from: this.clientId,
+          candidate: event.candidate
+      });
+      this.pc.ontrack = (event) => this.emit('peerStream', event.streams[0]);
 
-    this.mediaDevice = new MediaDevice();
-    this.friendID = friendID;
+      this.mediaDevice = new MediaDevice();
+      this.friendId = friendId;
+      this.clientId = clientId;
   }
 
   /**
@@ -28,18 +31,18 @@ class PeerConnection extends Emitter {
    * @param {Object} config - configuration for the call {audio: boolean, video: boolean}
    */
   start(isCaller, config) {
-    this.mediaDevice
-      .on('stream', (stream) => {
-        stream.getTracks().forEach((track) => {
-          this.pc.addTrack(track, stream);
-        });
-        this.emit('localStream', stream);
-        if (isCaller) socket.emit('request', { to: this.friendID });
-        else this.createOffer();
-      })
-      .start(config);
+      this.mediaDevice
+          .on('stream', (stream) => {
+              stream.getTracks().forEach((track) => {
+                  this.pc.addTrack(track, stream);
+              });
+              this.emit('localStream', stream);
+              if (isCaller) socket.emit('request', {to: this.friendId, from: this.clientId});
+              else this.createOffer();
+          })
+          .start(config);
 
-    return this;
+      return this;
   }
 
   /**
@@ -47,54 +50,54 @@ class PeerConnection extends Emitter {
    * @param {Boolean} isStarter
    */
   stop(isStarter) {
-    if (isStarter) {
-      socket.emit('end', { to: this.friendID });
-    }
-    this.mediaDevice.stop();
-    this.pc.close();
-    this.pc = null;
-    this.off();
-    return this;
+      if (isStarter) {
+          socket.emit('end', {to: this.friendId, from: this.clientId});
+      }
+      this.mediaDevice.stop();
+      this.pc.close();
+      this.pc = null;
+      this.off();
+      return this;
   }
 
   createOffer() {
-    this.pc.createOffer()
-      .then(this.getDescription.bind(this))
-      .catch((err) => console.log(err));
-    return this;
+      this.pc.createOffer()
+          .then(this.getDescription.bind(this))
+          .catch((err) => console.log(err));
+      return this;
   }
 
   createAnswer() {
-    this.pc.createAnswer()
-      .then(this.getDescription.bind(this))
-      .catch((err) => console.log(err));
-    return this;
+      this.pc.createAnswer()
+          .then(this.getDescription.bind(this))
+          .catch((err) => console.log(err));
+      return this;
   }
 
   getDescription(desc) {
-    this.pc.setLocalDescription(desc);
-    socket.emit('call', { to: this.friendID, sdp: desc });
-    return this;
+      this.pc.setLocalDescription(desc);
+      socket.emit('call', {to: this.friendId, sdp: desc});
+      return this;
   }
 
   /**
    * @param {Object} sdp - Session description
    */
   setRemoteDescription(sdp) {
-    const rtcSdp = new RTCSessionDescription(sdp);
-    this.pc.setRemoteDescription(rtcSdp);
-    return this;
+      const rtcSdp = new RTCSessionDescription(sdp);
+      this.pc.setRemoteDescription(rtcSdp);
+      return this;
   }
 
   /**
    * @param {Object} candidate - ICE Candidate
    */
   addIceCandidate(candidate) {
-    if (candidate) {
-      const iceCandidate = new RTCIceCandidate(candidate);
-      this.pc.addIceCandidate(iceCandidate);
-    }
-    return this;
+      if (candidate) {
+          const iceCandidate = new RTCIceCandidate(candidate);
+          this.pc.addIceCandidate(iceCandidate);
+      }
+      return this;
   }
 }
 

@@ -1,6 +1,4 @@
 import React from 'react';
-import AboutUs from '../UIcomponents/PageDesign/AboutUs';
-import Background from "../Images/Homepage.jpg";
 import Navigation from "../UIcomponents/PageDesign/Navigation";
 import VideoCall from "../UIcomponents/VideoCall/VideoCall";
 
@@ -21,7 +19,7 @@ export class VideoCallView extends React.Component {
             <div>
                 <Navigation/>
                 <section>
-                   <VideoCall caller={this.props.match.params.email}/>
+                   <VideoCall caller={this.props.match.params.email} ready={ this.props.match.params.email !== null}/>
                 </section>
             </div>
         );

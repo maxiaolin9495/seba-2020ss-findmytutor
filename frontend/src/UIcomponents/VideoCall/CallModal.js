@@ -1,36 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 
-function CallModal({ status, callFrom, startCall, rejectCall }) {
-  const acceptWithVideo = (video) => {
-    const config = { audio: true, video };
-    return () => startCall(false, callFrom, config);
-  };
+export default class CallModal extends React.Component {
 
-  return (
-    <div className={classnames('call-modal', status)}>
-      <p>
-        <span className="caller">{`${callFrom} is calling`}</span>
-      </p>
-      <button
-        type="button"
-        className="btn-action fa fa-video-camera"
-        onClick={acceptWithVideo(true)}
-      />
-      <button
-        type="button"
-        className="btn-action fa fa-phone"
-        onClick={acceptWithVideo(false)}
-      />
-      <button
-        type="button"
-        className="btn-action hangup fa fa-phone"
-        onClick={rejectCall}
-      />
-    </div>
-  );
+    constructor(props) {
+        super(props);
+    }
+
+     acceptWithVideo = (video) => {
+        const config = { audio: true, video };
+        return () => this.props.startCall(false, this.props.callFrom, config);
+    };
+
+    render (){
+        return (
+            <div className={classNames('call-modal', status)}>
+                <p>
+                    <span className="caller">{`${this.props.callFrom} is calling`}</span>
+                </p>
+                <button
+                    type="button"
+                    className="btn-action fa fa-video-camera"
+                    onClick={this.acceptWithVideo(true)}
+                />
+                <button
+                    type="button"
+                    className="btn-action fa fa-phone"
+                    onClick={this.acceptWithVideo(false)}
+                />
+                <button
+                    type="button"
+                    className="btn-action hangup fa fa-phone"
+                    onClick={this.props.rejectCall}
+                />
+            </div>
+        );
+    }
+
+
 }
 
 CallModal.propTypes = {
@@ -39,5 +48,3 @@ CallModal.propTypes = {
   startCall: PropTypes.func.isRequired,
   rejectCall: PropTypes.func.isRequired
 };
-
-export default CallModal;

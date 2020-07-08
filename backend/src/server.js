@@ -19,15 +19,17 @@ wsServer.on('connection', (socket) => {
             socket.emit('init', {clientId: data.clientId});
         })
         .on('request', (data) => {
+            console.log(data);
             const receiver = sockets.get(data.to);
             if (receiver) {
-                receiver.emit('request', {from: id});
+                receiver.emit('request', {from: data.from});
             }
         })
         .on('call', (data) => {
+            console.log(data);
             const receiver = sockets.get(data.to);
             if (receiver) {
-                receiver.emit('call', {data, from: id});
+                receiver.emit('call', {data, from: data.from});
             } else {
                 socket.emit('failed');
             }
@@ -39,7 +41,6 @@ wsServer.on('connection', (socket) => {
             }
         })
         .on('disconnect', () => {
-            console.log(emails.getAll());
             sockets.remove(emails.get(socket.id));
             console.log(emails.get(socket.id), 'disconnected');
             emails.remove(socket.id);

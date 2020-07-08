@@ -6,5 +6,5 @@ exports.create = (socket, id) => {
 };
 
 exports.get = (id) => sockets[id];
-
+exports.getAll = () => sockets;
 exports.remove = (id) => delete sockets[id];

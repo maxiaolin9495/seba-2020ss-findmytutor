@@ -156,12 +156,12 @@ export default class BookingCard extends React.Component {
     ifShouldRemind = () => {
         let now = new Date().getTime();
         return !this.props.tutorial.ifHadVideo &&
-            this.props.tutorial.startTime - now < 1800000;
+            this.props.tutorial.startTime - now < 180000000;
     };
     ifPastVideo =()=>{
         let now = new Date().getTime();
          return  now - this.props.tutorial.endTime > 0;
-    }
+    };
 
 
     render() {
