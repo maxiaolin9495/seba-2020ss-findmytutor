@@ -20,7 +20,25 @@ Then you can start the whole project with:
 
 To stop the docker containers, simply use `docker-compose down`
 
+## Deploy to Azure
+Simply update the prod docker images which are located in this project container registry. The image pull will be automatically done by Azure in about 10 minutes.
+### Frontend
+Specify the `BACKEND_URI`, the url of backend with `--build-arg` argument while building the docker image
+```bash
+docker build -f Dockerfile.prod --build-arg BACKEND_URI=https://findmytutor-backend.azurewebsites.net  -t gitlab.lrz.de:5005/ge72vob/seba-2020ss-findmytutor/frontend:prod .
+docker push gitlab.lrz.de:5005/ge72vob/seba-2020ss-findmytutor/frontend:prod
+```
+
+### Backend
+```bash
+docker build -f Dockerfile.prod -t gitlab.lrz.de:5005/ge72vob/seba-2020ss-findmytutor/backend:prod .
+docker push gitlab.lrz.de:5005/ge72vob/seba-2020ss-findmytutor/backend:prod
+```
+
 ## Demo
+
+### [Frontend site](https://findmytutor.azurewebsites.net) 
+### [Backend site](https://findmytutor-backend.azurewebsites.net)
 
 ### Code of Conduct
 
