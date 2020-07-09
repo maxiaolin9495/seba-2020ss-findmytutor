@@ -77,4 +77,5 @@ const TutorSchema = new mongoose.Schema({
     }],
 });
 
+TutorSchema.index({ firstName: "text", lastName: "text",courses:"text" });
 module.exports = mongoose.model('tutors', TutorSchema);
