@@ -62,14 +62,14 @@ class BookingCalendar extends React.Component {
     }
 
     //acquire time slots between start and end timestamp within one time period
-    getSingleTimes = (startTimestamp, endTimestamp,type) => {
+    getSingleTimes = (startTimestamp, endTimestamp, type) => {
         let arr = [];
         let current = startTimestamp;
         while (current < endTimestamp - 1000) {
             arr.push(new Date(parseInt(current)));
             current += 60 * 60 * 1000;
         }
-        if(type!=='booking'){
+        if (type !== 'booking') {
             arr.push(new Date(parseInt(endTimestamp)));
         }
 
@@ -77,13 +77,13 @@ class BookingCalendar extends React.Component {
     };
 
     //get all time slots in time array
-    availableTimes = (initials,type) => {
+    availableTimes = (initials, type) => {
         let arr = [];
         initials.forEach((data) => {
             if (data.start !== undefined && data.end !== undefined) {
                 let startStp = data.start.getTime();
                 let endStp = data.end.getTime();
-                let newArr = this.getSingleTimes(startStp, endStp,type);
+                let newArr = this.getSingleTimes(startStp, endStp, type);
                 if (newArr !== null && newArr !== undefined) {
                     newArr.forEach((data) => {
                         if (arr.indexOf(data) === -1) {
@@ -125,22 +125,37 @@ class BookingCalendar extends React.Component {
 
     handleChangeEnd = (value) => {
         let tmpSelectEnd;
-        if(this.state.selectedStart) {
+        if (this.state.selectedStart) {
             tmpSelectEnd = new Date(this.state.selectedStart.getTime());
             tmpSelectEnd.setHours(value.getHours());
             tmpSelectEnd.setMinutes(value.getMinutes());
-        }else{
+        } else {
+            //this.setState({selectedEnd: undefined});
             tmpSelectEnd = value;
+
         }
-        this.setState({selectedEnd: tmpSelectEnd});
+        if (tmpSelectEnd.getHours() === 0) {
+            tmpSelectEnd.setHours(24);
+            this.setState({selectedEnd: tmpSelectEnd});
+        } else {
+            this.setState({selectedEnd: tmpSelectEnd});
+        }
+
 
         let startTime = this.state.selectedStart.getHours();
         let endTime = tmpSelectEnd.getHours();
-        if (endTime <= startTime) {
+        if (endTime <= startTime &&
+            this.state.selectedStart.getDay() === tmpSelectEnd.getDay()) {
             toast.error('Invalid time selected!');
             this.setState({selectedEnd: undefined});
         } else {
-            let duration = endTime - startTime;
+            let duration;
+            if (this.state.selectedStart.getDay() === tmpSelectEnd.getDay()) {
+                duration = endTime - startTime;
+            } else {
+                duration = 24 - startTime;
+            }
+
             this.setState({duration: duration});
             this.setState({totalPrice: duration * this.state.price})
         }
@@ -170,9 +185,9 @@ class BookingCalendar extends React.Component {
                         id="newPickDate"
                         require
                         inline
-                        includeDates={this.availableTimes(this.state.initialTimes,'')}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay,'')}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay,'booking')}
+                        includeDates={this.availableTimes(this.state.initialTimes, '')}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay, '')}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay, 'booking')}
                         timesShown={2}
                         style={stylePicker}
                         dateFormat='dd.MM.yyyy HH:mm'
@@ -197,9 +212,9 @@ class BookingCalendar extends React.Component {
                         dateFormat='dd.MM.yyyy HH:mm'
                         className="md-cell"
                         selected={this.state.selectedEnd}
-                        includeDates={this.availableTimes(this.state.initialTimes,'')}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay,'')}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay,'booking')}
+                        includeDates={this.availableTimes(this.state.initialTimes, '')}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay, '')}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay, 'booking')}
                         isClearable
                         minDate={this.state.minDate}
                         //   minTime={new Date()}
