@@ -2,10 +2,9 @@ const app = require('./app');
 const config = require('./config');
 const sockets = require('./services/socketStore');
 const emails = require('./services/socketIdForEmail');
-const http = require('http').createServer(app);
-const io = require('socket.io');
 
-http.listen(config.port);
+const io = require('./socket');
+
 
 let wsServer = io.listen(http, {
     path: '/videoStream'
@@ -47,5 +46,8 @@ wsServer.on('connection', (socket) => {
         });
 
 });
+const server = app.listen(config.port);
+io.listen(server);
+
 
 console.log(`Listening on port ${config.port}`);

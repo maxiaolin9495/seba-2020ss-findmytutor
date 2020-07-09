@@ -80,7 +80,11 @@ module.exports = {
             filename: 'index.html',
             inject: 'body'
         }),
-        new ExtractTextPlugin("styles/app.css")
+        new ExtractTextPlugin("styles/app.css"),
+        new webpack.DefinePlugin({
+            'process.env.BACKEND_URI': JSON.stringify(process.env.BACKEND_URI),
+            'process.env.PORT': JSON.stringify(process.env.PORT)
+        }),
     ]
 
 };
