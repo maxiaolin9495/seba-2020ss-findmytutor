@@ -119,11 +119,50 @@ export default class BookingCard extends React.Component {
             case 'notConfirmed':
             case 'confirmed':
                 return (
-                    <Dialog actionName='cancel' onClick={() => this.cancelTutorial()} />);
+                    <div>
+                        <Dialog actionName='cancel' onClick={() => this.cancelTutorial()}/>
+                        {this.ifShouldRemind() && !this.ifPastVideo()?
+                            <Button
+                                raised
+                                className="md-cell md-cell--3"
+                                style={{
+                                    background: '#696969',
+                                    color: 'white',
+                                    fontSize: '18px',
+                                    marginTop: '32px',
+                                    paddingBottom: '5px',
+                                    fontFamily: 'San Francisco',
+                                }}
+                                onClick={() => this.props.handleReview(`/video/${this.props.tutorial.tutorEmail}`)}
+                            >
+                                Video Call
+                            </Button> :
+                            this.ifPastVideo()?
+                                <div/>:
+                                    <p>Please wait</p>
+
+
+                        }
+
+
+                    </div>
+
+                );
             default:
                 return '';
         }
     };
+
+    ifShouldRemind = () => {
+        let now = new Date().getTime();
+        return !this.props.tutorial.ifHadVideo &&
+            this.props.tutorial.startTime - now < 180000000;
+    };
+    ifPastVideo =()=>{
+        let now = new Date().getTime();
+         return  now - this.props.tutorial.endTime > 0;
+    };
+
 
     render() {
         return (
@@ -166,14 +205,14 @@ export default class BookingCard extends React.Component {
                         </div>
                     </div>
                     {this.props.userType === 'customer' &&
-                        <div className="md-cell md-cell--2" id="price-tag">
-                            <h2 style={{
-                                color: 'black',
-                                textAlign: 'center'
-                            }}>
-                                EUR {this.props.tutorial.price}
-                            </h2>
-                        </div>}
+                    <div className="md-cell md-cell--2" id="price-tag">
+                        <h2 style={{
+                            color: 'black',
+                            textAlign: 'center'
+                        }}>
+                            EUR {this.props.tutorial.price}
+                        </h2>
+                    </div>}
 
                     <div className="md-cell md-cell--2" id="tutorial-time"
                         style={{ textAlign: 'center' }}>

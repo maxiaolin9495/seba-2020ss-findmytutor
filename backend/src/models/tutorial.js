@@ -47,7 +47,11 @@ const TutorialSchema = new mongoose.Schema({
     transactionId: [{
         type: String,
         required: false
-    }]
+    }],
+    ifHadVideo: {
+        type: Boolean,
+        required: false
+    },
 });
 
 module.exports = mongoose.model('tutorial', TutorialSchema);

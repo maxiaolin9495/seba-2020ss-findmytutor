@@ -342,7 +342,8 @@ const createTutorial = (req, res) => {
             transactionStatus: 'transferred',
             startTime: req.body.startTime,
             endTime: req.body.endTime,
-            transactionId: req.body.transactionId
+            transactionId: req.body.transactionId,
+            ifHadVideo:false
         });
 
         tutorModel.findOne({email: tutorial.tutorEmail}).exec()

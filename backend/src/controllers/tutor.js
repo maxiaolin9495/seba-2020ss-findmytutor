@@ -169,6 +169,9 @@ const sortOnTimeSlots = (timeSlotIds) => {
             combinedTimeSlotIds.push(tempTimeSlot);
         }
     }
+    if(timeSlotIds.length === 1){
+        combinedTimeSlotIds = timeSlotIds;
+    }
     return combinedTimeSlotIds;
 };
 

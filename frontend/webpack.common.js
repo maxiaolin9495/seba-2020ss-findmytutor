@@ -1,7 +1,5 @@
 "use strict";
 
-
-const webpack            = require('webpack');
 const path               = require('path');
 const ExtractTextPlugin  = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin  = require('html-webpack-plugin');
@@ -59,23 +57,30 @@ module.exports = {
                     fallback: "style-loader",
                     use: "css-loader"
                 })
-            }
-
-        ]
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: true,
+                            import: true
+                        }
+                    },
+                    'sass-loader'
+                ]
+            }]
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
-        new webpack.optimize.CommonsChunkPlugin({name: "vendor", minChunks: Infinity,}),
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
             inject: 'body'
         }),
-        new ExtractTextPlugin("styles/app.css"),
-        new webpack.DefinePlugin({
-            'process.env.BACKEND_URI': JSON.stringify(process.env.BACKEND_URI),
-            'process.env.PORT': JSON.stringify(process.env.PORT)
-        }),
+        new ExtractTextPlugin("styles/app.css")
     ]
 
 };

@@ -1,0 +1,39 @@
+@import "variables";
+@import "./shared/base";
+
+html {
+  background: url("https://source.unsplash.com/2560x1440/?forest,mountain") center no-repeat fixed;
+}
+
+body {
+  padding: 0 20px 20px 20px;
+  min-height: 100vh;
+}
+
+.navbar-brand {
+  font-size: 1.5em;
+  img {
+    display: inline-block;
+    width: 50px;
+  }
+}
+
+#root {
+  h2 {
+    margin-top: 0;
+  }
+
+  h4 {
+    margin-top: 20px;
+  }
+}
+
+.btn-action {
+  outline: none;
+  border: none;
+}
+
+
+@import "main-window";
+@import "call-window";
+@import "call-modal";
