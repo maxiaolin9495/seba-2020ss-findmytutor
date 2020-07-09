@@ -18,7 +18,7 @@ const login = (req, res) => {
             //user object
             if(!user){
                 customerModel.findOne({
-                    email: req.body.email
+                    email: req.body.email.trim().toLowerCase()
                 })
                     .exec()
                     .then(user => {
@@ -66,6 +66,9 @@ const register = (req, res) => {
     if (req.body.userType === "tutor") {
 
         const user = Object.assign(req.body, { ifProved: false });
+        //the email address will be transformed to lowerCase;
+        user.email = user.email.trim().toLowerCase();
+        console.log(user);
         return registerUser(user, customerModel, tutorModel, req, res);
 
     } else {
@@ -78,7 +81,7 @@ const register = (req, res) => {
 };
 
 const registerUser = (user, dataModel1, dataModel2, req, res) => {
-    dataModel1.findOne({ email: req.body.email }).exec()
+    dataModel1.findOne({ email: req.body.email.trim().toLowerCase() }).exec()
         .then(data => {
             //verify if the email is registered in the dataModel1
             if (data === null) {

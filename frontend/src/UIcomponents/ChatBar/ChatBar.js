@@ -5,10 +5,7 @@ import UserService from "../../Services/UserService";
 import TutorialService from "../../Services/TutorialService";
 import EditProfileService from "../../Services/EditProfileService";
 
-
-import Background from '../../Images/Homepage.jpg';
 import logoIcon from '../../Images/Logo.png';
-import Navigation from "../PageDesign/Navigation";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
 import ChatBox, { ChatFrame } from 'react-chat-plugin';
