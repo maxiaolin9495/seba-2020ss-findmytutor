@@ -110,12 +110,12 @@ const uploadTutorProfile = (req, res) => {
         });
 
         tutor.timeSlotIds = sortOnTimeSlots(tutor.timeSlotIds);
-        tutorModel.updateOne({email: tutor.email}, tutor)
+        tutorModel.updateOne({ email: tutor.email }, tutor)
             .then(
                 () => {
                     return res.status(200)
                         .json({
-                                message: "successfully updated"
+                            message: "successfully updated"
                         });
                 }
             )
@@ -124,9 +124,9 @@ const uploadTutorProfile = (req, res) => {
                     console.log('error by creating a Tutor Profile');
                     if (error.code === 11000) {
                         return res.status(400).json({
-                                error: 'tutor Profile exists',
-                                message: error.message
-                            }
+                            error: 'tutor Profile exists',
+                            message: error.message
+                        }
                         )
                     }
                     else {
@@ -151,11 +151,11 @@ const sortOnTimeSlots = (timeSlotIds) => {
         tempTimeSlot = timeSlotIds[0];
     }
     for (let i = 0; i < timeSlotIds.length - 1; i++) {
-        if(!timeSlotIds[i].ifBooked) {
+        if (!timeSlotIds[i].ifBooked) {
             if (timeSlotIds[i].end === timeSlotIds[i + 1].start
-                && timeSlotIds[i].ifBooked === timeSlotIds[i+1].ifBooked) {
+                && timeSlotIds[i].ifBooked === timeSlotIds[i + 1].ifBooked) {
                 tempTimeSlot.end = timeSlotIds[i + 1].end
-            }else {
+            } else {
                 combinedTimeSlotIds.push(tempTimeSlot);
                 tempTimeSlot = timeSlotIds[i + 1];
             }
@@ -233,36 +233,19 @@ const searchTutor = (req, res) => {
         });
     if (!req.query.q)
         return res.status(200).json({});
-    if (decodeURI(req.query.q).includes(',')) {
-        // Find tutor
-        const [lastName, firstName] = decodeURI(req.query.q).split(/[ ,]+/);
-        tutorModel.find(
-            { $and: [{ 'firstName': firstName }, { 'lastName': lastName }] }
-        ).then(tutors => {
-            return res.status(200).json(tutors);
-        }).catch(error => {
-            console.log('internal server error by searching');
-            return res.status(400).json({
-                error: 'Internal Server Error',
-                message: 'Error in Search function: ' + error.message
-            });
-        })
-    } else {
-        const queryString = req.query.q;
-        const pattern = new RegExp(`${queryString}`, 'i'); // Regex find all value match the query string starting from the first position
-        // const filteredData = await 
-        tutorModel.find(
-            { $or: [{ 'firstName': pattern }, { 'lastName': pattern }, { 'courses': pattern }] }
-        ).then(tutors => {
-            return res.status(200).json(tutors);
-        }).catch(error => {
-            console.log('internal server error by searching');
-            return res.status(400).json({
-                error: 'Internal Server Error',
-                message: 'Error in Search function: ' + error.message
-            });
-        })
-    }
+
+    const queryString = decodeURI(req.query.q);
+    tutorModel.find(
+        { $text: { $search: queryString } }
+    ).then(tutors => {
+        return res.status(200).json(tutors);
+    }).catch(error => {
+        console.log('internal server error by searching');
+        return res.status(400).json({
+            error: 'Internal Server Error',
+            message: 'Error in Search function: ' + error.message
+        });
+    })
 };
 
 const autoCompleteForSearch = async (req, res) => {
@@ -312,7 +295,7 @@ const autoCompleteForSearch = async (req, res) => {
     }
 };
 
-const searchTutorByEmail=(req, res) => {
+const searchTutorByEmail = (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
         return res.status(200).json({
             error: 'Bad Request',
