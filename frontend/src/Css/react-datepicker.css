@@ -247,6 +247,8 @@
 
 .react-datepicker__month-container {
     float: left;
+    border-right: groove;
+
 }
 
 .react-datepicker__month {
@@ -284,7 +286,7 @@
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
     list-style: none;
     margin: 0;
-    height: 184px;
+    height: 210px;
     overflow-y: scroll;
     padding-right: 0;
     padding-left: 0;
