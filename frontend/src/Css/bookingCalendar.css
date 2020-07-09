@@ -1,0 +1,14 @@
+.react-datepicker__time-container {
+    float: right;
+    border-left: 1px solid #aeaeae;
+    width: 70px;
+    height:247px;
+}
+ul.react-datepicker__time-list {
+    height: 211px !important;
+}
+.react-datepicker__month-container {
+    float: left;
+    border-right: groove;
+    height: 247px;
+}
