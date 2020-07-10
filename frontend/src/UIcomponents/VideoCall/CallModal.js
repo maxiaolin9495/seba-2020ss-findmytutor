@@ -16,7 +16,7 @@ export default class CallModal extends React.Component {
 
     render (){
         return (
-            <div className={classNames('call-modal', status)}>
+            <div className={classNames('call-modal', this.props.status)}>
                 <p>
                     <span className="caller">{`${this.props.callFrom} is calling`}</span>
                 </p>
