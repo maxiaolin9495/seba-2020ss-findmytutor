@@ -1,19 +1,19 @@
 "use strict";
 
-const path               = require('path');
-const ExtractTextPlugin  = require("extract-text-webpack-plugin");
-const HtmlWebpackPlugin  = require('html-webpack-plugin');
+const path = require('path');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
+const webpack = require('webpack');
 
 
 module.exports = {
     entry: {
-        'vendor': ['react','react-dom','react-router-dom'],
-        'app': path.resolve(__dirname,'src/index.js')
+        'vendor': ['react', 'react-dom', 'react-router-dom'],
+        'app': path.resolve(__dirname, 'src/index.js')
     },
     output: {
-        path: path.resolve(__dirname,'dist'),
+        path: path.resolve(__dirname, 'dist'),
         filename: 'scripts/[name].js'
     },
     module: {
@@ -25,7 +25,7 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['env', 'react'],
-                        plugins: ['transform-class-properties','transform-object-rest-spread']
+                        plugins: ['transform-class-properties', 'transform-object-rest-spread']
                     }
                 }
             },
@@ -42,7 +42,7 @@ module.exports = {
             },
             {
                 test: /\.html$/,
-                use: [ {
+                use: [{
                     loader: 'html-loader',
                     options: {
                         minimize: true,
@@ -80,7 +80,11 @@ module.exports = {
             filename: 'index.html',
             inject: 'body'
         }),
-        new ExtractTextPlugin("styles/app.css")
+        new ExtractTextPlugin("styles/app.css"),
+        new webpack.DefinePlugin({
+            'process.env.BACKEND_URI': JSON.stringify(process.env.BACKEND_URI),
+            'process.env.PORT': JSON.stringify(process.env.PORT)
+        })
     ]
 
 };
