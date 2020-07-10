@@ -39,16 +39,20 @@ export default class VideoCall extends React.Component {
                 .on('init', ({clientId: clientId}) => {
                     document.title = `${clientId} - VideoCall`;
                 })
-                .on('request', ({from: callFrom}) => {
-                    console.log('request', callFrom);
-                    this.setState({callModal: 'active', callFrom});
+                .on('request', (data) => {
+                    this.setState({callModal: 'active', callFrom: data.from});
                 })
                 .on('call', (data) => {
                     console.log('call', data);
                     if (data.sdp) {
+                        console.log(this.pc, '1234');
                         this.pc.setRemoteDescription(data.sdp);
-                        if (data.sdp.type === 'offer') this.pc.createAnswer();
-                    } else this.pc.addIceCandidate(data.candidate);
+                        if (data.sdp.type === 'offer') {
+                            this.pc.createAnswer();
+                        }
+                    } else{
+                        this.pc.addIceCandidate(data.candidate);
+                    }
                 })
                 .on('end', this.endCall.bind(this, false));
             this.setState({socket: socket});
@@ -60,10 +64,16 @@ export default class VideoCall extends React.Component {
         this.pc = new PeerConnection(friendId, this.state.clientId, this.state.socket)
             .on('localStream', (src) => {
                 const newState = {callWindow: 'active', localSrc: src};
-                if (!isCaller) newState.callModal = '';
+                if (!isCaller){
+                    newState.callModal = '';
+                }
+
                 this.setState(newState);
             })
-            .on('peerStream', (src) => this.setState({peerSrc: src}))
+            .on('peerStream', (src) => {
+                console.log('peerStream', src);
+                this.setState({peerSrc: src})
+            })
             .start(isCaller, config);
     }
 

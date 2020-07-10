@@ -49,6 +49,10 @@ chatNamespace.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
 
+        sockets.remove(emails.get(socket.id));
+        console.log(emails.get(socket.id), 'disconnected');
+        emails.remove(socket.id);
+
         if (user) {
             chatNamespace.to(user.room)
                 .emit('notification',
@@ -65,40 +69,34 @@ chatNamespace.on('connection', (socket) => {
                     });
         }
     });
+    //these part are for video call
     socket
         .on('init', (data)=> {
-            console.log(1234);
             sockets.create(socket, data.clientId);
             emails.create(data.clientId, socket.id);
             socket.emit('init', {clientId: data.clientId});
         })
         .on('request', (data) => {
-            console.log(data);
             const receiver = sockets.get(data.to);
             if (receiver) {
                 receiver.emit('request', {from: data.from});
             }
         })
         .on('call', (data) => {
-            console.log(data);
             const receiver = sockets.get(data.to);
             if (receiver) {
-                receiver.emit('call', {data, from: data.from});
+                receiver.emit('call', data);
             } else {
                 socket.emit('failed');
             }
         })
         .on('end', (data) => {
+            console.log('end', data);
             const receiver = sockets.get(data.to);
             if (receiver) {
                 receiver.emit('end');
             }
         })
-        .on('disconnect', () => {
-            sockets.remove(emails.get(socket.id));
-            console.log(emails.get(socket.id), 'disconnected');
-            emails.remove(socket.id);
-        });
 
 });
 

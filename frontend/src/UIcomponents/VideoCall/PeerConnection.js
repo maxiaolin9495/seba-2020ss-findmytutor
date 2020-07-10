@@ -13,13 +13,18 @@ class PeerConnection extends Emitter {
   constructor(friendId, clientId, socket) {
       super();
       this.pc = new RTCPeerConnection(PC_CONFIG);
-      this.pc.onicecandidate = (event) => socket.emit('call', {
-          to: this.friendId,
-          from: this.clientId,
-          candidate: event.candidate,
-          socket: socket
-      });
-      this.pc.ontrack = (event) => this.emit('peerStream', event.streams[0]);
+      this.pc.onicecandidate = (event) => {
+          console.log('onicecandidate', event);
+          socket.emit('call', {
+              to: this.friendId,
+              from: this.clientId,
+              candidate: event.candidate
+          });
+      };
+      this.pc.ontrack = (event) => {
+          console.log('ontrack', event);
+          this.emit('peerStream', event.streams[0]);
+      };
 
       this.mediaDevice = new MediaDevice();
       this.friendId = friendId;
@@ -33,16 +38,18 @@ class PeerConnection extends Emitter {
    * @param {Object} config - configuration for the call {audio: boolean, video: boolean}
    */
   start(isCaller, config) {
-
       this.mediaDevice
           .on('stream', (stream) => {
               stream.getTracks().forEach((track) => {
                   this.pc.addTrack(track, stream);
               });
               this.emit('localStream', stream);
-              console.log('start', this.friendId, this.clientId);
-              if (isCaller) this.socket.emit('request', {to: this.friendId, from: this.clientId});
-              else this.createOffer();
+              if (isCaller) {
+                  this.socket.emit('request', {to: this.friendId, from: this.clientId});
+              }
+              else {
+                  this.createOffer();
+              }
           })
           .start(config);
 
@@ -88,6 +95,7 @@ class PeerConnection extends Emitter {
    * @param {Object} sdp - Session description
    */
   setRemoteDescription(sdp) {
+      console.log('set Remote Des');
       const rtcSdp = new RTCSessionDescription(sdp);
       this.pc.setRemoteDescription(rtcSdp);
       return this;
