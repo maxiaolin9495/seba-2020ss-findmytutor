@@ -7,7 +7,9 @@ import CallModal from './CallModal';
 import './app.scss';
 import UserService from "../../Services/UserService";
 import io from "socket.io-client";
+
 const backendUri =  require("../../config").backendUri;
+
 export default class VideoCall extends React.Component {
     constructor(props) {
         super(props);
@@ -31,18 +33,18 @@ export default class VideoCall extends React.Component {
     componentDidMount() {
         this.setState({caller: this.props.caller});
         if(this.props.ready){
-            console.log(1);
             const socket = io( `${backendUri}/chat` );
             socket
                 .emit('init', ({clientId:  this.state.clientId}))
                 .on('init', ({clientId: clientId}) => {
-                    console.log(clientId);
                     document.title = `${clientId} - VideoCall`;
                 })
                 .on('request', ({from: callFrom}) => {
+                    console.log('request', callFrom);
                     this.setState({callModal: 'active', callFrom});
                 })
                 .on('call', (data) => {
+                    console.log('call', data);
                     if (data.sdp) {
                         this.pc.setRemoteDescription(data.sdp);
                         if (data.sdp.type === 'offer') this.pc.createAnswer();

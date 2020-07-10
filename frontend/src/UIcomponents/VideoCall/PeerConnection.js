@@ -7,7 +7,8 @@ class PeerConnection extends Emitter {
   /**
      * Create a PeerConnection.
      * @param {String} friendId - ID of the friend you want to call.
-   * * @param {String} clientId - ID of the client, who call the client.
+     * @param {String} clientId - ID of the client, who call the client.
+     * @param {String} socket - socket, which is used to make video call.
      */
   constructor(friendId, clientId, socket) {
       super();
@@ -23,6 +24,7 @@ class PeerConnection extends Emitter {
       this.mediaDevice = new MediaDevice();
       this.friendId = friendId;
       this.clientId = clientId;
+      this.socket = socket;
   }
 
   /**
@@ -31,13 +33,15 @@ class PeerConnection extends Emitter {
    * @param {Object} config - configuration for the call {audio: boolean, video: boolean}
    */
   start(isCaller, config) {
+
       this.mediaDevice
           .on('stream', (stream) => {
               stream.getTracks().forEach((track) => {
                   this.pc.addTrack(track, stream);
               });
               this.emit('localStream', stream);
-              if (isCaller) this.state.socket.emit('request', {to: this.friendId, from: this.clientId});
+              console.log('start', this.friendId, this.clientId);
+              if (isCaller) this.socket.emit('request', {to: this.friendId, from: this.clientId});
               else this.createOffer();
           })
           .start(config);
@@ -51,7 +55,7 @@ class PeerConnection extends Emitter {
    */
   stop(isStarter) {
       if (isStarter) {
-          this.state.socket.emit('end', {to: this.friendId, from: this.clientId});
+          this.socket.emit('end', {to: this.friendId, from: this.clientId});
       }
       this.mediaDevice.stop();
       this.pc.close();
@@ -76,7 +80,7 @@ class PeerConnection extends Emitter {
 
   getDescription(desc) {
       this.pc.setLocalDescription(desc);
-      this.state.socket.emit('call', {to: this.friendId, sdp: desc});
+      this.socket.emit('call', {to: this.friendId, sdp: desc});
       return this;
   }
 
