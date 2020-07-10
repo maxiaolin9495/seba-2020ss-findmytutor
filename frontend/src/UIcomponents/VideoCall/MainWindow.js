@@ -18,7 +18,6 @@ export default class MainWindow extends React.Component {
      */
     callWithVideo = (video) => {
         const config = {audio: true, video};
-        console.log(this.props.friendId);
         return () => this.props.friendId && this.props.startCall(true, this.props.friendId, config);
     };
 
