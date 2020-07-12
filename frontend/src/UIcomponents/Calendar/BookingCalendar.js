@@ -23,12 +23,14 @@ class BookingCalendar extends React.Component {
             initialTimes: [],
             selectedStart: undefined,
             selectedEnd: undefined,
-            initialTimesForSpecificDay: [],
+            initialTimesForSpecificDayForStart: [],
+            initialTimesForSpecificDayForEnd:[],
             price: 0,
             duration: 0,
             totalPrice: 0,
             bookedTimes: [],
-            bookingTimesForSpecificDay: [],
+            bookingTimesForSpecificDayForStart: [],
+            bookingTimesForSpecificDayForEnd: [],
             minDate: undefined,
         };
     }
@@ -99,13 +101,20 @@ class BookingCalendar extends React.Component {
         return arr;
     };
     handleChangeStart = (value) => {
-        let timeOnSpecificDay = [];
+        let timeOnSpecificDayForStart = [];
+        let timeOnSpecificDayForEnd = [];
+
         this.state.initialTimes.map((data) => {
             let dateDay = data.start.getDate();
+            let dataForEnd = {start: new Date(data.start), end: new Date(data.end)};
             if (value.getDate() === dateDay) {
-                timeOnSpecificDay.push(data);
+                data.end.setHours(parseInt(data.end.getHours())-1);
+                timeOnSpecificDayForStart.push(data);
+                dataForEnd.start.setHours(parseInt(dataForEnd.start.getHours()) -1);
+                timeOnSpecificDayForEnd.push(dataForEnd)
             }
         });
+
         let bookingOnSpecificDay = [];
         this.state.bookedTimes.map((data) => {
             let dateDay = data.start.getDate();
@@ -113,14 +122,17 @@ class BookingCalendar extends React.Component {
                 bookingOnSpecificDay.push(data);
             }
         });
+
         this.setState({selectedStart: value});
         let tmpDate = new Date(value.getTime());
         tmpDate.setHours(0);
         tmpDate.setMinutes(0);
         this.setState({selectedEnd: tmpDate});
-        this.setState({initialTimesForSpecificDay: timeOnSpecificDay});
+        this.setState({initialTimesForSpecificDayForStart: timeOnSpecificDayForStart});
+        this.setState({initialTimesForSpecificDayForEnd: timeOnSpecificDayForEnd});
         this.setState({minDate: value});
-        this.setState({bookingTimesForSpecificDay: bookingOnSpecificDay});
+        this.setState({bookingTimesForSpecificDayForStart: bookingOnSpecificDay});
+        this.setState({bookingTimesForSpecificDayForEnd: bookingOnSpecificDay});
 
     };
 
@@ -187,8 +199,8 @@ class BookingCalendar extends React.Component {
                         require
                         inline
                         includeDates={this.availableTimes(this.state.initialTimes, '')}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay, '')}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay, 'booking')}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForStart, '')}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDayForStart, 'booking')}
                         timesShown={2}
                         style={stylePicker}
                         dateFormat='dd.MM.yyyy HH:mm'
@@ -214,8 +226,8 @@ class BookingCalendar extends React.Component {
                         className="md-cell"
                         selected={this.state.selectedEnd}
                         includeDates={this.availableTimes(this.state.initialTimes, '')}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDay, '')}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDay, 'booking')}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForEnd, '')}
+                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDayForEnd, 'booking')}
                         isClearable
                         minDate={this.state.minDate}
                         //   minTime={new Date()}
