@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const getButtonClass = (icon, enabled) => classNames(`btn-action fa ${icon}`, { disable: !enabled });
-
-function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, shareScreen }) {
+const giveButtonClass=(name,enabled)=> classNames(name,{disable: !enabled });
+function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall }) {
     const peerVideo = useRef(null);
     const localVideo = useRef(null);
     const [video, setVideo] = useState(config.video);
@@ -44,13 +44,14 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, s
                 <button
                     key="btnVideo"
                     type="button"
-                    className={getButtonClass('fa-video-camera', video)}
+                 //   className={getButtonClass('fa-video-camera', video)}
+                    className={giveButtonClass('video', video)}
                     onClick={() => toggleMediaDevice('video')}
                 />
                 <button
                     key="btnAudio"
                     type="button"
-                    className={getButtonClass('fa-microphone', audio)}
+                    className={giveButtonClass('microphone', audio)}
                     onClick={() => toggleMediaDevice('audio')}
                 />
                 <button
@@ -61,7 +62,7 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, s
                 />
                 <button
                     type="button"
-                    className="btn-action hangup fa fa-phone"
+                    className="hangup"
                     onClick={() => endCall(true)}
                 />
             </div>

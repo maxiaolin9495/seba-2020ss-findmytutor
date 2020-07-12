@@ -8,7 +8,7 @@ import TutorPageService from "../../Services/TutorPageService";
 import TutorialService from "../../Services/TutorialService";
 import {TextIconSpacing} from "@react-md/icon";
 import {AccessAlarmFontIcon} from "@react-md/material-icons";
-import '../../Css/bookingCalendar.css';
+import '../../css/bookingCalendar.css';
 
 const stylePicker = {
     display: "contents",
