@@ -8,7 +8,7 @@ import TutorPageService from "../../Services/TutorPageService";
 import TutorialService from "../../Services/TutorialService";
 import {TextIconSpacing} from "@react-md/icon";
 import {AccessAlarmFontIcon} from "@react-md/material-icons";
-import '../../css/bookingCalendar.css';
+import '../../Css/bookingCalendar.css';
 
 const stylePicker = {
     display: "contents",
@@ -225,6 +225,7 @@ class BookingCalendar extends React.Component {
                         timeIntervals={60}
                         timeCaption="Time"
                         timeFormat="HH:mm"
+
                     />
 
                 </div>
