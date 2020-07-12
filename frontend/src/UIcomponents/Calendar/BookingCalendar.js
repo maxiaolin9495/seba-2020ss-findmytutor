@@ -118,7 +118,10 @@ class BookingCalendar extends React.Component {
         //if startTime is chosen, app will match valid endTimes to be specified for the startTime
         for (let i = 0; i < timeOnSpecificDayForEnd.length; i++){
             if(parseInt(timeOnSpecificDayForEnd[i].start.getHours()) <= parseInt(value.getHours()) &&
-                parseInt(timeOnSpecificDayForEnd[i].end.getHours()) > parseInt(value.getHours())){
+                parseInt(timeOnSpecificDayForEnd[i].end.getHours()) === 0?
+                    24 > parseInt(value.getHours()) :
+                    parseInt(timeOnSpecificDayForEnd[i].end.getHours()) > parseInt(value.getHours())
+            ){
                 console.log(value);
                 timeOnSpecificDayForEnd[i].start.setHours(parseInt(value.getHours()) + 1);
             }
