@@ -5,9 +5,9 @@ import { toast } from "react-toastify";
 /**
  * Manage all media devices
  */
-class MediaDevice extends Emitter {
+class DesktopMediaDevice extends Emitter {
 
-    constructor({ifShareScreen: ifShareScreen}) {
+    constructor() {
         super();
     }
 
@@ -16,30 +16,23 @@ class MediaDevice extends Emitter {
      * Start media devices and send stream
      */
     start() {
-        const constraintsForSelfieCamera = {
-            video: {
-                facingMode: 'user',
-                height: { min: 360, ideal: 720, max: 1080 }
-            },
-            audio: true
-        };
-        navigator.mediaDevices
-            .getUserMedia(
-                constraintsForSelfieCamera
-            )
-            .then((stream) => {
-                this.stream = stream;
-                this.emit('stream', stream);
-            })
-            .catch((err) => {
-                if (err instanceof DOMException) {
-                    toast.error('Cannot open webcam and/or microphone');
-                } else {
-                    console.log(err);
-                }
+        if (navigator.getDisplayMedia) {
+            return navigator.getDisplayMedia({
+                video: true,
+                audio: true
             });
+        } else if (navigator.mediaDevices.getDisplayMedia) {
+            return navigator.mediaDevices.getDisplayMedia({
+                video: true,
+                audio: true
+            });
+        } else {
+            return navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+        }
 
-        return this;
     }
 
     /**
@@ -69,4 +62,4 @@ class MediaDevice extends Emitter {
     }
 }
 
-export default MediaDevice;
+export default DesktopMediaDevice;

@@ -9,12 +9,16 @@ export default class CallModal extends React.Component {
         super(props);
     }
 
-     acceptWithVideo = (video) => {
-        const config = { audio: true, video };
+    acceptWithVideo = (video) => {
+        const config = {audio: true, video};
         return () => this.props.startCall(false, this.props.callFrom, config);
     };
 
-    render (){
+    shareScreen = () => {
+        return () => this.props.startScreenShare(this.props.callFrom);
+    };
+
+    render() {
         return (
             <div className={classNames('call-modal', this.props.status)}>
                 <p>

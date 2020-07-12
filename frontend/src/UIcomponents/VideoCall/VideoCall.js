@@ -25,9 +25,11 @@ export default class VideoCall extends React.Component {
         };
         this.pc = {};
         this.config = null;
+        this.ifShareScreen =false;
         this.startCallHandler = this.startCall.bind(this);
         this.endCallHandler = this.endCall.bind(this);
         this.rejectCallHandler = this.rejectCall.bind(this);
+        this.shareScreenHandler = this.shareScreen.bind(this);
     }
 
     componentDidMount() {
@@ -43,15 +45,24 @@ export default class VideoCall extends React.Component {
                     this.setState({callModal: 'active', callFrom: data.from});
                 })
                 .on('call', (data) => {
-                    console.log('call', data);
                     if (data.sdp) {
-                        console.log(this.pc, '1234');
+                        console.log(data.sdp);
                         this.pc.setRemoteDescription(data.sdp);
                         if (data.sdp.type === 'offer') {
+                            console.log('offer');
                             this.pc.createAnswer();
                         }
                     } else{
                         this.pc.addIceCandidate(data.candidate);
+                    }
+                })
+                .on('screenShare', (data) => {
+                    console.log('screenShare', data);
+                    if (data.sdp) {
+                        console.log(data.sdp);
+                        this.pc.setRemoteDescriptionForShareScreen(data.sdp);
+                    } else{
+                        this.pc.addIceCandidateForShareScreen(data.candidate);
                     }
                 })
                 .on('end', this.endCall.bind(this, false));
@@ -74,7 +85,20 @@ export default class VideoCall extends React.Component {
                 console.log('peerStream', src);
                 this.setState({peerSrc: src})
             })
+            .on('peerShareScreen', (src) => {
+                console.log('peerShareScreen', src);
+                this.setState({peerSrc: src})
+            })
             .start(isCaller, config);
+    }
+
+    shareScreen() {
+        this.ifShareScreen = !this.ifShareScreen;
+        if(this.ifShareScreen) {
+            this.pc.shareScreen();
+        }else{
+            this.pc.stopShareScreen();
+        }
     }
 
     rejectCall() {
@@ -114,6 +138,7 @@ export default class VideoCall extends React.Component {
                         config={this.config}
                         mediaDevice={this.pc.mediaDevice}
                         endCall={this.endCallHandler}
+                        shareScreen={this.shareScreenHandler}
                     />
                 )}
                 <CallModal
