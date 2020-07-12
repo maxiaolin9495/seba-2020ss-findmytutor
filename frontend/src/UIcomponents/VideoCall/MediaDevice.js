@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
  */
 class MediaDevice extends Emitter {
 
-    constructor({ifShareScreen: ifShareScreen}) {
+    constructor() {
         super();
     }
 

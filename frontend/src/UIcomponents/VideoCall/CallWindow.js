@@ -4,15 +4,19 @@ import classNames from 'classnames';
 
 const getButtonClass = (icon, enabled) => classNames(`btn-action fa ${icon}`, { disable: !enabled });
 const giveButtonClass=(name,enabled)=> classNames(name,{disable: !enabled });
-function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall }) {
+function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, shareScreen }) {
     const peerVideo = useRef(null);
     const localVideo = useRef(null);
     const [video, setVideo] = useState(config.video);
     const [audio, setAudio] = useState(config.audio);
 
     useEffect(() => {
-        if (peerVideo.current && peerSrc) peerVideo.current.srcObject = peerSrc;
-        if (localVideo.current && localSrc) localVideo.current.srcObject = localSrc;
+        if (peerVideo.current && peerSrc) {
+            peerVideo.current.srcObject = peerSrc;
+        }
+        if (localVideo.current && localSrc) {
+            localVideo.current.srcObject = localSrc;
+        }
     });
 
     useEffect(() => {
@@ -61,8 +65,8 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall })
                 <button
                     key="btnShareScreen"
                     type="button"
-                    className={getButtonClass('fa-microphone', audio)}
-                 // onClick={shareScreen}
+                    className={getButtonClass('microphone')}
+                    onClick={shareScreen}
                 />
                 <button
                     type="button"

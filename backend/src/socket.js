@@ -99,6 +99,15 @@ chatNamespace.on('connection', (socket) => {
                 socket.emit('failed');
             }
         })
+        .on('endScreenShare', (data) => {
+            console.log('endScreenShare', data);
+            const receiver = sockets.get(data.to);
+            if (receiver) {
+                receiver.emit('endScreenShare', data);
+            } else {
+                socket.emit('failed');
+            }
+        })
         .on('end', (data) => {
             console.log('end', data);
             const receiver = sockets.get(data.to);

@@ -17,22 +17,51 @@ class DesktopMediaDevice extends Emitter {
      */
     start() {
         if (navigator.getDisplayMedia) {
-            return navigator.getDisplayMedia({
+            navigator.getDisplayMedia({
                 video: true,
                 audio: true
+            }).then((stream) => {
+                this.stream = stream;
+                this.emit('stream', stream);
+            }).catch((err) => {
+                if (err instanceof DOMException) {
+                    toast.error('Cannot open webcam and/or microphone');
+                } else {
+                    console.log(err);
+                }
             });
         } else if (navigator.mediaDevices.getDisplayMedia) {
-            return navigator.mediaDevices.getDisplayMedia({
+            navigator.mediaDevices.getDisplayMedia({
                 video: true,
                 audio: true
+            }).then((stream) => {
+                this.stream = stream;
+                this.emit('stream', stream);
+            }).catch((err) => {
+                if (err instanceof DOMException) {
+                    toast.error('Cannot open webcam and/or microphone');
+                } else {
+                    console.log(err);
+                }
             });
+
         } else {
-            return navigator.mediaDevices.getUserMedia({
+            navigator.mediaDevices.getUserMedia({
                 video: true,
                 audio: true
-            });
+            }).then((stream) => {
+                this.stream = stream;
+                this.emit('stream', stream);
+            }).catch((err) => {
+                if (err instanceof DOMException) {
+                    toast.error('Cannot open webcam and/or microphone');
+                } else {
+                    console.log(err);
+                }
+            })
         }
 
+        return this;
     }
 
     /**
