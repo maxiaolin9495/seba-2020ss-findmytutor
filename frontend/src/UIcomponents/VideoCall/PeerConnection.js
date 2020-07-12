@@ -85,7 +85,6 @@ class PeerConnection extends Emitter {
             this.secondMediaDevice.stop();
         }
         this.pc.close();
-        this.pc.
         this.pc1.close();
         this.pc = null;
         this.pc1 = null;
@@ -152,6 +151,7 @@ class PeerConnection extends Emitter {
     getDescription(desc) {
         this.pc.setLocalDescription(desc);
         this.pc1.setLocalDescription(desc);
+        console.log('this.getDescription', this.friendId);
         this.socket.emit('call', {to: this.friendId, sdp: desc});
         return this;
     }

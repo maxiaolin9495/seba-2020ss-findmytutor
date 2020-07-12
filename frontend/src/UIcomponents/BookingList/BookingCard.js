@@ -3,6 +3,7 @@ import { Button } from 'react-md';
 import Dialog from "../PageDesign/Dialog"
 import TutorialService from "../../Services/TutorialService";
 import EditProfileService from "../../Services/EditProfileService";
+import UserService from "../../Services/UserService";
 
 export default class BookingCard extends React.Component {
     constructor(props) {
@@ -167,9 +168,9 @@ export default class BookingCard extends React.Component {
     goToVideoPage = () => {
         let userType = UserService.getCurrentUser().userType;
         if (userType === `customer`) {
-            this.props.handleChatRoom(`/video/${this.props.tutorial.tutorEmail}`);
+            this.props.handleChatRoom(`/video/${this.props.tutorial._id}`);
         } else {
-            this.props.handleChatRoom(`/video/${this.props.tutorial.customerEmail}`);
+            this.props.handleChatRoom(`/video/${this.props.tutorial._id}`);
         }
     }
 

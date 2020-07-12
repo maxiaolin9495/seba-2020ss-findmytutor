@@ -5,68 +5,71 @@ import MainWindow from './MainWindow';
 import CallWindow from './CallWindow';
 import CallModal from './CallModal';
 import './app.scss';
-import UserService from "../../Services/UserService";
-import io from "socket.io-client";
 
-const backendUri =  require("../../config").backendUri;
 
 export default class VideoCall extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            clientId: UserService.getCurrentUser().email,
+            clientId: '',
             callWindow: '',
             callModal: '',
             callFrom: '',
             localSrc: null,
             peerSrc: null,
-            caller:'',
+            caller: '',
             socket: null
         };
         this.pc = {};
         this.config = null;
-        this.ifShareScreen =false;
+        this.ifShareScreen = false;
         this.startCallHandler = this.startCall.bind(this);
         this.endCallHandler = this.endCall.bind(this);
         this.rejectCallHandler = this.rejectCall.bind(this);
         this.shareScreenHandler = this.shareScreen.bind(this);
     }
 
-    componentDidMount() {
-        this.setState({caller: this.props.caller});
-        if(this.props.ready){
-            const socket = io( `${backendUri}/chat` );
-            socket
-                .emit('init', ({clientId:  this.state.clientId}))
-                .on('init', ({clientId: clientId}) => {
-                    document.title = `${clientId} - VideoCall`;
-                })
-                .on('request', (data) => {
-                    this.setState({callModal: 'active', callFrom: data.from});
-                })
-                .on('call', (data) => {
-                    if (data.sdp) {
-                        console.log(data.sdp);
-                        this.pc.setRemoteDescription(data.sdp);
-                        if (data.sdp.type === 'offer') {
-                            console.log('offer');
-                            this.pc.createAnswer();
+
+    componentDidUpdate(prevprops) {
+        if (this.props.caller !== prevprops.caller) {
+            this.setState({caller: this.props.caller});
+            this.setState({clientId: this.props.clientId});
+
+            if (this.props.caller && this.props.clientId) {
+                const socket = this.props.socket;
+                socket
+                    .emit('init', ({clientId: this.props.clientId}))
+                    .on('init', ({clientId: clientId}) => {
+                        document.title = `${clientId} - VideoCall`;
+                    })
+                    .on('request', (data) => {
+                        this.setState({callModal: 'active', callFrom: data.from});
+                    })
+                    .on('call', (data) => {
+                        console.log('call', data);
+                        if (data.sdp) {
+                            console.log(data.sdp);
+                            this.pc.setRemoteDescription(data.sdp);
+                            if (data.sdp.type === 'offer') {
+                                console.log('offer');
+                                this.pc.createAnswer();
+                            }
+                        } else {
+                            this.pc.addIceCandidate(data.candidate);
                         }
-                    } else{
-                        this.pc.addIceCandidate(data.candidate);
-                    }
-                })
-                .on('screenShare', (data) => {
-                    console.log('screenShare', data);
-                    if (data.sdp) {
-                        console.log(data.sdp);
-                        this.pc.setRemoteDescriptionForShareScreen(data.sdp);
-                    } else{
-                        this.pc.addIceCandidateForShareScreen(data.candidate);
-                    }
-                })
-                .on('end', this.endCall.bind(this, false));
-            this.setState({socket: socket});
+                    })
+                    .on('screenShare', (data) => {
+                        console.log('screenShare', data);
+                        if (data.sdp) {
+                            console.log(data.sdp);
+                            this.pc.setRemoteDescriptionForShareScreen(data.sdp);
+                        } else {
+                            this.pc.addIceCandidateForShareScreen(data.candidate);
+                        }
+                    })
+                    .on('end', this.endCall.bind(this, false));
+                this.setState({socket: socket});
+            }
         }
     }
 
@@ -75,7 +78,7 @@ export default class VideoCall extends React.Component {
         this.pc = new PeerConnection(friendId, this.state.clientId, this.state.socket)
             .on('localStream', (src) => {
                 const newState = {callWindow: 'active', localSrc: src};
-                if (!isCaller){
+                if (!isCaller) {
                     newState.callModal = '';
                 }
 
@@ -94,9 +97,9 @@ export default class VideoCall extends React.Component {
 
     shareScreen() {
         this.ifShareScreen = !this.ifShareScreen;
-        if(this.ifShareScreen) {
+        if (this.ifShareScreen) {
             this.pc.shareScreen();
-        }else{
+        } else {
             this.pc.stopShareScreen();
         }
     }
