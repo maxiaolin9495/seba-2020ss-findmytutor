@@ -103,17 +103,26 @@ class BookingCalendar extends React.Component {
     handleChangeStart = (value) => {
         let timeOnSpecificDayForStart = [];
         let timeOnSpecificDayForEnd = [];
-
         this.state.initialTimes.map((data) => {
             let dateDay = data.start.getDate();
+            let dataForStart = {start: new Date(data.start), end: new Date(data.end)};
             let dataForEnd = {start: new Date(data.start), end: new Date(data.end)};
             if (value.getDate() === dateDay) {
-                data.end.setHours(parseInt(data.end.getHours())-1);
-                timeOnSpecificDayForStart.push(data);
-                dataForEnd.start.setHours(parseInt(dataForEnd.start.getHours()) -1);
+                dataForStart.end.setHours(parseInt(data.end.getHours())-1);
+                timeOnSpecificDayForStart.push(dataForStart);
+                dataForEnd.start.setHours(parseInt(data.start.getHours()) + 1);
                 timeOnSpecificDayForEnd.push(dataForEnd)
             }
         });
+
+        //if startTime is chosen, app will match valid endTimes to be specified for the startTime
+        for (let i = 0; i < timeOnSpecificDayForEnd.length; i++){
+            if(parseInt(timeOnSpecificDayForEnd[i].start.getHours()) <= parseInt(value.getHours()) &&
+                parseInt(timeOnSpecificDayForEnd[i].end.getHours()) > parseInt(value.getHours())){
+                console.log(value);
+                timeOnSpecificDayForEnd[i].start.setHours(parseInt(value.getHours()) + 1);
+            }
+        }
 
         let bookingOnSpecificDay = [];
         this.state.bookedTimes.map((data) => {

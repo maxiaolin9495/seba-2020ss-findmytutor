@@ -35,7 +35,7 @@ export default class App extends React.Component {
                 { component: BookingListView, path: '/booking', exact: true },
                 { component: ReviewTutorView, path: '/review/:id', exact: true },
                 { component: ChatBar, path: '/chat/:id', exact: true },
-                { component: VideoCallView, path: '/video/:email',exact: true }
+                { component: VideoCallView, path: '/video/:id',exact: true }
             ]
         };
     }

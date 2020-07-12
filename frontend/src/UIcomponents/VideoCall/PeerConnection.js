@@ -169,6 +169,7 @@ class PeerConnection extends Emitter {
         console.log('getDescription');
         this.pc.setLocalDescription(desc);
         this.pc1.setLocalDescription(desc);
+        console.log('this.getDescription', this.friendId);
         this.socket.emit('call', {to: this.friendId, sdp: desc});
         return this;
     }

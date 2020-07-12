@@ -37,10 +37,14 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall })
         }
     };
     return (
-        <div className={classNames('call-window', status)}>
+        <div className={classNames('call-window', status)}
+             style={{ marginLeft:"540px",
+                 marginTop:"40px",
+                 height:"850px",
+                 width:"900px"}}>
             <video id="peerVideo" ref={peerVideo} autoPlay />
             <video id="localVideo" ref={localVideo} autoPlay muted />
-            <div className="video-control">
+            <div className="video-control" >
                 <button
                     key="btnVideo"
                     type="button"
@@ -58,7 +62,7 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall })
                     key="btnShareScreen"
                     type="button"
                     className={getButtonClass('fa-microphone', audio)}
-                    onClick={shareScreen}
+                 // onClick={shareScreen}
                 />
                 <button
                     type="button"
