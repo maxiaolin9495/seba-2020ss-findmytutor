@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Avatar, Card, CardTitle, TextField, Media, Grid, Cell, Button, FontIcon } from 'react-md';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
+import { toast } from "react-toastify";
 import StarRatingComponent from 'react-star-rating-component';
-import FindMyTutor from '../../Images/Logo.png';
 import BookingCalendar from "../Calendar/BookingCalendar";
+import ReviewCard from "./ReviewCard";
 
 
 class TutorPersonalPage extends React.Component {
@@ -13,60 +14,19 @@ class TutorPersonalPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedCourse: this.props.selectedCourse
+            selectedCourse: this.props.selectedCourse,
+            reviews: this.props.reviews,
         };
     }
 
-    // TODO: create booking
-
-    // TODO: get available time slots
-
-    // add reviews
-    addReview = () => {
-        let reviews = [{
-            user: 'Linda',
-            rating: 5,
-            comment: 'Best teacher and advisor!!!I have had 30 lessons with her, and I am 100% satisfied.',
-            avatar: FindMyTutor
-        }, {
-            user: 'Lukas',
-            rating: 4,
-            comment: 'Jerry is a professional and understanding tutor, she always wait for her lessons with interest and invariably makes progress',
-            avatar: FindMyTutor
-        }];
-
-        return reviews.map(r => {
-            return (
-                <Card
-                    className="md-grid md-block-centered md-row md-full-width"
-                    style={{
-                        background: 'transparent',
-                        marginBottom: '8px'
-                    }}
-                    key={r.user}>
-                    <CardTitle
-                        title={
-                            <div>
-                                <span style={{ height: '100%', verticalAlign: 'middle' }}>{r.user}</span>
-                                <div style={{ paddingLeft: '32px', display: 'inline', verticalAlign: 'middle' }}>
-                                    <StarRatingComponent
-                                        name="rate2"
-                                        editing={false}
-                                        starCount={5}
-                                        value={r.rating}
-                                        starColor={`#ffb400`}
-                                        emptyStarColor={`#333`} />
-                                </div>
-                            </div>
-                        }
-                        subtitle={r.comment}
-                        avatar={<Avatar src={r.avatar} role="presentation" />}
-                        style={{ padding: '8px' }}
-                    />
-                </Card>
-            )
-        })
-    };
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.reviews !== prevState.reviews) {
+            return ({
+                reviews: nextProps.reviews,
+            })
+        }
+        return null
+    }
 
     renderCourses = () => {
         // TODO: remove manual added courses
@@ -76,18 +36,19 @@ class TutorPersonalPage extends React.Component {
             let style = {
                 marginRight: '8px'
             };
-            if (c === this.state.selectedCourse) {
+            if (c !== this.state.selectedCourse) {
                 style = {
                     ...style,
-                    backgroundColor: '#f44336',
-                    color: '#ffffff'
+                    backgroundColor: '#EEEEEE',
+                    color: '#333'
                 }
             }
             return (
                 <Button
                     key={c}
                     style={style}
-                    secondary={c !== this.state.selectedCourse}
+                    primary={c === this.state.selectedCourse}
+                    //secondary={c !== this.state.selectedCourse}
                     onClick={() => this.changeSelectedCourse(c)}
                     raised>
                     {c}
@@ -205,13 +166,15 @@ class TutorPersonalPage extends React.Component {
                 <div className="md-grid">
                     <h1 className='md-row md-full-width'>Calender</h1>
                     {/** Calender should be placed here */}
-                    <BookingCalendar/>
+                    <BookingCalendar />
                 </div>
 
                 <hr style={{ height: 1 }} />
                 <div className="md-grid">
                     <h1 className='md-row md-full-width'>Comments</h1>
-                    {this.addReview()}
+                    {this.state.reviews.map(r => {
+                        return <ReviewCard review={r} key={r._id} />
+                    })}
                 </div>
 
             </Card >

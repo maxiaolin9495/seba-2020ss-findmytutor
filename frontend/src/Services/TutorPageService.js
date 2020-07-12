@@ -24,4 +24,19 @@ export default class TutorPageService {
             });
         });
     }
+
+    static getTutorReviews(_id) {
+        return new Promise((resolve, reject) => {
+            HttpService.get(`${config.backendUri}/user/getAllReviews/${_id}`, function (data) {
+                if (data !== undefined || Object.keys(data).length !== 0) {
+                    resolve(data);
+                }
+                else {
+                    reject('Error while retrieving tutor profile');
+                }
+            }, function (textStatus) {
+                reject(textStatus);
+            });
+        });
+    }
 }
