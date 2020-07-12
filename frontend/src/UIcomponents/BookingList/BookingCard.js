@@ -92,7 +92,7 @@ export default class BookingCard extends React.Component {
                                 fontSize: '18px',
                                 fontFamily: 'San Francisco',
                             }}
-                            onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)} >
+                            onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)}>
                             REVIEW
                         </Button>);
                 else
@@ -111,7 +111,7 @@ export default class BookingCard extends React.Component {
                                 fontSize: '18px',
                                 fontFamily: 'San Francisco',
                             }}
-                            onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)} >
+                            onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)}>
                             REVIEW
                         </Button>);
                 else
@@ -121,7 +121,7 @@ export default class BookingCard extends React.Component {
                 return (
                     <div>
                         <Dialog actionName='cancel' onClick={() => this.cancelTutorial()}/>
-                        {this.ifShouldRemind() && !this.ifPastVideo()?
+                        {this.ifShouldRemind() && !this.ifPastVideo() ?
                             <Button
                                 raised
                                 className="md-cell md-cell--3"
@@ -133,13 +133,13 @@ export default class BookingCard extends React.Component {
                                     paddingBottom: '5px',
                                     fontFamily: 'San Francisco',
                                 }}
-                                onClick={() => this.props.handleReview(`/video/${this.props.tutorial.tutorEmail}`)}
+                                onClick={() => this.goToVideoPage()}
                             >
                                 Video Call
                             </Button> :
-                            this.ifPastVideo()?
-                                <div/>:
-                                    <p>Please wait</p>
+                            this.ifPastVideo() ?
+                                <div/> :
+                                <p>Please wait</p>
 
 
                         }
@@ -158,10 +158,20 @@ export default class BookingCard extends React.Component {
         return !this.props.tutorial.ifHadVideo &&
             this.props.tutorial.startTime - now < 180000000;
     };
-    ifPastVideo =()=>{
+
+    ifPastVideo = () => {
         let now = new Date().getTime();
-         return  now - this.props.tutorial.endTime > 0;
+        return now - this.props.tutorial.endTime > 0;
     };
+
+    goToVideoPage = () => {
+        let userType = UserService.getCurrentUser().userType;
+        if (userType === `customer`) {
+            this.props.handleChatRoom(`/video/${this.props.tutorial.tutorEmail}`);
+        } else {
+            this.props.handleChatRoom(`/video/${this.props.tutorial.customerEmail}`);
+        }
+    }
 
 
     render() {
@@ -186,7 +196,7 @@ export default class BookingCard extends React.Component {
                                 `${this.state.tutor.firstName} ${this.state.tutor.lastName}` :
                                 `${this.state.customer.firstName} ${this.state.customer.lastName}`}
                         </h1>
-                        <div style={{ margin: 0, padding: 0 }}>
+                        <div style={{margin: 0, padding: 0}}>
                             <h3 style={{
                                 color: 'gray',
                                 marginBottom: '0px',
@@ -215,7 +225,7 @@ export default class BookingCard extends React.Component {
                     </div>}
 
                     <div className="md-cell md-cell--2" id="tutorial-time"
-                        style={{ textAlign: 'center' }}>
+                         style={{textAlign: 'center'}}>
                         <h3 style={{
                             fontWeight: 'bolder',
                             fontFamily: 'cursive'
@@ -226,7 +236,7 @@ export default class BookingCard extends React.Component {
                         }}>{this.showDuration(this.props.tutorial.startTime, this.props.tutorial.endTime)}</h3>
                     </div>
                     {this.props.userType === 'tutor' &&
-                        <div className="md-cell md-cell--2" />}
+                    <div className="md-cell md-cell--2"/>}
                     {this.props.userType === 'customer' ?
                         <Button
                             raised
@@ -239,12 +249,12 @@ export default class BookingCard extends React.Component {
                                 marginTop: '32px',
                                 paddingBottom: '5px',
                                 fontFamily: 'San Francisco',
-                            }} >
+                            }}>
                             {this.props.tutorial.tutorialStatus === 'notConfirmed' ? 'NEED CONFIRMATION' : this.props.tutorial.tutorialStatus}
                         </Button> :
                         (
                             this.props.tutorial.tutorialStatus === 'notConfirmed' ?
-                                <Dialog actionName='confirm' onClick={() => this.confirmTutorial()} /> :
+                                <Dialog actionName='confirm' onClick={() => this.confirmTutorial()}/> :
                                 <Button
                                     raised
                                     className="md-cell md-cell--3"
@@ -256,33 +266,32 @@ export default class BookingCard extends React.Component {
                                         marginTop: '32px',
                                         paddingBottom: '5px',
                                         fontFamily: 'San Francisco',
-                                    }} >
+                                    }}>
                                     {this.props.tutorial.tutorialStatus === 'reviewed' ? 'finished' : this.props.tutorial.tutorialStatus}
                                 </Button>
                         )}
                     {this.showLastButton()}
                 </div>
-                <hr style={{ marginLeft: 0, marginRight: 0 }} />
-                        <h4 style={{ marginLeft: '8px',marginBottom: 0 }}>Topics: {this.props.tutorial.sessionTopic}</h4>
-                    {/* </div> */}
-
+                <hr style={{marginLeft: 0, marginRight: 0}}/>
+                <h4 style={{marginLeft: '8px', marginBottom: 0}}>Topics: {this.props.tutorial.sessionTopic}</h4>
+                {/* </div> */}
 
 
                 {/* </div> */}
-                <hr style={{ marginLeft: 0, marginRight: 0 }} />
+                <hr style={{marginLeft: 0, marginRight: 0}}/>
                 <Button
-                            raised
-                            className="md-cell md-cell--2"
-                            style={{
-                                background: '#696969',
-                                marginBottom: '10px',
-                                color: 'white',
-                                fontSize: '18px',
-                                marginTop: '0px',
-                                paddingBottom: '5px',
-                                fontFamily: 'cursive',
-                            }} onClick={() => this.props.handleChatRoom(`/chat/${this.props.tutorial._id}`)} >Tutorial
-                                </Button>
+                    raised
+                    className="md-cell md-cell--2"
+                    style={{
+                        background: '#696969',
+                        marginBottom: '10px',
+                        color: 'white',
+                        fontSize: '18px',
+                        marginTop: '0px',
+                        paddingBottom: '5px',
+                        fontFamily: 'cursive',
+                    }} onClick={() => this.props.handleChatRoom(`/chat/${this.props.tutorial._id}`)}>Tutorial
+                </Button>
             </div>
         );
     }
