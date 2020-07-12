@@ -31,7 +31,7 @@ class PeerConnection extends Emitter {
         }
         this.pc = new RTCPeerConnection(PC_CONFIG);
         this.pc.onicecandidate = (event) => {
-            socket.emit('call', {
+            this.socket.emit('call', {
                 to: this.friendId,
                 from: this.clientId,
                 candidate: event.candidate
@@ -49,7 +49,7 @@ class PeerConnection extends Emitter {
         }
         this.pc1 = new RTCPeerConnection(PC_CONFIG);
         this.pc1.onicecandidate = (event) => {
-            socket.emit('screenShare', {
+            this.socket.emit('screenShare', {
                 to: this.friendId,
                 from: this.clientId,
                 candidate: event.candidate
