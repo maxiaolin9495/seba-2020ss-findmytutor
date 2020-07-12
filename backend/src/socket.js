@@ -8,9 +8,8 @@ const emails = require('./services/socketIdForEmail');
 const chatNamespace = io.of('/chat');
 
 chatNamespace.on('connection', (socket) => {
-    socket.on('join', ({ name, room }, callback) => {
-        console.log(`Hello ${name}, welcome to room ${room}`);
-        const { error, user } = addUser({ id: socket.id, name, room });
+    socket.on('join', ({ email, name, room }, callback) => {
+        const { error, user } = addUser({ id: socket.id, email, name, room });
 
         if (error) return callback({ error: 'error' });
 
@@ -39,6 +38,7 @@ chatNamespace.on('connection', (socket) => {
         chatNamespace.to(user.room).emit('message',
             {
                 user: user.name,
+                email: user.email,
                 id: socket.id,
                 text: message.text,
                 timestamp: message.timestamp

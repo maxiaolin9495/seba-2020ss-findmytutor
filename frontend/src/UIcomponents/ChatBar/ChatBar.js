@@ -35,41 +35,38 @@ export class ChatBar extends React.Component {
         // Read tutor and customer's information
         let tutorialId = this.props.match.params.id;
         TutorialService.getTutorial(tutorialId).then((data) => {
-            TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
-                console.log("get tutor infos");
+            let tutorPromise = TutorialService.getTutorByTutorEmail(data.tutorEmail);
+            let customerPromise = EditProfileService.getCustomerByCustomerEmail(data.customerEmail);
+            Promise.all([tutorPromise, customerPromise]).then((values) => {
                 this.setState({
-                    tutor: tutor,
+                    tutor: values[0],
+                    customer: values[1],
                     tutorial: data,
                     avatarUrl: {
-                        ...this.state.avatarUrl,
-                        [tutor.email]: tutor.avatar
+                        [values[0].email]: values[0].avatar,
+                        [values[1].email]: logoIcon
                     }
                 });
-            });
-            EditProfileService.getCustomerByCustomerEmail(data.customerEmail).then((customer) => {
-                this.setState({
-                    customer,
-                    avatarUrl: {
-                        ...this.state.avatarUrl,
-                        [customer.email]: logoIcon
-                    }
-                })
+                socket.emit('join',
+                    {
+                        email: UserService.getCurrentUser().email,
+                        name: (UserService.getCurrentUser().userType === 'tutor' ?
+                            `${values[0].firstName} ${values[0].lastName}` :
+                            `${values[1].firstName} ${values[1].lastName}`),
+                        room: tutorialId
+                    },
+                    (error) => {
+                        if (error) {
+                            toast.error(error);
+                        }
+
+                    });
+            }).catch((e) => {
+                console.error(e);
             });
         }).catch((e) => {
             console.error(e);
         });
-
-        socket.emit('join',
-            {
-                name: UserService.getCurrentUser().email,
-                room: tutorialId
-            },
-            (error) => {
-                if (error) {
-                    toast.error(error);
-                }
-
-            });
 
         // receive notification
         socket.on('notification', notification => {
@@ -87,11 +84,9 @@ export class ChatBar extends React.Component {
         socket.on('message', message => {
             let newMessage = {
                 author: {
-                    username: (message.user === this.state.tutor.email ?
-                        `${this.state.tutor.firstName} ${this.state.tutor.lastName}` :
-                        `${this.state.customer.firstName} ${this.state.customer.lastName}`),
+                    username: message.user,
                     id: message.id,
-                    avatarUrl: this.state.avatarUrl[message.user] || logoIcon,
+                    avatarUrl: this.state.avatarUrl[message.email] || logoIcon,
                 },
                 text: message.text,
                 timestamp: message.timestamp,
@@ -103,6 +98,11 @@ export class ChatBar extends React.Component {
         });
 
         socket.on("roomData", ({ users }) => {
+            let newNotification = {
+                text: 'Current users: ' + users.map(u => u.name).join(', '),
+                timestamp: +new Date(),
+                type: 'notification',
+            };
             this.setState({
                 users
             })
