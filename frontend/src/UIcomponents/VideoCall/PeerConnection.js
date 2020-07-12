@@ -7,22 +7,29 @@ class PeerConnection extends Emitter {
   /**
      * Create a PeerConnection.
      * @param {String} friendId - ID of the friend you want to call.
-   * * @param {String} clientId - ID of the client, who call the client.
+     * @param {String} clientId - ID of the client, who call the client.
+     * @param {String} socket - socket, which is used to make video call.
      */
   constructor(friendId, clientId, socket) {
       super();
       this.pc = new RTCPeerConnection(PC_CONFIG);
-      this.pc.onicecandidate = (event) => socket.emit('call', {
-          to: this.friendId,
-          from: this.clientId,
-          candidate: event.candidate,
-          socket: socket
-      });
-      this.pc.ontrack = (event) => this.emit('peerStream', event.streams[0]);
+      this.pc.onicecandidate = (event) => {
+          console.log('onicecandidate', event);
+          socket.emit('call', {
+              to: this.friendId,
+              from: this.clientId,
+              candidate: event.candidate
+          });
+      };
+      this.pc.ontrack = (event) => {
+          console.log('ontrack', event);
+          this.emit('peerStream', event.streams[0]);
+      };
 
       this.mediaDevice = new MediaDevice();
       this.friendId = friendId;
       this.clientId = clientId;
+      this.socket = socket;
   }
 
   /**
@@ -37,8 +44,12 @@ class PeerConnection extends Emitter {
                   this.pc.addTrack(track, stream);
               });
               this.emit('localStream', stream);
-              if (isCaller) this.state.socket.emit('request', {to: this.friendId, from: this.clientId});
-              else this.createOffer();
+              if (isCaller) {
+                  this.socket.emit('request', {to: this.friendId, from: this.clientId});
+              }
+              else {
+                  this.createOffer();
+              }
           })
           .start(config);
 
@@ -51,7 +62,7 @@ class PeerConnection extends Emitter {
    */
   stop(isStarter) {
       if (isStarter) {
-          this.state.socket.emit('end', {to: this.friendId, from: this.clientId});
+          this.socket.emit('end', {to: this.friendId, from: this.clientId});
       }
       this.mediaDevice.stop();
       this.pc.close();
@@ -76,7 +87,7 @@ class PeerConnection extends Emitter {
 
   getDescription(desc) {
       this.pc.setLocalDescription(desc);
-      this.state.socket.emit('call', {to: this.friendId, sdp: desc});
+      this.socket.emit('call', {to: this.friendId, sdp: desc});
       return this;
   }
 
@@ -84,6 +95,7 @@ class PeerConnection extends Emitter {
    * @param {Object} sdp - Session description
    */
   setRemoteDescription(sdp) {
+      console.log('set Remote Des');
       const rtcSdp = new RTCSessionDescription(sdp);
       this.pc.setRemoteDescription(rtcSdp);
       return this;

@@ -225,6 +225,7 @@ class BookingCalendar extends React.Component {
                         timeIntervals={60}
                         timeCaption="Time"
                         timeFormat="HH:mm"
+
                     />
 
                 </div>
