@@ -37,6 +37,16 @@ export class TutorPageView extends React.Component {
                 });
                 this.props.history.goBack();
             });
+
+        TutorPageService.getTutorReviews(tutorId)
+            .then((reviews) => {
+                this.setState({
+                    reviews
+                });
+            }).catch((e) => {
+                console.error(e);
+                toast.error('Error by getting tutor reviews');
+            })
     }
 
     render() {
