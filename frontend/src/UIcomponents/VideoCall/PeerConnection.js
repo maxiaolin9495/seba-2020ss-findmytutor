@@ -1,6 +1,7 @@
 import MediaDevice from './MediaDevice';
 import Emitter from './Emitter';
 import DesktopMediaDevice from "./DesktopMediaDevice";
+import { toast } from "react-toastify";
 
 const PC_CONFIG = { iceServers: [{ urls: ['stun:stun.l.google.com:19302'] }] };
 
@@ -13,18 +14,24 @@ class PeerConnection extends Emitter {
      */
     constructor(friendId, clientId, socket) {
         super();
+        this.createRTCPeerConnectionForVideoCall();
+        this.createRTCPeerConnectionForScreenSharing();
+        this.mediaDevice = new MediaDevice(true);
+        this.friendId = friendId;
+        this.clientId = clientId;
+        this.socket = socket;
+        this.ifShareScreen = false;
+    }
+
+
+    createRTCPeerConnectionForVideoCall(){
+        if(this.pc){
+            this.pc.close();
+            this.pc = null;
+        }
         this.pc = new RTCPeerConnection(PC_CONFIG);
-        this.pc1 = new RTCPeerConnection(PC_CONFIG);
         this.pc.onicecandidate = (event) => {
             socket.emit('call', {
-                to: this.friendId,
-                from: this.clientId,
-                candidate: event.candidate
-            });
-        };
-
-        this.pc1.onicecandidate = (event) => {
-            socket.emit('screenShare', {
                 to: this.friendId,
                 from: this.clientId,
                 candidate: event.candidate
@@ -33,20 +40,24 @@ class PeerConnection extends Emitter {
         this.pc.ontrack = (event) => {
             this.emit('peerStream', event.streams[0]);
         };
-        this.pc1.ontrack = (event) => {
-            this.emit('peerShareScreen', event.streams[0]);
-        };
-        this.mediaDevice = new MediaDevice(true);
-        this.friendId = friendId;
-        this.clientId = clientId;
-        this.socket = socket;
-    }
-
-
-    createRTCPeerConnectionForVideoCall(){
 
     }
     createRTCPeerConnectionForScreenSharing(){
+        if(this.pc1){
+            this.pc1.close();
+            this.pc1 = null;
+        }
+        this.pc1 = new RTCPeerConnection(PC_CONFIG);
+        this.pc1.onicecandidate = (event) => {
+            socket.emit('screenShare', {
+                to: this.friendId,
+                from: this.clientId,
+                candidate: event.candidate
+            });
+        };
+        this.pc1.ontrack = (event) => {
+            this.emit('peerShareScreen', event.streams[0]);
+        };
 
     }
     /**
@@ -69,6 +80,7 @@ class PeerConnection extends Emitter {
                 }
             })
             .start(config);
+        this.config = config;
         return this;
     }
 
@@ -85,7 +97,6 @@ class PeerConnection extends Emitter {
             this.secondMediaDevice.stop();
         }
         this.pc.close();
-        this.pc.
         this.pc1.close();
         this.pc = null;
         this.pc1 = null;
@@ -113,29 +124,34 @@ class PeerConnection extends Emitter {
         return this;
     }
 
-    shareScreen(ifSharer) {
-        if(ifSharer) {
-            this.secondMediaDevice = new DesktopMediaDevice(true);
-            this.secondMediaDevice
-                .on('stream', (stream) => {
-                    stream.getTracks().forEach((track) => {
-                        this.pc1.addTrack(track, stream);
-                    });
-                    this.createOfferForShareScreen();
-                })
-                .start();
-            this.pc1.createOffer()
-                .then((desc) => {
-                    console.log('screenShare');
-                    this.socket.emit('screenShare', {to: this.friendId, sdp: desc});
-                })
-                .catch((err) => console.log(err));
+    shareScreen() {
+        if (this.ifShareScreen) {
+            toast.error('Only one attendee can share his screen');
+            return;
         }
+        this.ifShareScreen = true;
+        this.secondMediaDevice = new DesktopMediaDevice();
+        this.secondMediaDevice
+            .on('stream', (stream) => {
+                stream.getTracks().forEach((track) => {
+                    this.pc1.addTrack(track, stream);
+                });
+                this.createOfferForShareScreen();
+            })
+            .start();
+        this.pc1.createOffer()
+            .then((desc) => {
+                console.log('screenShare');
+                this.socket.emit('screenShare', {to: this.friendId, sdp: desc});
+            })
+            .catch((err) => console.log(err));
+
         return this;
     }
 
     stopShareScreen() {
-        this.createOffer()
+        this.createOffer();
+        this.ifShareScreen = false;
     }
 
     createAnswer() {
@@ -150,6 +166,7 @@ class PeerConnection extends Emitter {
 
 
     getDescription(desc) {
+        console.log('getDescription');
         this.pc.setLocalDescription(desc);
         this.pc1.setLocalDescription(desc);
         this.socket.emit('call', {to: this.friendId, sdp: desc});
@@ -171,8 +188,11 @@ class PeerConnection extends Emitter {
     }
 
     setRemoteDescriptionForShareScreen(sdp) {
+        this.ifShareScreen = true;
+        this.pc.close();
+        this.createRTCPeerConnectionForVideoCall();
         const rtcSdp = new RTCSessionDescription(sdp);
-        this.pc1.setRemoteDescription(rtcSdp);
+        this.pc.setRemoteDescription(rtcSdp);
         return this;
     }
 
