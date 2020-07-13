@@ -1,15 +1,16 @@
 "use strict";
 
 import React from 'react';
-import { Card, Button, FontIcon, TextField, FileInput, Media, Cell } from 'react-md';
+import { Card, Button, FontIcon, TextField, FileInput, Media, Cell, Grid, Chip } from 'react-md';
 import { withRouter } from 'react-router-dom'
 import TutorCalendar from "../Calendar/TutorCalendar";
 import Resizer from 'react-image-file-resizer';
-
+import CoursesChip from "./CoursesChip";
 
 const style = {
     maxWidth: 750,
     opacity: 0.85,
+    marginTop: '16px'
 };
 
 
@@ -40,7 +41,8 @@ class EditProfile extends React.Component {
                 description: '',
                 timeSlotIds: [],
                 courses: [],
-                avatar: ''
+                avatar: '',
+                course: '',
             }
         }
     }
@@ -103,8 +105,6 @@ class EditProfile extends React.Component {
     }
 
     handleSubmit = () => {
-        // event.preventDefault();
-
         let userProfile = this.props.userProfile;
         // TODO: change to not user profile
         if (userProfile === undefined) {
@@ -124,6 +124,24 @@ class EditProfile extends React.Component {
 
         // onsubmit defined by EditProfileView
         this.props.onSubmit(userProfile);
+    };
+
+    removeCourse = (course) => {
+        console.log(course);
+        let courses = this.state.courses;
+        courses.splice(courses.indexOf(course), 1);
+        this.setState({ courses });
+    }
+
+    addCourse = () => {
+        if (this.state.course === '') {
+            toast.error('Please input a course name');
+            return;
+        }
+        let courses = this.state.courses;
+        courses.push(this.state.course);
+        this.setState({ courses: courses, course: '' });
+
     };
 
     // onReset={() => this.props.history.goBack()}
@@ -187,19 +205,6 @@ class EditProfile extends React.Component {
                                 value={this.state.university}
                                 onChange={this.handleChangeUniversity}
                                 errorText="University is required" />
-                            {/* TODO: Add courses
-                                <Grid style={{ padding: 0, margin: 0 }}>
-                                    <Cell size={6}>
-                                        <TextField
-                                            id="TeachingCoursesField"
-                                            leftIcon={<FontIcon>book</FontIcon>}
-                                            value={'Teaching Courses: '}
-                                            type="text" />
-                                    </Cell>
-                                    <Cell size={6} align='middle'>
-                                        {this.renderCourses()}
-                                    </Cell>
-                                </Grid> */}
                             {/* TODO: show rating
                                 <div style={{ marginBottom: '13.5px' }}>
                                     <FontIcon style={{ paddingLeft: '8px', marginRight: '16px', }}>thumbs_up_down</FontIcon>
@@ -227,6 +232,34 @@ class EditProfile extends React.Component {
                                 onChange={value => this.handleChangeDescription(value)}
                                 placeholder="Write some text to describe yourself"
                                 errorText="Description is required" />
+
+                            <TextField className="md-cell md-cell--6"
+                                id="TeachingCoursesField"
+                                leftIcon={<FontIcon>book</FontIcon>}
+                                label="Teaching Courses:"
+                                value={this.state.course}
+                                onChange={(value) => this.setState({ course: value })}
+                                type="text" />
+
+                            <Button id="dismissButton" raised secondary className="md-cell md-cell--4"
+                                style={{ marginTop: '30px' }}
+                                // className="md-cell md-cell--2"
+                                onClick={() => this.addCourse()}>Add</Button>
+
+                            <div className="md-row">
+                                {this.state.courses.map(c => {
+                                    return (
+                                        <CoursesChip
+                                            key={c}
+                                            course={c}
+                                            onClick={this.removeCourse}
+                                            style={{
+                                                marginRight: '8px',
+                                                marginBottom: '8px'
+                                            }}
+                                        />)
+                                })}
+                            </div>
                         </div>
                         <Cell size={5} style={{ paddingTop: '16px' }}>
                             <div style={{ padding: '0 50px', }}>
@@ -262,37 +295,33 @@ class EditProfile extends React.Component {
             );
         } else if (this.props.userType === 'customer') {
             return (
-                <Card style={style} className="md-block-centered">
+                <Card style={{ ...style, maxWidth: '520px' }} className="md-block-centered">
                     <div className="md-grid" >
                         <TextField
+                            style={{ padding: 0, margin: 0 }}
                             label="FirstName"
                             leftIcon={<FontIcon>person</FontIcon>}
                             id="FirstNameField"
                             type="text"
-                            className="md-row"
+                            className="md-cell md-cell--6"
                             required={true}
                             value={this.state.firstName}
                             onChange={this.handleChangeFirstName}
                             errorText="First name is required" />
                         <TextField
+                            style={{ padding: 0, margin: 0 }}
                             label="LastName"
                             leftIcon={<FontIcon>person</FontIcon>}
                             id="LastNameField"
                             type="text"
-                            className="md-row"
+                            className="md-cell md-cell--6"
                             required={true}
                             value={this.state.lastName}
                             onChange={this.handleChangeLastName}
                             errorText="Last name is required"
                             maxLength={20} />
                         <TextField
-                            label="email"
-                            leftIcon={<FontIcon>email</FontIcon>}
-                            id="emailField"
-                            type="text"
-                            className="md-row"
-                            value={this.state.email} />
-                        <TextField
+                            style={{ padding: 0, margin: 0 }}
                             label="University"
                             leftIcon={<FontIcon>school</FontIcon>}
                             id="UniversityField"
@@ -302,6 +331,15 @@ class EditProfile extends React.Component {
                             value={this.state.university}
                             onChange={this.handleChangeUniversity}
                             errorText="University is required" />
+                        <TextField
+                            style={{ padding: 0, marginTop: 0, marginBottom: '20px' }}
+                            label="email"
+                            leftIcon={<FontIcon>email</FontIcon>}
+                            id="emailField"
+                            type="text"
+                            className="md-row"
+                            value={this.state.email} />
+
                         <Button id="submit"
                             disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university}
                             raised

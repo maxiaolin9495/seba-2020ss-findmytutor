@@ -5,6 +5,7 @@ import Background from '../Images/Homepage.jpg';//https://www.umc.edu/Research/C
 import SearchBarComponent from "../UIcomponents/Search/SearchBarComponent";
 import '../Css/bg.css';
 import Navigation from "../UIcomponents/PageDesign/Navigation";
+import UserService from "../Services/UserService";
 
 export class SearchPageView extends React.Component {
 
@@ -15,6 +16,9 @@ export class SearchPageView extends React.Component {
         }
     }
 
+    componentWillMount() {
+        UserService.getCurrentUser().userType === 'tutor' && this.props.history.push("/booking");
+    }
 
 
     render() {

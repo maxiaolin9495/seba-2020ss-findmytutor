@@ -1,9 +1,36 @@
 import React from 'react';
-import { Button } from 'react-md';
+import { Button, FontIcon } from 'react-md';
 import Dialog from "../PageDesign/Dialog"
 import TutorialService from "../../Services/TutorialService";
 import EditProfileService from "../../Services/EditProfileService";
 import UserService from "../../Services/UserService";
+
+const buttonStyle = {
+    background: '#64A338',
+    color: 'white',
+    fontSize: '14px',
+    marginTop: '6px',
+    paddingBottom: '5px',
+    fontFamily: 'San Francisco',
+    textAlign: 'center'
+};
+
+const StatusButton = (attr, iconName, background, name) => {
+    return (
+        <Button
+            className={attr}
+            raised
+            disabled
+            iconBefore={false}
+            iconEl={<FontIcon>{iconName}</FontIcon>}
+            style={{
+                ...buttonStyle,
+                background,
+            }} >
+            {name}
+        </Button>
+    )
+}
 
 export default class BookingCard extends React.Component {
     constructor(props) {
@@ -79,6 +106,7 @@ export default class BookingCard extends React.Component {
     showLastButton = () => {
         switch (this.props.tutorial.tutorialStatus) {
             case 'finished':
+            case 'reviewed':
                 if (this.props.userType === 'customer')
                     return (
                         <Button
@@ -98,57 +126,57 @@ export default class BookingCard extends React.Component {
                         </Button>);
                 else
                     return '';
-            case 'reviewed':
-                if (this.props.userType === 'customer')
-                    return (
-                        <Button
-                            raised
-                            className="md-cell md-cell--2"
-                            style={{
-                                background: '#555',
-                                borderRadius: '10px',
-                                marginTop: '32px',
-                                color: 'white',
-                                fontSize: '18px',
-                                fontFamily: 'San Francisco',
-                            }}
-                            onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)}>
-                            REVIEW
-                        </Button>);
-                else
-                    return '';
             case 'notConfirmed':
             case 'confirmed':
                 return (
-                    <div>
-                        <Dialog actionName='cancel' onClick={() => this.cancelTutorial()}/>
+                    <div className="md-cell md-cell--2"
+                        style={{
+                            marginTop: 0,
+                            marginBottom: '20px'
+                        }}>
+                        <Dialog actionName='cancel' onClick={() => this.cancelTutorial()} />
                         {this.ifShouldRemind() && !this.ifPastVideo() ?
                             <Button
                                 raised
-                                className="md-cell md-cell--3"
+                                className="md-full-width"
                                 style={{
                                     background: '#696969',
+                                    marginTop: '10px',
                                     color: 'white',
+                                    borderRadius: '10px',
                                     fontSize: '18px',
-                                    marginTop: '32px',
                                     paddingBottom: '5px',
-                                    fontFamily: 'San Francisco',
+                                    fontFamily: 'cursive',
                                 }}
                                 onClick={() => this.goToVideoPage()}
                             >
                                 Video Call
                             </Button> :
-                            this.ifPastVideo() ?
-                                <div/> :
-                                <p>Please wait</p>
-
-
+                            <div />
                         }
-
-
                     </div>
 
                 );
+            default:
+                return '';
+        }
+    };
+
+    showStatusButton = () => {
+        switch (this.props.tutorial.tutorialStatus) {
+            case 'reviewed':
+                if (this.props.userType === 'customer')
+                    return StatusButton('md-full-width', 'mark_chat_read', '#64A338', 'reviewed');
+            case 'finished': return StatusButton('md-full-width', 'done', '#64A338', 'finished');
+            case 'notConfirmed':
+                if (this.props.userType === 'customer')
+                    return StatusButton('md-full-width', 'more_horiz', '#FBBC05', 'need confirm');
+                else
+                    return <Dialog actionName='confirm' onClick={() => this.confirmTutorial()} />;
+            case 'confirmed':
+                return StatusButton('md-full-width', 'check_circle', '#4285F4', 'confirmed');
+            case 'cancelled':
+                return StatusButton('md-full-width', 'clear', '#87A2C7', 'cancelled');
             default:
                 return '';
         }
@@ -174,7 +202,6 @@ export default class BookingCard extends React.Component {
         }
     }
 
-
     render() {
         return (
             <div className="md-block-centered" style={{
@@ -188,6 +215,13 @@ export default class BookingCard extends React.Component {
             }}>
                 <div className="md-grid md-full-width">
                     <div className="md-cell md-cell--3">
+                        <label
+                            className="md-text--secondary"
+                        >
+                            {this.props.userType === 'customer' ?
+                                'Tutor name:' :
+                                'Customer name:'}
+                        </label>
                         <h1 style={{
                             color: 'black',
                             fontWeight: 'bolder',
@@ -197,102 +231,58 @@ export default class BookingCard extends React.Component {
                                 `${this.state.tutor.firstName} ${this.state.tutor.lastName}` :
                                 `${this.state.customer.firstName} ${this.state.customer.lastName}`}
                         </h1>
-                        <div style={{margin: 0, padding: 0}}>
-                            <h3 style={{
-                                color: 'gray',
-                                marginBottom: '0px',
-                                fontWeight: 'bolder',
-                                fontFamily: 'cursive',
-                                float: 'left'
-                            }}>Book date: </h3>
+                        <div style={{ margin: 0, padding: 0 }}>
+                            <label className="md-text--secondary" >
+                                Book date:
+                            </label>
                             <h2 style={{
                                 marginTop: '0px',
                                 marginBottom: '0px',
                                 color: 'black',
-                                float: 'right'
                             }}>
                                 {this.convertTimeToStr(this.props.tutorial.bookedTime)}
                             </h2>
                         </div>
                     </div>
-                    {this.props.userType === 'customer' &&
+                    {/* {this.props.userType === 'customer' && */}
                     <div className="md-cell md-cell--2" id="price-tag">
+                        <label className="md-text--secondary" >
+                            Price:
+                            </label>
                         <h2 style={{
                             color: 'black',
-                            textAlign: 'center'
+                            textAlign: 'left'
                         }}>
                             EUR {this.props.tutorial.price}
                         </h2>
-                    </div>}
-
-                    <div className="md-cell md-cell--2" id="tutorial-time"
-                         style={{textAlign: 'center'}}>
-                        <h3 style={{
-                            fontWeight: 'bolder',
-                            fontFamily: 'cursive'
-                        }}>{this.convertTimeToStr(this.props.tutorial.startTime)}</h3>
-                        <h3 style={{
-                            fontWeight: 'bolder',
-                            fontFamily: 'cursive'
-                        }}>{this.showDuration(this.props.tutorial.startTime, this.props.tutorial.endTime)}</h3>
                     </div>
-                    {this.props.userType === 'tutor' &&
-                    <div className="md-cell md-cell--2"/>}
-                    {this.props.userType === 'customer' ?
-                        <Button
-                            raised
-                            className="md-cell md-cell--3"
-                            disabled
-                            style={{
-                                background: '#696969',
-                                color: 'white',
-                                fontSize: '18px',
-                                marginTop: '32px',
-                                paddingBottom: '5px',
-                                fontFamily: 'San Francisco',
-                            }}>
-                            {this.props.tutorial.tutorialStatus === 'notConfirmed' ? 'NEED CONFIRMATION' : this.props.tutorial.tutorialStatus}
-                        </Button> :
-                        (
-                            this.props.tutorial.tutorialStatus === 'notConfirmed' ?
-                                <Dialog actionName='confirm' onClick={() => this.confirmTutorial()}/> :
-                                <Button
-                                    raised
-                                    className="md-cell md-cell--3"
-                                    disabled
-                                    style={{
-                                        background: '#696969',
-                                        color: 'white',
-                                        fontSize: '18px',
-                                        marginTop: '32px',
-                                        paddingBottom: '5px',
-                                        fontFamily: 'San Francisco',
-                                    }}>
-                                    {this.props.tutorial.tutorialStatus === 'reviewed' ? 'finished' : this.props.tutorial.tutorialStatus}
-                                </Button>
-                        )}
+
+                    <div className="md-cell md-cell--2" id="tutorial-time">
+                        <label className="md-text--secondary" >
+                            Tutorial date:
+                        </label>
+                        <div style={{ textAlign: 'center' }}>
+                            <h3 style={{
+                                fontWeight: 'bolder',
+                                fontFamily: 'cursive'
+                            }}>{this.convertTimeToStr(this.props.tutorial.startTime)}</h3>
+                            <h3 style={{
+                                fontWeight: 'bolder',
+                                fontFamily: 'cursive'
+                            }}>{this.showDuration(this.props.tutorial.startTime, this.props.tutorial.endTime)}</h3>
+                        </div>
+                    </div>
+                    <div className="md-cell md-cell--2 md-cell--0-phone-offset md-cell--0-tablet-offset md-cell--1-desktop-offset">
+                        <label className="md-text--secondary" >
+                            Status:
+                        </label>
+                        {this.showStatusButton()}
+                    </div>
+
                     {this.showLastButton()}
                 </div>
-                <hr style={{marginLeft: 0, marginRight: 0}}/>
-                <h4 style={{marginLeft: '8px', marginBottom: 0}}>Topics: {this.props.tutorial.sessionTopic}</h4>
-                {/* </div> */}
-
-
-                {/* </div> */}
-                <hr style={{marginLeft: 0, marginRight: 0}}/>
-                <Button
-                    raised
-                    className="md-cell md-cell--2"
-                    style={{
-                        background: '#696969',
-                        marginBottom: '10px',
-                        color: 'white',
-                        fontSize: '18px',
-                        marginTop: '0px',
-                        paddingBottom: '5px',
-                        fontFamily: 'cursive',
-                    }} onClick={() => this.props.handleChatRoom(`/chat/${this.props.tutorial._id}`)}>Tutorial
-                </Button>
+                <hr style={{ marginLeft: 0, marginRight: 0 }} />
+                <h4 style={{ marginLeft: '8px', marginBottom: 0 }}>Topics: {this.props.tutorial.sessionTopic}</h4>
             </div>
         );
     }
