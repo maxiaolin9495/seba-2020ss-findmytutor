@@ -22,6 +22,7 @@ class PeerConnection extends Emitter {
         this.ifShareScreen = false;
         this.isSharing = false;
         this.peerStream = null;
+        this.localStream = null;
     }
 
 
@@ -65,6 +66,7 @@ class PeerConnection extends Emitter {
             }
         };
         this.pc1.ontrack = (event) => {
+            //console.log('peerShareScreen');
             if(this.ifShareScreen) {
                 this.emit('peerShareScreen', event.streams[0]);
             }
@@ -82,6 +84,7 @@ class PeerConnection extends Emitter {
                 stream.getTracks().forEach((track) => {
                     this.pc.addTrack(track, stream);
                 });
+                this.localStream = stream;
                 this.emit('localStream', stream);
                 if (isCaller) {
                     this.socket.emit('request', {to: this.friendId, from: this.clientId});
@@ -140,16 +143,22 @@ class PeerConnection extends Emitter {
             toast.error('Only one attendee can share his screen');
             return;
         }
+
+        //we assure, each time only one RTC Connection in work, thus we prevent resource misused.
+        if(this.pc){
+            this.pc.close();
+            this.pc = null;
+        }
+
         this.createRTCPeerConnectionForScreenSharing();
         //set sharing Status
         this.ifShareScreen = true;
         this.isSharing = true;
-
         //capture screen
         this.secondMediaDevice = new DesktopMediaDevice();
         this.secondMediaDevice
             .on('stream', (stream) => {
-                console.log('stream', stream);
+                //console.log('stream', stream);
                 stream.getTracks().forEach((track) => {
                     this.pc1.addTrack(track, stream);
                 });
@@ -159,24 +168,35 @@ class PeerConnection extends Emitter {
         return this;
     }
 
-    stopShareScreen() {
-        if (this.isSharing) {
+    stopShareScreen(ifEnd) {
+        // a sharer can choose to stop screen sharing
+        if (this.isSharing && this.ifShareScreen) {
             //remove screen capturing
             this.secondMediaDevice.stop();
             this.secondMediaDevice = null;
             this.isSharing = false;
             this.socket.emit('endScreenShare', {to: this.friendId, from: this.clientId});
+            this.pc1.close();
+            this.pc1 = null;
+            this.ifShareScreen = false;
+            //console.log(this.peerStream);
+            this.emit('peerStream', this.peerStream);
+            return;
         }
-        this.pc1.close();
-        this.pc1 = null;
-        this.ifShareScreen = false;
-        this.emit('peerStream', this.peerStream);
+        //or receive the notification, that the screen sharing is stopped;
+        if (ifEnd && this.ifShareScreen) {
+            this.pc1.close();
+            this.pc1 = null;
+            this.ifShareScreen = false;
+            //console.log(this.peerStream);
+            this.emit('peerStream', this.peerStream);
+        }
+        toast.error('You are not allowed to stop screen share');
     }
 
     createAnswer() {
         this.pc.createAnswer()
             .then((desc) => {
-                console.log('answer');
                 this.getDescription(desc);
             })
             .catch((err) => console.log(err));
@@ -186,7 +206,6 @@ class PeerConnection extends Emitter {
     createAnswerForShareScreen() {
         this.pc1.createAnswer()
             .then((desc) => {
-                console.log('answer');
                 this.getDescriptionForShareScreen(desc);
             })
             .catch((err) => console.log(err));
@@ -210,14 +229,26 @@ class PeerConnection extends Emitter {
      * @param {Object} sdp - Session description
      */
     setRemoteDescription(sdp) {
+        //console.log('setRemoteDescription' , sdp);
         const rtcSdp = new RTCSessionDescription(sdp);
         this.pc.setRemoteDescription(rtcSdp);
         return this;
     }
 
     setRemoteDescriptionForShareScreen(sdp) {
-        if(! this.pc1){
+        //we assure, each time only one RTC Connection in work, thus we prevent resource misused.
+        if(this.pc){
+            this.pc.close();
+            this.pc = null;
+        }
+        //console.log('setRemoteDescriptionForShareScreen' , sdp);
+        if(! this.pc1) {
             this.createRTCPeerConnectionForScreenSharing();
+            //set localStream for the remote sender
+            this.localStream.getTracks().forEach((track) => {
+                this.pc1.addTrack(track, this.localStream);
+            })
+
         }
         this.ifShareScreen = true;
         this.createRTCPeerConnectionForVideoCall();

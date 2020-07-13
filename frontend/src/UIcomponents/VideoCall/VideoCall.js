@@ -58,9 +58,8 @@ export default class VideoCall extends React.Component {
                         }
                     })
                     .on('screenShare', (data) => {
-                        console.log('screenShare', data);
                         if (data.sdp) {
-                            console.log(data.sdp);
+                            console.log('screenShare', data);
                             this.pc.setRemoteDescriptionForShareScreen(data.sdp);
                             if (data.sdp.type === 'offer') {
                                 console.log('offer');
@@ -72,7 +71,7 @@ export default class VideoCall extends React.Component {
                     })
                     .on('endScreenShare', (data) => {
                         console.log('endScreenShare', data);
-                        this.pc.stopShareScreen();
+                        this.pc.stopShareScreen(true);
                     })
                     .on('end', this.endCall.bind(this, false));
                 this.setState({socket: socket});
