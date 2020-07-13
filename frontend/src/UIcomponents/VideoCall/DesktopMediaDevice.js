@@ -28,7 +28,7 @@ class DesktopMediaDevice extends Emitter {
                 this.emit('stream', stream);
             }).catch((err) => {
                 if (err instanceof DOMException) {
-                    toast.error('Cannot open webcam and/or microphone');
+                    toast.error('Cannot open desktop display');
                 } else {
                     console.log(err);
                 }
@@ -46,7 +46,7 @@ class DesktopMediaDevice extends Emitter {
                 this.emit('stream', stream);
             }).catch((err) => {
                 if (err instanceof DOMException) {
-                    toast.error('Cannot open webcam and/or microphone');
+                    toast.error('Cannot open desktop display');
                 } else {
                     console.log(err);
                 }
@@ -65,7 +65,7 @@ class DesktopMediaDevice extends Emitter {
                 this.emit('stream', stream);
             }).catch((err) => {
                 if (err instanceof DOMException) {
-                    toast.error('Cannot open webcam and/or microphone');
+                    toast.error('Cannot open desktop display');
                 } else {
                     console.log(err);
                 }

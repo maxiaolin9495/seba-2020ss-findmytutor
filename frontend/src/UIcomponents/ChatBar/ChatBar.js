@@ -137,8 +137,8 @@ export class ChatBar extends React.Component {
                 messages={this.state.messages}
                 userId={this.props.id}
                 onSendMessage={this.handleOnSendMessage}
-                width={'500px'}
-                height={'500px'}
+                width={'600px'}
+                height={'710px'}
             />
         )
     }

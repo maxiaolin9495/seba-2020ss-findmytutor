@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 const getButtonClass = (icon, enabled) => classNames(`btn-action fa ${icon}`, { disable: !enabled });
 const giveButtonClass=(name,enabled)=> classNames(name,{disable: !enabled });
-function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, shareScreen }) {
+function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, shareScreen, ifShareScreen }) {
     const peerVideo = useRef(null);
     const localVideo = useRef(null);
     const [video, setVideo] = useState(config.video);
@@ -42,10 +42,10 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, s
     };
     return (
         <div className={classNames('call-window', status)}
-             style={{ marginLeft:"540px",
-                 marginTop:"40px",
-                 height:"850px",
-                 width:"900px"}}>
+             style={{ marginLeft:"30px",
+                 marginTop:"80px",
+                 height:"710px",
+                 width:"940px"}}>
             <video id="peerVideo" ref={peerVideo} autoPlay />
             <video id="localVideo" ref={localVideo} autoPlay muted />
             <div className="video-control" >
@@ -65,7 +65,7 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, s
                 <button
                     key="btnShareScreen"
                     type="button"
-                    className={getButtonClass('microphone')}
+                    className={giveButtonClass('shareScreen', ifShareScreen)}
                     onClick={shareScreen}
                 />
                 <button

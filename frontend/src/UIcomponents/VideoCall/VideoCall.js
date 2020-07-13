@@ -142,6 +142,7 @@ export default class VideoCall extends React.Component {
                         mediaDevice={this.pc.mediaDevice}
                         endCall={this.endCallHandler}
                         shareScreen={this.shareScreenHandler}
+                        ifShareScreen={this.ifShareScreen}
                     />
                 )}
                 <CallModal

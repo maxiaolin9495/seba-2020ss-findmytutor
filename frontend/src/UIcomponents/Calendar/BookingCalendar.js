@@ -32,12 +32,14 @@ class BookingCalendar extends React.Component {
             bookingTimesForSpecificDayForStart: [],
             bookingTimesForSpecificDayForEnd: [],
             minDate: undefined,
+            initialDates: []
         };
     }
 
     componentDidMount() {
         //get initial available times
         let initials = [];
+        let initialDates=[];
         TutorPageService.getTutorProfileById(this.props.match.params.id).then((data) => {
             this.setState({price: data.price});
             data.timeSlotIds.forEach((times) => {
@@ -46,7 +48,15 @@ class BookingCalendar extends React.Component {
                     end: new Date(parseInt(times.end))
                 })
             });
+            //add available dates and unit the start and end time to solve additional date problem
+            data.timeSlotIds.forEach((times) => {
+                initialDates.push({
+                    start: new Date(parseInt(times.start)),
+                    end: new Date(parseInt(times.start))
+                })
+            });
             this.setState({initialTimes: initials});
+            this.setState({initialDates:initialDates});
             //get booked times
             let bookedTimes = [];
             TutorialService.getAllTutorials(this.props.match.params.id).then((bookings) => {
@@ -98,7 +108,15 @@ class BookingCalendar extends React.Component {
             }
 
         });
+        //change text in datepicker time header
+        let a = document.querySelectorAll('.react-datepicker-time__header');
+        if(a && a.length > 1) {
+            a[0].innerText = 'Start';
+            a[1].innerText = 'End';
+        }
+
         return arr;
+
     };
     handleChangeStart = (value) => {
         let timeOnSpecificDayForStart = [];
@@ -210,7 +228,7 @@ class BookingCalendar extends React.Component {
                         id="newPickDate"
                         require
                         inline
-                        includeDates={this.availableTimes(this.state.initialTimes, '')}
+                        includeDates={this.availableTimes(this.state.initialDates, '')}
                         includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForStart, '')}
                         excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDayForStart, 'booking')}
                         timesShown={2}
@@ -237,7 +255,7 @@ class BookingCalendar extends React.Component {
                         dateFormat='dd.MM.yyyy HH:mm'
                         className="md-cell"
                         selected={this.state.selectedEnd}
-                        includeDates={this.availableTimes(this.state.initialTimes, '')}
+                        includeDates={this.availableTimes(this.state.initialDates, '')}
                         includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForEnd, '')}
                         excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDayForEnd, 'booking')}
                         isClearable
