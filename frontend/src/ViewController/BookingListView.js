@@ -59,6 +59,7 @@ export class BookingListView extends React.Component {
         this.props.history.push(url);
     };
 
+
     cancelTutorial = (tutorialInfo) => {
         TutorialService.cancelTutorial(tutorialInfo).then(() => {
             toast.success('Successfully cancel tutorial');

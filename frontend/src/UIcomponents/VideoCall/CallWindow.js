@@ -3,16 +3,20 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const getButtonClass = (icon, enabled) => classNames(`btn-action fa ${icon}`, { disable: !enabled });
-
-function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall }) {
+const giveButtonClass=(name,enabled)=> classNames(name,{disable: !enabled });
+function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, shareScreen, ifShareScreen }) {
     const peerVideo = useRef(null);
     const localVideo = useRef(null);
     const [video, setVideo] = useState(config.video);
     const [audio, setAudio] = useState(config.audio);
 
     useEffect(() => {
-        if (peerVideo.current && peerSrc) peerVideo.current.srcObject = peerSrc;
-        if (localVideo.current && localSrc) localVideo.current.srcObject = localSrc;
+        if (peerVideo.current && peerSrc) {
+            peerVideo.current.srcObject = peerSrc;
+        }
+        if (localVideo.current && localSrc) {
+            localVideo.current.srcObject = localSrc;
+        }
     });
 
     useEffect(() => {
@@ -36,27 +40,37 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall })
             mediaDevice.toggle('Audio');
         }
     };
-
     return (
-        <div className={classNames('call-window', status)}>
+        <div className={classNames('call-window', status)}
+             style={{ marginLeft:"30px",
+                 marginTop:"80px",
+                 height:"710px",
+                 width:"940px"}}>
             <video id="peerVideo" ref={peerVideo} autoPlay />
             <video id="localVideo" ref={localVideo} autoPlay muted />
-            <div className="video-control">
+            <div className="video-control" >
                 <button
                     key="btnVideo"
                     type="button"
-                    className={getButtonClass('fa-video-camera', video)}
+                 //   className={getButtonClass('fa-video-camera', video)}
+                    className={giveButtonClass('video', video)}
                     onClick={() => toggleMediaDevice('video')}
                 />
                 <button
                     key="btnAudio"
                     type="button"
-                    className={getButtonClass('fa-microphone', audio)}
+                    className={giveButtonClass('microphone', audio)}
                     onClick={() => toggleMediaDevice('audio')}
                 />
                 <button
+                    key="btnShareScreen"
                     type="button"
-                    className="btn-action hangup fa fa-phone"
+                    className={giveButtonClass('shareScreen', ifShareScreen)}
+                    onClick={shareScreen}
+                />
+                <button
+                    type="button"
+                    className="hangup"
                     onClick={() => endCall(true)}
                 />
             </div>

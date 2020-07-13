@@ -118,6 +118,7 @@ class RegisterTab extends React.Component {
         if ( this.state.password === this.state.passwordConfirm) {
             return true;
         } else {
+            toast.error("Password does not match");
             this.setState({
                 password: '',
                 passwordConfirm: ''

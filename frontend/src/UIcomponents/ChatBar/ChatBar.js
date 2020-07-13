@@ -7,10 +7,7 @@ import EditProfileService from "../../Services/EditProfileService";
 
 import logoIcon from '../../Images/Logo.png';
 import { toast } from "react-toastify";
-import io from "socket.io-client";
-import ChatBox, { ChatFrame } from 'react-chat-plugin';
-
-const config = require('../../config');
+import ChatBox from 'react-chat-plugin';
 
 export class ChatBar extends React.Component {
 
@@ -27,91 +24,92 @@ export class ChatBar extends React.Component {
 
     componentDidMount() {
         this.setState({ loading: true });
-        const socket = io(`${config.backendUri}/chat`);
-        if (!socket) {
-            toast.error('Error connecting chat server');
-            this.props.history.goBack();
-        }
-        // Read tutor and customer's information
-        let tutorialId = this.props.match.params.id;
-        TutorialService.getTutorial(tutorialId).then((data) => {
-            TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
-                console.log("get tutor infos");
-                this.setState({
-                    tutor: tutor,
-                    tutorial: data,
-                    avatarUrl: {
-                        ...this.state.avatarUrl,
-                        [tutor.email]: tutor.avatar
-                    }
+        if(this.props.ready) {
+            const socket = this.props.socket;
+            if (!socket) {
+                toast.error('Error connecting chat server');
+                this.props.history.goBack();
+            }
+            // Read tutor and customer's information
+            let tutorialId = this.props.tutorialId;
+            TutorialService.getTutorial(tutorialId).then((data) => {
+                TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
+                    this.setState({
+                        tutor: tutor,
+                        tutorial: data,
+                        avatarUrl: {
+                            ...this.state.avatarUrl,
+                            [tutor.email]: tutor.avatar
+                        }
+                    });
                 });
+                EditProfileService.getCustomerByCustomerEmail(data.customerEmail).then((customer) => {
+                    this.setState({
+                        customer,
+                        avatarUrl: {
+                            ...this.state.avatarUrl,
+                            [customer.email]: logoIcon
+                        }
+                    })
+                });
+            }).catch((e) => {
+                console.error(e);
             });
-            EditProfileService.getCustomerByCustomerEmail(data.customerEmail).then((customer) => {
-                this.setState({
-                    customer,
-                    avatarUrl: {
-                        ...this.state.avatarUrl,
-                        [customer.email]: logoIcon
+
+            socket.emit('join',
+                {
+                    name: UserService.getCurrentUser().email,
+                    room: tutorialId
+                },
+                (error) => {
+                    if (error) {
+                        toast.error(error);
                     }
+
+                });
+
+            // receive notification
+            socket.on('notification', notification => {
+                let newNotification = {
+                    text: notification.text,
+                    timestamp: notification.timestamp,
+                    type: 'notification',
+                };
+                this.setState({
+                    messages: [...this.state.messages, newNotification]
                 })
             });
-        }).catch((e) => {
-            console.error(e);
-        });
 
-        socket.emit('join',
-            {
-                name: UserService.getCurrentUser().email,
-                room: tutorialId
-            },
-            (error) => {
-                if (error) {
-                    toast.error(error);
-                }
-
+            // receive message
+            socket.on('message', message => {
+                let newMessage = {
+                    author: {
+                        username: (message.user === this.state.tutor.email ?
+                            `${this.state.tutor.firstName} ${this.state.tutor.lastName}` :
+                            `${this.state.customer.firstName} ${this.state.customer.lastName}`),
+                        id: message.id,
+                        avatarUrl: this.state.avatarUrl[message.user] || logoIcon,
+                    },
+                    text: message.text,
+                    timestamp: message.timestamp,
+                    type: 'text',
+                };
+                this.setState({
+                    messages: [...this.state.messages, newMessage]
+                })
             });
 
-        // receive notification
-        socket.on('notification', notification => {
-            let newNotification = {
-                text: notification.text,
-                timestamp: notification.timestamp,
-                type: 'notification',
-            };
-            this.setState({
-                messages: [...this.state.messages, newNotification]
-            })
-        });
+            socket.on("roomData", ({users}) => {
+                this.setState({
+                    users
+                })
+            });
 
-        // receive message
-        socket.on('message', message => {
-            let newMessage = {
-                author: {
-                    username: (message.user === this.state.tutor.email ?
-                        `${this.state.tutor.firstName} ${this.state.tutor.lastName}` :
-                        `${this.state.customer.firstName} ${this.state.customer.lastName}`),
-                    id: message.id,
-                    avatarUrl: this.state.avatarUrl[message.user] || logoIcon,
-                },
-                text: message.text,
-                timestamp: message.timestamp,
-                type: 'text',
-            };
             this.setState({
-                messages: [...this.state.messages, newMessage]
-            })
-        });
-
-        socket.on("roomData", ({ users }) => {
-            this.setState({
-                users
-            })
-        });
-
-        this.setState({
-            socket,
-            loading: false,
-        });
+                socket,
+                loading: false,
+            });
+        }
     }
 
     handleOnSendMessage = (message) => {
@@ -137,10 +135,10 @@ export class ChatBar extends React.Component {
         return (
             <ChatBox
                 messages={this.state.messages}
-                userId={this.state.socket.id}
+                userId={this.props.id}
                 onSendMessage={this.handleOnSendMessage}
-                width={'500px'}
-                height={'500px'}
+                width={'600px'}
+                height={'710px'}
             />
         )
     }
