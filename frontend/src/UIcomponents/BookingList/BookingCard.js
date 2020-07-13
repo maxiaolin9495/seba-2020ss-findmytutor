@@ -159,6 +159,11 @@ export default class BookingCard extends React.Component {
             }}>
                 <div className="md-grid md-full-width">
                     <div className="md-cell md-cell--3">
+                        <label
+                            className="md-text--secondary"
+                        >
+                            Tutor name:
+                        </label>
                         <h1 style={{
                             color: 'black',
                             fontWeight: 'bolder',
@@ -169,18 +174,13 @@ export default class BookingCard extends React.Component {
                                 `${this.state.customer.firstName} ${this.state.customer.lastName}`}
                         </h1>
                         <div style={{ margin: 0, padding: 0 }}>
-                            <h3 style={{
-                                color: 'gray',
-                                marginBottom: '0px',
-                                fontWeight: 'bolder',
-                                fontFamily: 'cursive',
-                                float: 'left'
-                            }}>Book date: </h3>
+                            <label className="md-text--secondary" >
+                                Book date:
+                            </label>
                             <h2 style={{
                                 marginTop: '0px',
                                 marginBottom: '0px',
                                 color: 'black',
-                                float: 'right'
                             }}>
                                 {this.convertTimeToStr(this.props.tutorial.bookedTime)}
                             </h2>
@@ -188,24 +188,31 @@ export default class BookingCard extends React.Component {
                     </div>
                     {this.props.userType === 'customer' &&
                         <div className="md-cell md-cell--2" id="price-tag">
+                            <label className="md-text--secondary" >
+                                Price:
+                            </label>
                             <h2 style={{
                                 color: 'black',
-                                textAlign: 'center'
+                                textAlign: 'left'
                             }}>
                                 EUR {this.props.tutorial.price}
                             </h2>
                         </div>}
 
-                    <div className="md-cell md-cell--2" id="tutorial-time"
-                        style={{ textAlign: 'center' }}>
-                        <h3 style={{
-                            fontWeight: 'bolder',
-                            fontFamily: 'cursive'
-                        }}>{this.convertTimeToStr(this.props.tutorial.startTime)}</h3>
-                        <h3 style={{
-                            fontWeight: 'bolder',
-                            fontFamily: 'cursive'
-                        }}>{this.showDuration(this.props.tutorial.startTime, this.props.tutorial.endTime)}</h3>
+                    <div className="md-cell md-cell--2" id="tutorial-time">
+                        <label className="md-text--secondary" >
+                            Tutorial date:
+                        </label>
+                        <div style={{ textAlign: 'center' }}>
+                            <h3 style={{
+                                fontWeight: 'bolder',
+                                fontFamily: 'cursive'
+                            }}>{this.convertTimeToStr(this.props.tutorial.startTime)}</h3>
+                            <h3 style={{
+                                fontWeight: 'bolder',
+                                fontFamily: 'cursive'
+                            }}>{this.showDuration(this.props.tutorial.startTime, this.props.tutorial.endTime)}</h3>
+                        </div>
                     </div>
                     {this.props.userType === 'tutor' &&
                         <div className="md-cell md-cell--2" />}
