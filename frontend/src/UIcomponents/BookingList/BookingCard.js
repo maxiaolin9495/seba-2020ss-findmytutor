@@ -1,9 +1,36 @@
 import React from 'react';
-import { Button } from 'react-md';
+import { Button, FontIcon } from 'react-md';
 import Dialog from "../PageDesign/Dialog"
 import TutorialService from "../../Services/TutorialService";
 import EditProfileService from "../../Services/EditProfileService";
 import UserService from "../../Services/UserService";
+
+const buttonStyle = {
+    background: '#64A338',
+    color: 'white',
+    fontSize: '14px',
+    marginTop: '6px',
+    paddingBottom: '5px',
+    fontFamily: 'San Francisco',
+    textAlign: 'center'
+};
+
+const StatusButton = (attr, iconName, background, name) => {
+    return (
+        <Button
+            className={attr}
+            raised
+            disabled
+            iconBefore={false}
+            iconEl={<FontIcon>{iconName}</FontIcon>}
+            style={{
+                ...buttonStyle,
+                background,
+            }} >
+            {name}
+        </Button>
+    )
+}
 
 export default class BookingCard extends React.Component {
     constructor(props) {
@@ -135,11 +162,32 @@ export default class BookingCard extends React.Component {
         }
     };
 
+    showStatusButton = () => {
+        switch (this.props.tutorial.tutorialStatus) {
+            case 'reviewed':
+                if (this.props.userType === 'customer')
+                    return StatusButton('md-full-width', 'mark_chat_read', '#64A338', 'reviewed');
+            case 'finished': return StatusButton('md-full-width', 'done', '#64A338', 'finished');
+            case 'notConfirmed':
+                if (this.props.userType === 'customer')
+                    return StatusButton('md-full-width', 'more_horiz', '#FBBC05', 'need confirm');
+                else
+                    return <Dialog actionName='confirm' onClick={() => this.confirmTutorial()} />;
+            case 'confirmed':
+                return StatusButton('md-full-width', 'check_circle', '#4285F4', 'confirmed');
+            case 'cancelled':
+                return StatusButton('md-full-width', 'clear', '#87A2C7', 'cancelled');
+            default:
+                return '';
+        }
+    };
+
     ifShouldRemind = () => {
         let now = new Date().getTime();
         return !this.props.tutorial.ifHadVideo &&
             this.props.tutorial.startTime - now < 180000000;
     };
+
     ifPastVideo = () => {
         let now = new Date().getTime();
         return now - this.props.tutorial.endTime > 0;
@@ -153,7 +201,6 @@ export default class BookingCard extends React.Component {
             this.props.handleChatRoom(`/video/${this.props.tutorial._id}`);
         }
     }
-
 
     render() {
         return (
@@ -223,54 +270,16 @@ export default class BookingCard extends React.Component {
                             }}>{this.showDuration(this.props.tutorial.startTime, this.props.tutorial.endTime)}</h3>
                         </div>
                     </div>
-                    {this.props.userType === 'tutor' &&
-                        <div className="md-cell md-cell--2" />}
-                    {this.props.userType === 'customer' ?
-                        <Button
-                            raised
-                            className="md-cell md-cell--3"
-                            disabled
-                            style={{
-                                background: '#696969',
-                                color: 'white',
-                                fontSize: '18px',
-                                marginTop: '32px',
-                                paddingBottom: '5px',
-                                fontFamily: 'San Francisco',
-                            }}>
-                            {this.props.tutorial.tutorialStatus === 'notConfirmed' ? 'NEED CONFIRMATION' : this.props.tutorial.tutorialStatus}
-                        </Button> :
-                        (this.props.tutorial.tutorialStatus === 'notConfirmed' ?
-                            <div className="md-cell md-cell--3">
-                                <Dialog actionName='confirm' onClick={() => this.confirmTutorial()} />
-                            </div> :
-                            <Button
-                                raised
-                                disabled
-                                className="md-cell md-cell--3"
-                                style={{
-                                    background: '#696969',
-                                    color: 'white',
-                                    fontSize: '18px',
-                                    marginTop: '32px',
-                                    paddingBottom: '5px',
-                                    fontFamily: 'San Francisco',
-                                }} >
-                                {this.props.tutorial.tutorialStatus === 'reviewed' ? 'finished' : this.props.tutorial.tutorialStatus}
-                            </Button>
-                        )
-                    }
+                    <div className="md-cell md-cell--2 md-cell--0-phone-offset md-cell--0-tablet-offset md-cell--1-desktop-offset">
+                        <label className="md-text--secondary" >
+                            Status:
+                        </label>
+                        {this.showStatusButton()}
+                    </div>
                     {this.showLastButton()}
                 </div>
                 <hr style={{ marginLeft: 0, marginRight: 0 }} />
                 <h4 style={{ marginLeft: '8px', marginBottom: 0 }}>Topics: {this.props.tutorial.sessionTopic}</h4>
-                {/* </div> */}
-
-
-
-                {/* </div> */}
-                {/* <hr style={{ marginLeft: 0, marginRight: 0 }} /> */}
-
             </div>
         );
     }
