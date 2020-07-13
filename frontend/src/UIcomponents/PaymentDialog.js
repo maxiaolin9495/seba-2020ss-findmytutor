@@ -48,7 +48,7 @@ class PaymentDialog extends PureComponent {
                 tutorFirstName: this.state.tutor.firstName,
                 tutorEmail: this.state.tutor.email,
                 customerEmail: UserService.getCurrentUser().email,
-                sessionTopic: 'topic',
+                sessionTopic: this.props.topic,
                 bookedTime: new Date(res.create_time).getTime(),
                 price: this.props.totalPrice,
                 tutorialStatus: 'notConfirmed',

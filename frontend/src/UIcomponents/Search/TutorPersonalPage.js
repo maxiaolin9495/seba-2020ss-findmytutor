@@ -16,6 +16,7 @@ class TutorPersonalPage extends React.Component {
         this.state = {
             selectedCourse: this.props.selectedCourse,
             reviews: this.props.reviews,
+            topic:''
         };
     }
 
@@ -27,6 +28,7 @@ class TutorPersonalPage extends React.Component {
         }
         return null
     }
+
 
     renderCourses = () => {
         // TODO: remove manual added courses
@@ -163,19 +165,36 @@ class TutorPersonalPage extends React.Component {
 
                 </Grid>
                 <hr style={{ height: 1 }} />
-                <div className="md-grid">
-                    <h1 className='md-row md-full-width'>Calender</h1>
-                    {/** Calender should be placed here */}
-                    <BookingCalendar />
+                <div style={{ marginLeft: '400px' }}>
+                    <div className="md-grid">
+                        <h1 className='md-row md-full-width'>Topics</h1>
+                        <TextField className="md-cell md-cell--4"
+                            id="TeachingCoursesTopics"
+                            leftIcon={<FontIcon>book</FontIcon>}
+                            label="Topics you want to learn in this tutorial:"
+                            value={this.state.topic}
+                            onChange={(value) => this.setState({ topic: value })}
+                            type="text" />
+                    </div>
                 </div>
 
-                <hr style={{ height: 1 }} />
-                <div className="md-grid">
-                    <h1 className='md-row md-full-width'>Comments</h1>
-                    {this.state.reviews.map(r => {
-                        return <ReviewCard review={r} key={r._id} />
-                    })}
+                <div style={{ marginLeft: '400px' }}>
+                    <div className="md-grid">
+                        <h1 className='md-row md-full-width'>Calender</h1>
+                        {/** Calender should be placed here */}
+                        <BookingCalendar topic={this.state.topic}/>
+                    </div>
                 </div>
+                <hr style={{ height: 1 }} />
+                <div style={{ marginLeft: '200px' }}>
+                    <div className="md-grid">
+                        <h1 className='md-row md-full-width'>Comments</h1>
+                        {this.state.reviews.map(r => {
+                            return <ReviewCard review={r} key={r._id} />
+                        })}
+                    </div>
+                </div>
+
 
             </Card >
         );

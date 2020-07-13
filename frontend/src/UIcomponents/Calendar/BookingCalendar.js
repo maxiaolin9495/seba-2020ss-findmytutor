@@ -270,7 +270,8 @@ class BookingCalendar extends React.Component {
                 <PaymentDialog totalPrice={this.state.totalPrice}
                                duration={this.state.duration}
                                startTime={this.state.selectedStart}
-                               endTime={this.state.selectedEnd}/>
+                               endTime={this.state.selectedEnd}
+                               topic={this.props.topic}/>
             </div>
 
         );
