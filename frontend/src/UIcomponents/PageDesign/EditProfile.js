@@ -14,7 +14,7 @@ const style = {
 
 
 class EditProfile extends React.Component {
-
+    
     constructor(props) {
         super(props);
 
@@ -40,7 +40,8 @@ class EditProfile extends React.Component {
                 description: '',
                 timeSlotIds: [],
                 courses: [],
-                avatar: ''
+                avatar: '',
+                course:'',
             }
         }
     }
@@ -131,6 +132,17 @@ class EditProfile extends React.Component {
         this.setState({ courses });
     }
 
+    addCourse =() =>{
+        if(this.state.course === '') {
+            toast.error('Please input a course name');
+            return;
+        }
+        let courses = this.state.courses;
+        courses.push(this.state.course);
+        this.setState({ courses: courses, course:'' });
+
+    };
+
     // onReset={() => this.props.history.goBack()}
     // onChange={this.handleChangeEmail}
     render() {
@@ -219,39 +231,29 @@ class EditProfile extends React.Component {
                                 onChange={value => this.handleChangeDescription(value)}
                                 placeholder="Write some text to describe yourself"
                                 errorText="Description is required" />
-                            <Grid style={{ padding: 0, margin: 0 }}>
-                                <Cell size={6}>
-                                    <TextField
+
+                                <TextField className="md-cell md-cell--6"
                                         id="TeachingCoursesField"
                                         leftIcon={<FontIcon>book</FontIcon>}
                                         label="Teaching Courses:"
+                                        value={this.state.course}
+                                        onChange={(value) => this.setState({course: value})}
                                         type="text" />
-                                </Cell>
-                                <Cell size={6}>
-                                <Button id="dismissButton" raised secondary
+
+                                <Button id="dismissButton" raised secondary className="md-cell md-cell--4"
+                                style={{marginTop:'30px'}}
                                     // className="md-cell md-cell--2"
-                                    onClick={() => this.props.history.goBack()}>Add</Button>
-                                </Cell>
-                            </Grid>
-                            {/* {this.state.courses.map(c => {
+                                    onClick={() => this.addCourse()}>Add</Button>
+                           
+                            <div className="md-row">
+                            {this.state.courses.map(c => {
                                 return (
                                     <CoursesChip
                                         key={c}
                                         course={c}
                                         onClick={this.removeCourse}
                                         />)
-                            })} */}
-                            <div className="md-row">
-                            {
-                                ['SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database'].map(c => {
-                                    return (
-                                        <CoursesChip
-                                            key={c}
-                                            course={c}
-                                            onClick={this.removeCourse}
-                                            />)
-                                })
-                            }
+                            })}
                             </div>
                         </div>
                         <Cell size={5} style={{ paddingTop: '16px' }}>
