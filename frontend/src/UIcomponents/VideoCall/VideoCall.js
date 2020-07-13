@@ -47,10 +47,9 @@ export default class VideoCall extends React.Component {
                     })
                     .on('call', (data) => {
                         if (data.sdp) {
-                            console.log(data.sdp);
+
                             this.pc.setRemoteDescription(data.sdp);
                             if (data.sdp.type === 'offer') {
-                                console.log('offer');
                                 this.pc.createAnswer();
                             }
                         } else {
@@ -59,18 +58,15 @@ export default class VideoCall extends React.Component {
                     })
                     .on('screenShare', (data) => {
                         if (data.sdp) {
-                            console.log('screenShare', data);
                             this.pc.setRemoteDescriptionForShareScreen(data.sdp);
                             if (data.sdp.type === 'offer') {
-                                console.log('offer');
                                 this.pc.createAnswerForShareScreen();
                             }
                         } else {
                             this.pc.addIceCandidateForShareScreen(data.candidate);
                         }
                     })
-                    .on('endScreenShare', (data) => {
-                        console.log('endScreenShare', data);
+                    .on('endScreenShare', () => {
                         this.pc.stopShareScreen(true);
                     })
                     .on('end', this.endCall.bind(this, false));
@@ -91,11 +87,9 @@ export default class VideoCall extends React.Component {
                 this.setState(newState);
             })
             .on('peerStream', (src) => {
-                console.log('peerStream', src);
                 this.setState({peerSrc: src})
             })
             .on('peerShareScreen', (src) => {
-                console.log('peerShareScreen', src);
                 this.setState({peerSrc: src})
             })
             .start(isCaller, config);

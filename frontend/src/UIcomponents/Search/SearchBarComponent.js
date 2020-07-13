@@ -15,7 +15,6 @@ class SearchBarComponent extends React.Component {
     }
     componentDidMount() {
         SearchService.getAllTutorsAndCourses().then((data) => {
-            console.log(data);
             this.setState({
                 data: [...data]
             });
@@ -32,7 +31,6 @@ class SearchBarComponent extends React.Component {
         this.props.history.push(`/searchResult?query=${this.state.searchValue}`)
     };
     render() {
-        const { filterType } = this.state;
 
         return (
             <div className="md-grid md-block-centered" style={{background:'white', opacity:'90%'}}>
