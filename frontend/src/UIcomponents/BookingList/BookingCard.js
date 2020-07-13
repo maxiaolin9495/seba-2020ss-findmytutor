@@ -102,32 +102,31 @@ export default class BookingCard extends React.Component {
             case 'notConfirmed':
             case 'confirmed':
                 return (
-                    <div>
+                    <div className="md-cell md-cell--2"
+                        style={{
+                            marginTop: 0,
+                            marginBottom: '20px'
+                        }}>
                         <Dialog actionName='cancel' onClick={() => this.cancelTutorial()} />
                         {this.ifShouldRemind() && !this.ifPastVideo() ?
                             <Button
                                 raised
-                                className="md-cell md-cell--3"
+                                className="md-full-width"
                                 style={{
                                     background: '#696969',
+                                    marginTop: '10px',
                                     color: 'white',
+                                    borderRadius: '10px',
                                     fontSize: '18px',
-                                    marginTop: '32px',
                                     paddingBottom: '5px',
-                                    fontFamily: 'San Francisco',
+                                    fontFamily: 'cursive',
                                 }}
                                 onClick={() => this.goToVideoPage()}
                             >
                                 Video Call
                             </Button> :
-                            this.ifPastVideo() ?
-                                <div /> :
-                                <p>Please wait</p>
-
-
+                            <div />
                         }
-
-
                     </div>
 
                 );
@@ -225,7 +224,7 @@ export default class BookingCard extends React.Component {
                         </div>
                     </div>
                     {this.props.userType === 'tutor' &&
-                    <div className="md-cell md-cell--2"/>}
+                        <div className="md-cell md-cell--2" />}
                     {this.props.userType === 'customer' ?
                         <Button
                             raised
@@ -241,24 +240,26 @@ export default class BookingCard extends React.Component {
                             }}>
                             {this.props.tutorial.tutorialStatus === 'notConfirmed' ? 'NEED CONFIRMATION' : this.props.tutorial.tutorialStatus}
                         </Button> :
-                        (
-                            this.props.tutorial.tutorialStatus === 'notConfirmed' ?
-                                <Dialog actionName='confirm' onClick={() => this.confirmTutorial()}/> :
-                                <Button
-                                    raised
-                                    className="md-cell md-cell--3"
-                                    disabled
-                                    style={{
-                                        background: '#696969',
-                                        color: 'white',
-                                        fontSize: '18px',
-                                        marginTop: '32px',
-                                        paddingBottom: '5px',
-                                        fontFamily: 'San Francisco',
-                                    }}>
-                                    {this.props.tutorial.tutorialStatus === 'reviewed' ? 'finished' : this.props.tutorial.tutorialStatus}
-                                </Button>
-                        )}
+                        (this.props.tutorial.tutorialStatus === 'notConfirmed' ?
+                            <div className="md-cell md-cell--3">
+                                <Dialog actionName='confirm' onClick={() => this.confirmTutorial()} />
+                            </div> :
+                            <Button
+                                raised
+                                disabled
+                                className="md-cell md-cell--3"
+                                style={{
+                                    background: '#696969',
+                                    color: 'white',
+                                    fontSize: '18px',
+                                    marginTop: '32px',
+                                    paddingBottom: '5px',
+                                    fontFamily: 'San Francisco',
+                                }} >
+                                {this.props.tutorial.tutorialStatus === 'reviewed' ? 'finished' : this.props.tutorial.tutorialStatus}
+                            </Button>
+                        )
+                    }
                     {this.showLastButton()}
                 </div>
                 <hr style={{ marginLeft: 0, marginRight: 0 }} />
@@ -268,20 +269,8 @@ export default class BookingCard extends React.Component {
 
 
                 {/* </div> */}
-                <hr style={{marginLeft: 0, marginRight: 0}}/>
-                <Button
-                    raised
-                    className="md-cell md-cell--2"
-                    style={{
-                        background: '#696969',
-                        marginBottom: '10px',
-                        color: 'white',
-                        fontSize: '18px',
-                        marginTop: '0px',
-                        paddingBottom: '5px',
-                        fontFamily: 'cursive',
-                    }} onClick={() => this.props.handleChatRoom(`/chat/${this.props.tutorial._id}`)}>Tutorial
-                </Button>
+                {/* <hr style={{ marginLeft: 0, marginRight: 0 }} /> */}
+
             </div>
         );
     }

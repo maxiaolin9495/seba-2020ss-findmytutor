@@ -37,7 +37,7 @@ export default class ScrollingContentAndSizing extends PureComponent {
     render() {
         return (
             <div
-                className="md-cell md-cell--2"
+                className="md-full-width"
                 style={{ marginTop: 0 }}>
                 {this.props.actionName === 'confirm' ?
                     <Button
