@@ -1,11 +1,11 @@
 "use strict";
 
 import React from 'react';
-import { Card, Button, FontIcon, TextField, FileInput, Media, Cell } from 'react-md';
+import { Card, Button, FontIcon, TextField, FileInput, Media, Cell, Grid, Chip } from 'react-md';
 import { withRouter } from 'react-router-dom'
 import TutorCalendar from "../Calendar/TutorCalendar";
 import Resizer from 'react-image-file-resizer';
-
+import CoursesChip from "./CoursesChip";
 
 const style = {
     maxWidth: 750,
@@ -103,8 +103,6 @@ class EditProfile extends React.Component {
     }
 
     handleSubmit = () => {
-        // event.preventDefault();
-
         let userProfile = this.props.userProfile;
         // TODO: change to not user profile
         if (userProfile === undefined) {
@@ -125,6 +123,13 @@ class EditProfile extends React.Component {
         // onsubmit defined by EditProfileView
         this.props.onSubmit(userProfile);
     };
+
+    removeCourse = (course) => {
+        console.log(course);
+        let courses = this.state.courses;
+        courses.splice(courses.indexOf(course), 1);
+        this.setState({ courses });
+    }
 
     // onReset={() => this.props.history.goBack()}
     // onChange={this.handleChangeEmail}
@@ -187,19 +192,6 @@ class EditProfile extends React.Component {
                                 value={this.state.university}
                                 onChange={this.handleChangeUniversity}
                                 errorText="University is required" />
-                            {/* TODO: Add courses
-                                <Grid style={{ padding: 0, margin: 0 }}>
-                                    <Cell size={6}>
-                                        <TextField
-                                            id="TeachingCoursesField"
-                                            leftIcon={<FontIcon>book</FontIcon>}
-                                            value={'Teaching Courses: '}
-                                            type="text" />
-                                    </Cell>
-                                    <Cell size={6} align='middle'>
-                                        {this.renderCourses()}
-                                    </Cell>
-                                </Grid> */}
                             {/* TODO: show rating
                                 <div style={{ marginBottom: '13.5px' }}>
                                     <FontIcon style={{ paddingLeft: '8px', marginRight: '16px', }}>thumbs_up_down</FontIcon>
@@ -227,6 +219,40 @@ class EditProfile extends React.Component {
                                 onChange={value => this.handleChangeDescription(value)}
                                 placeholder="Write some text to describe yourself"
                                 errorText="Description is required" />
+                            <Grid style={{ padding: 0, margin: 0 }}>
+                                <Cell size={6}>
+                                    <TextField
+                                        id="TeachingCoursesField"
+                                        leftIcon={<FontIcon>book</FontIcon>}
+                                        label="Teaching Courses:"
+                                        type="text" />
+                                </Cell>
+                                <Cell size={6}>
+                                <Button id="dismissButton" raised secondary
+                                    // className="md-cell md-cell--2"
+                                    onClick={() => this.props.history.goBack()}>Add</Button>
+                                </Cell>
+                            </Grid>
+                            {/* {this.state.courses.map(c => {
+                                return (
+                                    <CoursesChip
+                                        key={c}
+                                        course={c}
+                                        onClick={this.removeCourse}
+                                        />)
+                            })} */}
+                            <div className="md-row">
+                            {
+                                ['SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database', 'SEBA', 'Database'].map(c => {
+                                    return (
+                                        <CoursesChip
+                                            key={c}
+                                            course={c}
+                                            onClick={this.removeCourse}
+                                            />)
+                                })
+                            }
+                            </div>
                         </div>
                         <Cell size={5} style={{ paddingTop: '16px' }}>
                             <div style={{ padding: '0 50px', }}>
