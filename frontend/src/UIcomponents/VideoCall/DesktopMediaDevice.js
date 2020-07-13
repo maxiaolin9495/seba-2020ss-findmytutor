@@ -19,7 +19,10 @@ class DesktopMediaDevice extends Emitter {
         if (navigator.getDisplayMedia) {
             navigator.getDisplayMedia({
                 video: true,
-                audio: true
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100}
             }).then((stream) => {
                 this.stream = stream;
                 this.emit('stream', stream);
@@ -33,7 +36,11 @@ class DesktopMediaDevice extends Emitter {
         } else if (navigator.mediaDevices.getDisplayMedia) {
             navigator.mediaDevices.getDisplayMedia({
                 video: true,
-                audio: true
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100
+                }
             }).then((stream) => {
                 this.stream = stream;
                 this.emit('stream', stream);
@@ -48,7 +55,11 @@ class DesktopMediaDevice extends Emitter {
         } else {
             navigator.mediaDevices.getUserMedia({
                 video: true,
-                audio: true
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 44100
+                }
             }).then((stream) => {
                 this.stream = stream;
                 this.emit('stream', stream);

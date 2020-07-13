@@ -31,7 +31,7 @@ export class ChatBar extends React.Component {
                 this.props.history.goBack();
             }
             // Read tutor and customer's information
-            let tutorialId = this.props.id;
+            let tutorialId = this.props.tutorialId;
             TutorialService.getTutorial(tutorialId).then((data) => {
                 TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
                     this.setState({

@@ -56,7 +56,8 @@ export class VideoCallView extends React.Component {
                             <div className="md-cell md-cell--3">
                                 <ChatBar
                                     socket={this.state.socket}
-                                    id={this.props.match.params.id}
+                                    id={this.state.socket.id}
+                                    tutorialId={this.props.match.params.id}
                                     ready={this.props.match.params.id !== null} />
                             </div>
                         </div>
