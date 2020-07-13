@@ -7,9 +7,7 @@ import EditProfileService from "../../Services/EditProfileService";
 
 import logoIcon from '../../Images/Logo.png';
 import { toast } from "react-toastify";
-import ChatBox, { ChatFrame } from 'react-chat-plugin';
-
-const config = require('../../config');
+import ChatBox from 'react-chat-plugin';
 
 export class ChatBar extends React.Component {
 
@@ -35,9 +33,7 @@ export class ChatBar extends React.Component {
             // Read tutor and customer's information
             let tutorialId = this.props.id;
             TutorialService.getTutorial(tutorialId).then((data) => {
-                console.log(data);
                 TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
-                    console.log("get tutor infos");
                     this.setState({
                         tutor: tutor,
                         tutorial: data,

@@ -43,7 +43,6 @@ class PeerConnection extends Emitter {
         };
         this.pc.ontrack = (event) => {
             if(!this.ifShareScreen) {
-                console.log('onTrack');
                 this.peerStream = event.streams[0];
                 this.emit('peerStream', event.streams[0]);
             }
@@ -66,7 +65,6 @@ class PeerConnection extends Emitter {
             }
         };
         this.pc1.ontrack = (event) => {
-            //console.log('peerShareScreen');
             if(this.ifShareScreen) {
                 this.emit('peerShareScreen', event.streams[0]);
             }
@@ -121,7 +119,6 @@ class PeerConnection extends Emitter {
     createOffer() {
         this.pc.createOffer()
             .then((desc) => {
-                console.log('offer');
                 this.getDescription(desc);
             })
             .catch((err) => console.log(err));
@@ -131,7 +128,6 @@ class PeerConnection extends Emitter {
     createOfferForShareScreen() {
         this.pc1.createOffer()
             .then((desc) => {
-                console.log('offer screen share');
                 this.getDescriptionForShareScreen(desc);
             })
             .catch((err) => console.log(err));
@@ -158,7 +154,6 @@ class PeerConnection extends Emitter {
         this.secondMediaDevice = new DesktopMediaDevice();
         this.secondMediaDevice
             .on('stream', (stream) => {
-                //console.log('stream', stream);
                 stream.getTracks().forEach((track) => {
                     this.pc1.addTrack(track, stream);
                 });
@@ -175,23 +170,36 @@ class PeerConnection extends Emitter {
             this.secondMediaDevice.stop();
             this.secondMediaDevice = null;
             this.isSharing = false;
-            this.socket.emit('endScreenShare', {to: this.friendId, from: this.clientId});
-            this.pc1.close();
-            this.pc1 = null;
             this.ifShareScreen = false;
-            //console.log(this.peerStream);
-            this.emit('peerStream', this.peerStream);
+            this.socket.emit('endScreenShare', {to: this.friendId, from: this.clientId});
+            this.resetPeerConnection();
+
             return;
         }
         //or receive the notification, that the screen sharing is stopped;
         if (ifEnd && this.ifShareScreen) {
-            this.pc1.close();
-            this.pc1 = null;
-            this.ifShareScreen = false;
-            //console.log(this.peerStream);
-            this.emit('peerStream', this.peerStream);
+            this.resetPeerConnection();
+            this.createOffer();
+            return;
         }
         toast.error('You are not allowed to stop screen share');
+    }
+
+    /*close the RTCPeerConnection, which used to share screen, create a new RTCPeerConnection
+        to share the selfie video stream*/
+    resetPeerConnection () {
+        this.pc1.close();
+        this.pc1 = null;
+        this.ifShareScreen = false;
+        if(this.pc) {
+            this.pc.close();
+            this.pc = null;
+        }
+        this.createRTCPeerConnectionForVideoCall()
+        this.localStream.getTracks().forEach((track) => {
+            this.pc.addTrack(track, this.localStream);
+        })
+
     }
 
     createAnswer() {
@@ -229,7 +237,6 @@ class PeerConnection extends Emitter {
      * @param {Object} sdp - Session description
      */
     setRemoteDescription(sdp) {
-        //console.log('setRemoteDescription' , sdp);
         const rtcSdp = new RTCSessionDescription(sdp);
         this.pc.setRemoteDescription(rtcSdp);
         return this;
@@ -241,7 +248,6 @@ class PeerConnection extends Emitter {
             this.pc.close();
             this.pc = null;
         }
-        //console.log('setRemoteDescriptionForShareScreen' , sdp);
         if(! this.pc1) {
             this.createRTCPeerConnectionForScreenSharing();
             //set localStream for the remote sender
