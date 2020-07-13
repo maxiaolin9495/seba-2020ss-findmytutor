@@ -218,7 +218,9 @@ export default class BookingCard extends React.Component {
                         <label
                             className="md-text--secondary"
                         >
-                            Tutor name:
+                            {this.props.userType === 'customer' ?
+                                'Tutor name:' :
+                                'Customer name:'}
                         </label>
                         <h1 style={{
                             color: 'black',
@@ -242,18 +244,18 @@ export default class BookingCard extends React.Component {
                             </h2>
                         </div>
                     </div>
-                    {this.props.userType === 'customer' &&
-                        <div className="md-cell md-cell--2" id="price-tag">
-                            <label className="md-text--secondary" >
-                                Price:
+                    {/* {this.props.userType === 'customer' && */}
+                    <div className="md-cell md-cell--2" id="price-tag">
+                        <label className="md-text--secondary" >
+                            Price:
                             </label>
-                            <h2 style={{
-                                color: 'black',
-                                textAlign: 'left'
-                            }}>
-                                EUR {this.props.tutorial.price}
-                            </h2>
-                        </div>}
+                        <h2 style={{
+                            color: 'black',
+                            textAlign: 'left'
+                        }}>
+                            EUR {this.props.tutorial.price}
+                        </h2>
+                    </div>
 
                     <div className="md-cell md-cell--2" id="tutorial-time">
                         <label className="md-text--secondary" >
@@ -276,6 +278,7 @@ export default class BookingCard extends React.Component {
                         </label>
                         {this.showStatusButton()}
                     </div>
+
                     {this.showLastButton()}
                 </div>
                 <hr style={{ marginLeft: 0, marginRight: 0 }} />

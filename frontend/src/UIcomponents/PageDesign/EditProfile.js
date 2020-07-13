@@ -10,11 +10,12 @@ import CoursesChip from "./CoursesChip";
 const style = {
     maxWidth: 750,
     opacity: 0.85,
+    marginTop: '16px'
 };
 
 
 class EditProfile extends React.Component {
-    
+
     constructor(props) {
         super(props);
 
@@ -41,7 +42,7 @@ class EditProfile extends React.Component {
                 timeSlotIds: [],
                 courses: [],
                 avatar: '',
-                course:'',
+                course: '',
             }
         }
     }
@@ -132,14 +133,14 @@ class EditProfile extends React.Component {
         this.setState({ courses });
     }
 
-    addCourse =() =>{
-        if(this.state.course === '') {
+    addCourse = () => {
+        if (this.state.course === '') {
             toast.error('Please input a course name');
             return;
         }
         let courses = this.state.courses;
         courses.push(this.state.course);
-        this.setState({ courses: courses, course:'' });
+        this.setState({ courses: courses, course: '' });
 
     };
 
@@ -232,28 +233,32 @@ class EditProfile extends React.Component {
                                 placeholder="Write some text to describe yourself"
                                 errorText="Description is required" />
 
-                                <TextField className="md-cell md-cell--6"
-                                        id="TeachingCoursesField"
-                                        leftIcon={<FontIcon>book</FontIcon>}
-                                        label="Teaching Courses:"
-                                        value={this.state.course}
-                                        onChange={(value) => this.setState({course: value})}
-                                        type="text" />
+                            <TextField className="md-cell md-cell--6"
+                                id="TeachingCoursesField"
+                                leftIcon={<FontIcon>book</FontIcon>}
+                                label="Teaching Courses:"
+                                value={this.state.course}
+                                onChange={(value) => this.setState({ course: value })}
+                                type="text" />
 
-                                <Button id="dismissButton" raised secondary className="md-cell md-cell--4"
-                                style={{marginTop:'30px'}}
-                                    // className="md-cell md-cell--2"
-                                    onClick={() => this.addCourse()}>Add</Button>
-                           
+                            <Button id="dismissButton" raised secondary className="md-cell md-cell--4"
+                                style={{ marginTop: '30px' }}
+                                // className="md-cell md-cell--2"
+                                onClick={() => this.addCourse()}>Add</Button>
+
                             <div className="md-row">
-                            {this.state.courses.map(c => {
-                                return (
-                                    <CoursesChip
-                                        key={c}
-                                        course={c}
-                                        onClick={this.removeCourse}
+                                {this.state.courses.map(c => {
+                                    return (
+                                        <CoursesChip
+                                            key={c}
+                                            course={c}
+                                            onClick={this.removeCourse}
+                                            style={{
+                                                marginRight: '8px',
+                                                marginBottom: '8px'
+                                            }}
                                         />)
-                            })}
+                                })}
                             </div>
                         </div>
                         <Cell size={5} style={{ paddingTop: '16px' }}>
@@ -290,37 +295,33 @@ class EditProfile extends React.Component {
             );
         } else if (this.props.userType === 'customer') {
             return (
-                <Card style={style} className="md-block-centered">
+                <Card style={{ ...style, maxWidth: '520px' }} className="md-block-centered">
                     <div className="md-grid" >
                         <TextField
+                            style={{ padding: 0, margin: 0 }}
                             label="FirstName"
                             leftIcon={<FontIcon>person</FontIcon>}
                             id="FirstNameField"
                             type="text"
-                            className="md-row"
+                            className="md-cell md-cell--6"
                             required={true}
                             value={this.state.firstName}
                             onChange={this.handleChangeFirstName}
                             errorText="First name is required" />
                         <TextField
+                            style={{ padding: 0, margin: 0 }}
                             label="LastName"
                             leftIcon={<FontIcon>person</FontIcon>}
                             id="LastNameField"
                             type="text"
-                            className="md-row"
+                            className="md-cell md-cell--6"
                             required={true}
                             value={this.state.lastName}
                             onChange={this.handleChangeLastName}
                             errorText="Last name is required"
                             maxLength={20} />
                         <TextField
-                            label="email"
-                            leftIcon={<FontIcon>email</FontIcon>}
-                            id="emailField"
-                            type="text"
-                            className="md-row"
-                            value={this.state.email} />
-                        <TextField
+                            style={{ padding: 0, margin: 0 }}
                             label="University"
                             leftIcon={<FontIcon>school</FontIcon>}
                             id="UniversityField"
@@ -330,6 +331,15 @@ class EditProfile extends React.Component {
                             value={this.state.university}
                             onChange={this.handleChangeUniversity}
                             errorText="University is required" />
+                        <TextField
+                            style={{ padding: 0, marginTop: 0, marginBottom: '20px' }}
+                            label="email"
+                            leftIcon={<FontIcon>email</FontIcon>}
+                            id="emailField"
+                            type="text"
+                            className="md-row"
+                            value={this.state.email} />
+
                         <Button id="submit"
                             disabled={!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.university}
                             raised
