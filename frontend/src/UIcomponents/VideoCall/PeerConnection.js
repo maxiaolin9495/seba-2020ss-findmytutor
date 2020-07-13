@@ -108,10 +108,14 @@ class PeerConnection extends Emitter {
         if (this.secondMediaDevice) {
             this.secondMediaDevice.stop();
         }
-        this.pc.close();
-        this.pc1.close();
-        this.pc = null;
-        this.pc1 = null;
+        if(this.pc){
+            this.pc.close();
+            this.pc = null;
+        }
+        if(this.pc1){
+            this.pc1.close();
+            this.pc1 = null;
+        }
         this.off();
         return this;
     }

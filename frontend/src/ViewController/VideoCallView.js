@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Navigation from "../UIcomponents/PageDesign/Navigation";
 import VideoCall from "../UIcomponents/VideoCall/VideoCall";
 import UserService from "../Services/UserService";
@@ -26,13 +26,14 @@ export class VideoCallView extends React.Component {
         if (!userType) {
             toast.error("Need login information!");
             this.props.history.push('/login');
+            return;
         }
 
         TutorialService.getTutorial(this.props.match.params.id).then((data) => {
-            if(UserService.getCurrentUser().userType===`customer`){
-                this.setState({caller: data.tutorEmail, clientId:data.customerEmail});
-            }else{
-                this.setState({caller: data.customerEmail, clientId:data.tutorEmail});
+            if (userType=== 'customer') {
+                this.setState({caller: data.tutorEmail, clientId: data.customerEmail});
+            } else {
+                this.setState({caller: data.customerEmail, clientId: data.tutorEmail});
             }
         })
 
@@ -46,8 +47,9 @@ export class VideoCallView extends React.Component {
                 <section>
                     <div style={{display: "flex"}}>
                     <ChatBar socket ={this.state.socket} id={this.props.match.params.id} ready={this.props.match.params.id !== null}/>
-                    <VideoCall caller={this.state.caller} clientId={this.state.clientId} ready={this.props.match.params.id !== null}
-                   socket={this.state.socket} />
+                    <VideoCall caller={this.state.caller} clientId={this.state.clientId} socket={this.state.socket}
+                               tutorialId={this.props.match.params.id}
+                    />
                     </div>
                 </section>
             </div>

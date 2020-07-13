@@ -4,6 +4,7 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require('./services/cha
 const io = socket();
 const sockets = require('./services/socketStore');
 const emails = require('./services/socketIdForEmail');
+const socketPairStore = require('./services/socketPairStore');
 
 const chatNamespace = io.of('/chat');
 
@@ -47,11 +48,22 @@ chatNamespace.on('connection', (socket) => {
         callback();
     });
     socket.on('disconnect', () => {
+
+        console.log(emails.get(socket.id), 'disconnected');
+
+        let receiverId = socketPairStore.get(emails.get(socket.id));
+        let receiver = sockets.get(receiverId);
+
+        socketPairStore.remove(emails.get(socket.id));
+        socketPairStore.remove(receiverId);
+        sockets.remove(emails.get(socket.id));
+        emails.remove(socket.id);
+
         const user = removeUser(socket.id);
 
-        sockets.remove(emails.get(socket.id));
-        console.log(emails.get(socket.id), 'disconnected');
-        emails.remove(socket.id);
+        if (receiver) {
+            receiver.emit('end');
+        }
 
         if (user) {
             chatNamespace.to(user.room)
@@ -84,6 +96,7 @@ chatNamespace.on('connection', (socket) => {
         })
         .on('call', (data) => {
             const receiver = sockets.get(data.to);
+            socketPairStore.create(data.to, data.from);
             if (receiver) {
                 receiver.emit('call', data);
             } else {
