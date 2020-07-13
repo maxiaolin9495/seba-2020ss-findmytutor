@@ -79,6 +79,7 @@ export default class BookingCard extends React.Component {
     showLastButton = () => {
         switch (this.props.tutorial.tutorialStatus) {
             case 'finished':
+            case 'reviewed':
                 if (this.props.userType === 'customer')
                     return (
                         <Button
@@ -98,30 +99,11 @@ export default class BookingCard extends React.Component {
                         </Button>);
                 else
                     return '';
-            case 'reviewed':
-                if (this.props.userType === 'customer')
-                    return (
-                        <Button
-                            raised
-                            className="md-cell md-cell--2"
-                            style={{
-                                background: '#555',
-                                borderRadius: '10px',
-                                marginTop: '32px',
-                                color: 'white',
-                                fontSize: '18px',
-                                fontFamily: 'San Francisco',
-                            }}
-                            onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)}>
-                            REVIEW
-                        </Button>);
-                else
-                    return '';
             case 'notConfirmed':
             case 'confirmed':
                 return (
                     <div>
-                        <Dialog actionName='cancel' onClick={() => this.cancelTutorial()}/>
+                        <Dialog actionName='cancel' onClick={() => this.cancelTutorial()} />
                         {this.ifShouldRemind() && !this.ifPastVideo() ?
                             <Button
                                 raised
@@ -139,7 +121,7 @@ export default class BookingCard extends React.Component {
                                 Video Call
                             </Button> :
                             this.ifPastVideo() ?
-                                <div/> :
+                                <div /> :
                                 <p>Please wait</p>
 
 
@@ -159,7 +141,6 @@ export default class BookingCard extends React.Component {
         return !this.props.tutorial.ifHadVideo &&
             this.props.tutorial.startTime - now < 180000000;
     };
-
     ifPastVideo = () => {
         let now = new Date().getTime();
         return now - this.props.tutorial.endTime > 0;
@@ -216,14 +197,14 @@ export default class BookingCard extends React.Component {
                         </div>
                     </div>
                     {this.props.userType === 'customer' &&
-                    <div className="md-cell md-cell--2" id="price-tag">
-                        <h2 style={{
-                            color: 'black',
-                            textAlign: 'center'
-                        }}>
-                            EUR {this.props.tutorial.price}
-                        </h2>
-                    </div>}
+                        <div className="md-cell md-cell--2" id="price-tag">
+                            <h2 style={{
+                                color: 'black',
+                                textAlign: 'center'
+                            }}>
+                                EUR {this.props.tutorial.price}
+                            </h2>
+                        </div>}
 
                     <div className="md-cell md-cell--2" id="tutorial-time"
                          style={{textAlign: 'center'}}>
@@ -273,9 +254,10 @@ export default class BookingCard extends React.Component {
                         )}
                     {this.showLastButton()}
                 </div>
-                <hr style={{marginLeft: 0, marginRight: 0}}/>
-                <h4 style={{marginLeft: '8px', marginBottom: 0}}>Topics: {this.props.tutorial.sessionTopic}</h4>
+                <hr style={{ marginLeft: 0, marginRight: 0 }} />
+                <h4 style={{ marginLeft: '8px', marginBottom: 0 }}>Topics: {this.props.tutorial.sessionTopic}</h4>
                 {/* </div> */}
+
 
 
                 {/* </div> */}
