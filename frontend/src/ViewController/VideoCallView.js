@@ -2,10 +2,10 @@ import React from "react";
 import Navigation from "../UIcomponents/PageDesign/Navigation";
 import VideoCall from "../UIcomponents/VideoCall/VideoCall";
 import UserService from "../Services/UserService";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import io from "socket.io-client";
-import {backendUri} from "../config";
-import {ChatBar} from "../UIcomponents/ChatBar/ChatBar";
+import { backendUri } from "../config";
+import { ChatBar } from "../UIcomponents/ChatBar/ChatBar";
 import TutorialService from "../Services/TutorialService";
 
 
@@ -16,7 +16,7 @@ export class VideoCallView extends React.Component {
         this.state = {
             loading: false,
             data: [],
-            socket :io( `${backendUri}/chat` ),
+            socket: io(`${backendUri}/chat`),
         };
 
     }
@@ -30,10 +30,10 @@ export class VideoCallView extends React.Component {
         }
 
         TutorialService.getTutorial(this.props.match.params.id).then((data) => {
-            if (userType=== 'customer') {
-                this.setState({caller: data.tutorEmail, clientId: data.customerEmail});
+            if (UserService.getCurrentUser().userType === `customer`) {
+                this.setState({ caller: data.tutorEmail, clientId: data.customerEmail });
             } else {
-                this.setState({caller: data.customerEmail, clientId: data.tutorEmail});
+                this.setState({ caller: data.customerEmail, clientId: data.tutorEmail });
             }
         })
 
@@ -43,13 +43,23 @@ export class VideoCallView extends React.Component {
         setTimeout(() => window.scrollTo(0, 0), 150);
         return (
             <div>
-                <Navigation/>
+                <Navigation />
                 <section>
-                    <div style={{display: "flex"}}>
-                    <ChatBar socket ={this.state.socket} id={this.props.match.params.id} ready={this.props.match.params.id !== null}/>
-                    <VideoCall caller={this.state.caller} clientId={this.state.clientId} socket={this.state.socket}
-                               tutorialId={this.props.match.params.id}
-                    />
+                    <div>
+                        <div className="md-grid">
+                            <div className="md-cell md-cell--9">
+                                <VideoCall
+                                    caller={this.state.caller}
+                                    clientId={this.state.clientId}
+                                    socket={this.state.socket} />
+                            </div>
+                            <div className="md-cell md-cell--3">
+                                <ChatBar
+                                    socket={this.state.socket}
+                                    id={this.props.match.params.id}
+                                    ready={this.props.match.params.id !== null} />
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
