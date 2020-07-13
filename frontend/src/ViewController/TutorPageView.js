@@ -1,5 +1,6 @@
 import React from 'react';
 import TutorPageService from "../Services/TutorPageService";
+import UserService from "../Services/UserService.js";
 import TutorPersonalPage from '../UIcomponents/Search/TutorPersonalPage';
 import { toast } from "react-toastify";
 import Background from '../Images/Homepage.jpg';
@@ -17,6 +18,8 @@ export class TutorPageView extends React.Component {
     }
 
     componentWillMount() {
+        UserService.getCurrentUser().userType === 'tutor' && this.props.history.push("/booking");
+        
         this.setState({
             loading: true
         });

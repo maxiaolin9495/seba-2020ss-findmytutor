@@ -2,6 +2,7 @@ import React from 'react';
 import SearchResultPage from '../UIcomponents/Search/SearchResultPage';
 import Background from '../Images/Searchresultbg.jpg';
 import SearchService from "../Services/SearchService.js"
+import UserService from "../Services/UserService.js"
 import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class SearchResultView extends React.Component {
@@ -17,6 +18,8 @@ export class SearchResultView extends React.Component {
     }
 
     componentWillMount() {
+        UserService.getCurrentUser().userType === 'tutor' && this.props.history.push("/booking");
+        
         this.setState({
             loading: true
         });
