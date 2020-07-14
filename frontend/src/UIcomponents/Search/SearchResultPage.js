@@ -53,11 +53,16 @@ class SearchResultPage extends Component {
         })
     }
 
-    handleFilter() {
-        this.props.onFilter(this.state.value, this.state.price);
+    handleFilter=()=> {
+        let filterUni = [];
+        if (this.state.value.length !== 0){
+            filterUni = this.state.value
+        } else {
+            filterUni = this.state.universities;}
+        this.props.onFilter(filterUni, this.state.price);
     }
 
-    handleReset() {
+    handleReset=()=> {
         this.props.onFilter(this.state.universities,[0,100]);
         this.setState({
             value: [],
