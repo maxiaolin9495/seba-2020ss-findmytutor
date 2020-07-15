@@ -1,4 +1,5 @@
 import React from "react";
+import { Prompt } from 'react-router';
 import Navigation from "../UIcomponents/PageDesign/Navigation";
 import VideoCall from "../UIcomponents/VideoCall/VideoCall";
 import UserService from "../Services/UserService";
@@ -36,7 +37,19 @@ export class VideoCallView extends React.Component {
                 this.setState({ caller: data.customerEmail, clientId: data.tutorEmail });
             }
         })
+        window.addEventListener("beforeunload", this.handleWindowBeforeUnload);
+    }
 
+    handleWindowBeforeUnload = () => {
+        console.log('Refreshing window');
+        this.state.socket.emit('disconnect');
+        this.state.socket.close();
+    }
+    
+    componentWillUnmount(){
+        console.log(`Leaving page`);
+        this.state.socket.emit('disconnect');
+        this.state.socket.close();
     }
 
     render() {

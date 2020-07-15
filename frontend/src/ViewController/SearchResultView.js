@@ -25,16 +25,30 @@ export class SearchResultView extends React.Component {
         });
         console.log(this.props);
         SearchService.getTutorsByKeyword(this.props.location.search.split('=')[1]).then((data) => {
+            let sortedTutor = data.sort(this.sortByRating)
             this.setState({
-                data: [...data],
+                data: sortedTutor,
                 filteredData: [...data],
                 loading: false
             });
         }).catch((e) => {
             console.error(e);
         });
+    
     }
 
+    sortByRating=(a, b)=> {
+        let ratingA = a.rating || 0;
+        let ratingB = b.rating || 0; 
+        let comparison = 0;
+        if (ratingA > ratingB) {
+          comparison = -1;
+        } else if (ratingA < ratingB) {
+          comparison = 1;
+        }
+        return comparison;
+      }
+      
     filterTutor =(universities, price) => {
         let filteredTutor = [];
         this.state.data.map(d => {
@@ -43,9 +57,9 @@ export class SearchResultView extends React.Component {
                 universities.includes(d.university) &&
                 d.price>=price[0] && d.price<=price[1]) {
                     filteredTutor.push(d)
-                
             }
         });
+        filteredTutor.sort(this.sortByRating);
         this.setState({
             filteredData: filteredTutor,
             loading: false

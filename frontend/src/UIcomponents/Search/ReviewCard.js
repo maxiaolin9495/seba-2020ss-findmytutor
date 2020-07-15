@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Card, CardTitle, TextField, Media, Grid, Cell, Button, FontIcon } from 'react-md';
+import { Avatar, Card, CardTitle } from 'react-md';
 import StarRatingComponent from 'react-star-rating-component';
 import { toast } from "react-toastify";
 import FindMyTutor from '../../Images/Logo.png';
