@@ -10,6 +10,7 @@ const chatNamespace = io.of('/chat');
 
 chatNamespace.on('connection', (socket) => {
     socket.on('join', ({ email, name, room }, callback) => {
+        console.log('join', { email, name, room });
         const { error, user } = addUser({ id: socket.id, email, name, room });
 
         if (error) return callback({ error: 'error' });
@@ -84,6 +85,7 @@ chatNamespace.on('connection', (socket) => {
     //these part are for video call
     socket
         .on('init', (data)=> {
+            console.log('init', data);
             sockets.create(socket, data.clientId);
             emails.create(data.clientId, socket.id);
             socket.emit('init', {clientId: data.clientId});
