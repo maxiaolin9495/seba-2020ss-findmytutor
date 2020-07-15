@@ -30,8 +30,8 @@ export class VideoCallView extends React.Component {
         }
 
         TutorialService.getTutorial(this.props.match.params.id).then((data) => {
-            if (UserService.getCurrentUser().userType === `customer`) {
-                this.setState({ caller: data.tutorEmail, clientId: data.customerEmail });
+            if (userType=== 'customer') {
+                this.setState({caller: data.tutorEmail, clientId: data.customerEmail});
             } else {
                 this.setState({ caller: data.customerEmail, clientId: data.tutorEmail });
             }

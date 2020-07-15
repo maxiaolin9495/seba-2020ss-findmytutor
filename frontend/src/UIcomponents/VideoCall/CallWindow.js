@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-const getButtonClass = (icon, enabled) => classNames(`btn-action fa ${icon}`, { disable: !enabled });
 const giveButtonClass=(name,enabled)=> classNames(name,{disable: !enabled });
 function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, shareScreen, ifShareScreen }) {
     const peerVideo = useRef(null);
@@ -44,7 +43,7 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, s
         <div className={classNames('call-window', status)}
              style={{ marginLeft:"30px",
                  marginTop:"80px",
-                 height:"710px",
+                 height:"650px",
                  width:"940px"}}>
             <video id="peerVideo" ref={peerVideo} autoPlay />
             <video id="localVideo" ref={localVideo} autoPlay muted />
