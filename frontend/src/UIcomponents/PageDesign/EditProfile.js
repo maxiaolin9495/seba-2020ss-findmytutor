@@ -127,7 +127,6 @@ class EditProfile extends React.Component {
     };
 
     removeCourse = (course) => {
-        console.log(course);
         let courses = this.state.courses;
         courses.splice(courses.indexOf(course), 1);
         this.setState({ courses });

@@ -312,7 +312,7 @@ const updateRatingForTutor = (email) => {
                 for (let i = 0; i < reviews.length; i++) {
                     sumOverallRating += reviews[i].overallRating;
                 }
-                tutorModel.updateOne({email: email}, {$push: {rating: Math.round(sumOverallRating / reviews.length)}}).exec();
+                tutorModel.updateOne({email: email}, {rating: Math.round(sumOverallRating / reviews.length)}).exec();
             });
         }
     ).catch(error => {
