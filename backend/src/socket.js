@@ -95,6 +95,7 @@ chatNamespace.on('connection', (socket) => {
             }
         })
         .on('call', (data) => {
+            console.log('call', data.to)
             const receiver = sockets.get(data.to);
             socketPairStore.create(data.to, data.from);
             if (receiver) {
@@ -105,6 +106,7 @@ chatNamespace.on('connection', (socket) => {
         })
         .on('screenShare', (data) => {
             const receiver = sockets.get(data.to);
+            console.log('call', data.to)
             if (receiver) {
                 receiver.emit('screenShare', data);
             } else {
@@ -112,6 +114,7 @@ chatNamespace.on('connection', (socket) => {
             }
         })
         .on('endScreenShare', (data) => {
+            console.log('call', data.to)
             const receiver = sockets.get(data.to);
             if (receiver) {
                 receiver.emit('endScreenShare', data);
