@@ -1,9 +1,8 @@
 "use strict";
 
 import React from 'react';
-import { Avatar, Card, CardTitle, TextField, Media, Grid, Cell, Button, FontIcon } from 'react-md';
+import { Card, CardTitle, TextField, Media, Grid, Cell, Button, FontIcon } from 'react-md';
 import { withRouter } from 'react-router-dom';
-import { toast } from "react-toastify";
 import StarRatingComponent from 'react-star-rating-component';
 import BookingCalendar from "../Calendar/BookingCalendar";
 import ReviewCard from "./ReviewCard";
@@ -174,7 +173,9 @@ class TutorPersonalPage extends React.Component {
                             label="Topics you want to learn in this tutorial:"
                             value={this.state.topic}
                             onChange={(value) => this.setState({ topic: value })}
-                            type="text" />
+                            type="text"
+                            required={true}
+                        />
                     </div>
                 </div>
 

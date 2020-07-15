@@ -18,8 +18,6 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, s
         }
     });
 
-    console.log('ifShareScreen', ifShareScreen);
-
     useEffect(() => {
         if (mediaDevice) {
             mediaDevice.toggle('Video', video);

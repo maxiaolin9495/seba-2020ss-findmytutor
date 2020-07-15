@@ -10,7 +10,6 @@ const chatNamespace = io.of('/chat');
 
 chatNamespace.on('connection', (socket) => {
     socket.on('join', ({ email, name, room }, callback) => {
-        console.log('join', { email, name, room });
         const { error, user } = addUser({ id: socket.id, email, name, room });
 
         if (error) return callback({ error: 'error' });
@@ -50,8 +49,6 @@ chatNamespace.on('connection', (socket) => {
     });
     socket.on('disconnect', () => {
 
-        console.log(emails.get(socket.id), 'disconnected');
-
         let receiverId = socketPairStore.get(emails.get(socket.id));
         let receiver = sockets.get(receiverId);
 
@@ -85,7 +82,6 @@ chatNamespace.on('connection', (socket) => {
     //these part are for video call
     socket
         .on('init', (data)=> {
-            console.log('init', data);
             sockets.create(socket, data.clientId);
             emails.create(data.clientId, socket.id);
             socket.emit('init', {clientId: data.clientId});
@@ -97,7 +93,6 @@ chatNamespace.on('connection', (socket) => {
             }
         })
         .on('call', (data) => {
-            console.log('call', data.to)
             const receiver = sockets.get(data.to);
             socketPairStore.create(data.to, data.from);
             if (receiver) {
@@ -108,7 +103,6 @@ chatNamespace.on('connection', (socket) => {
         })
         .on('screenShare', (data) => {
             const receiver = sockets.get(data.to);
-            console.log('call', data.to)
             if (receiver) {
                 receiver.emit('screenShare', data);
             } else {
@@ -116,7 +110,6 @@ chatNamespace.on('connection', (socket) => {
             }
         })
         .on('endScreenShare', (data) => {
-            console.log('call', data.to)
             const receiver = sockets.get(data.to);
             if (receiver) {
                 receiver.emit('endScreenShare', data);
