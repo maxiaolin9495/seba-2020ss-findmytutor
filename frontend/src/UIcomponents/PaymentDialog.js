@@ -21,7 +21,12 @@ class PaymentDialog extends PureComponent {
 
 
     show = () => {
-        this.setState({visible: true});
+        if(this.props.topic) {
+            this.setState({visible: true});
+        }else{
+            toast.error('You must type in a session topic for your tutorial first.');
+            document.getElementById('TeachingCoursesTopics').focus();
+        }
     };
     hide = () => {
         this.setState({visible: false});
@@ -93,14 +98,14 @@ class PaymentDialog extends PureComponent {
                         <PayPalButton
                             amount={this.props.totalPrice}
                             onPaymentStart={() => {
-                                console.log('payment started')
+                                console.log('payment started');
                             }}
                             onPaymentSuccess={(res) => this.paymentSuccess(res)}
                             onPaymentError={(msg) => {
                                 toast.error('Unsuccessful payment');
                                 console.log(msg)
                             }}
-                            onPaymentCancel={(msg) => {
+                            onPaymentCancel={() => {
                             }}
                             paypalOptions={paypalOptions}
                             env='sandbox'/>

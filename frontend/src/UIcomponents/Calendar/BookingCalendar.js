@@ -101,7 +101,6 @@ class BookingCalendar extends React.Component {
                     newArr.forEach((data) => {
                         if (arr.indexOf(data) === -1) {
                             arr.push(data);
-                            //    console.log(arr)
                         }
                     })
                 }

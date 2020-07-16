@@ -49,8 +49,6 @@ chatNamespace.on('connection', (socket) => {
     });
     socket.on('disconnect', () => {
 
-        console.log(emails.get(socket.id), 'disconnected');
-
         let receiverId = socketPairStore.get(emails.get(socket.id));
         let receiver = sockets.get(receiverId);
 

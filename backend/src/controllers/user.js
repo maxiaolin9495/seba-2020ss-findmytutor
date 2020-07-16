@@ -68,7 +68,6 @@ const register = (req, res) => {
         const user = Object.assign(req.body, { ifProved: false });
         //the email address will be transformed to lowerCase;
         user.email = user.email.trim().toLowerCase();
-        console.log(user);
         return registerUser(user, customerModel, tutorModel, req, res);
 
     } else {
