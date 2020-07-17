@@ -32,18 +32,18 @@ export default class VideoCall extends React.Component {
 
     componentDidUpdate(prevprops) {
         if (this.props.caller !== prevprops.caller) {
-            this.setState({caller: this.props.caller});
-            this.setState({clientId: this.props.clientId});
+            this.setState({ caller: this.props.caller });
+            this.setState({ clientId: this.props.clientId });
 
             if (this.props.caller && this.props.clientId) {
                 const socket = this.props.socket;
                 socket
-                    .emit('init', ({clientId: this.props.clientId}))
-                    .on('init', ({clientId: clientId}) => {
+                    .emit('init', ({ clientId: this.props.clientId }))
+                    .on('init', ({ clientId: clientId }) => {
                         document.title = `${clientId} - VideoCall`;
                     })
                     .on('request', (data) => {
-                        this.setState({callModal: 'active', callFrom: data.from});
+                        this.setState({ callModal: 'active', callFrom: data.from });
                     })
                     .on('call', (data) => {
                         if (data.sdp) {
@@ -70,8 +70,14 @@ export default class VideoCall extends React.Component {
                         this.pc.stopShareScreen(true);
                     })
                     .on('end', this.endCall.bind(this, false));
-                this.setState({socket: socket});
+                this.setState({ socket: socket });
             }
+        }
+    }
+
+    componentWillUnmount() {
+        if (_.isFunction(this.pc.stop)) {
+            this.pc.stop(false);
         }
     }
 
@@ -79,7 +85,7 @@ export default class VideoCall extends React.Component {
         this.config = config;
         this.pc = new PeerConnection(friendId, this.state.clientId, this.state.socket)
             .on('localStream', (src) => {
-                const newState = {callWindow: 'active', localSrc: src};
+                const newState = { callWindow: 'active', localSrc: src };
                 if (!isCaller) {
                     newState.callModal = '';
                 }
@@ -87,10 +93,10 @@ export default class VideoCall extends React.Component {
                 this.setState(newState);
             })
             .on('peerStream', (src) => {
-                this.setState({peerSrc: src})
+                this.setState({ peerSrc: src })
             })
             .on('peerShareScreen', (src) => {
-                this.setState({peerSrc: src})
+                this.setState({ peerSrc: src })
             })
             .start(isCaller, config);
     }
@@ -105,9 +111,9 @@ export default class VideoCall extends React.Component {
     }
 
     rejectCall() {
-        const {callFrom} = this.state;
-        this.state.socket.emit('end', {to: callFrom});
-        this.setState({callModal: ''});
+        const { callFrom } = this.state;
+        this.state.socket.emit('end', { to: callFrom });
+        this.setState({ callModal: '' });
     }
 
     endCall(isStarter) {
@@ -125,7 +131,7 @@ export default class VideoCall extends React.Component {
     }
 
     render() {
-        const {clientId, callFrom, callModal, callWindow, localSrc, peerSrc} = this.state;
+        const { clientId, callFrom, callModal, callWindow, localSrc, peerSrc } = this.state;
         return (
             <div>
                 <MainWindow
