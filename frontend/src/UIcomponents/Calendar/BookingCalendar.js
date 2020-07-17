@@ -3,9 +3,8 @@ import {withRouter} from "react-router-dom";
 import DatePicker from "react-datepicker";
 import '../../Css/react-datepicker.css';
 import PaymentDialog from "../PaymentDialog";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import TutorPageService from "../../Services/TutorPageService";
-import TutorialService from "../../Services/TutorialService";
 import {TextIconSpacing} from "@react-md/icon";
 import {AccessAlarmFontIcon} from "@react-md/material-icons";
 import '../../Css/bookingCalendar.css';
@@ -24,13 +23,10 @@ class BookingCalendar extends React.Component {
             selectedStart: undefined,
             selectedEnd: undefined,
             initialTimesForSpecificDayForStart: [],
-            initialTimesForSpecificDayForEnd:[],
+            initialTimesForSpecificDayForEnd: [],
             price: 0,
             duration: 0,
             totalPrice: 0,
-            bookedTimes: [],
-            bookingTimesForSpecificDayForStart: [],
-            bookingTimesForSpecificDayForEnd: [],
             minDate: undefined,
             initialDates: []
         };
@@ -39,64 +35,56 @@ class BookingCalendar extends React.Component {
     componentDidMount() {
         //get initial available times
         let initials = [];
-        let initialDates=[];
+        let initialDates = [];
         TutorPageService.getTutorProfileById(this.props.match.params.id).then((data) => {
             this.setState({price: data.price});
             data.timeSlotIds.forEach((times) => {
-                initials.push({
-                    start: new Date(parseInt(times.start)),
-                    end: new Date(parseInt(times.end))
-                })
+                if (!times.ifBooked) {
+                    initials.push({
+                        start: new Date(parseInt(times.start)),
+                        end: new Date(parseInt(times.end))
+                    })
+                }
             });
             //add available dates and unit the start and end time to solve additional date problem
             data.timeSlotIds.forEach((times) => {
-                initialDates.push({
-                    start: new Date(parseInt(times.start)),
-                    end: new Date(parseInt(times.start))
-                })
+                if (!times.ifBooked) {
+                    initialDates.push({
+                        start: new Date(parseInt(times.start)),
+                        end: new Date(parseInt(times.start))
+                    })
+                }
+
             });
             this.setState({initialTimes: initials});
-            this.setState({initialDates:initialDates});
-            //get booked times
-            let bookedTimes = [];
-            TutorialService.getAllTutorials(this.props.match.params.id).then((bookings) => {
-                bookings.map((data) => {
-                    bookedTimes.push({
-                        start: new Date(parseInt(data.startTime)),
-                        end: new Date(parseInt(data.endTime)),
-                    })
-                });
-                this.setState({bookedTimes: bookedTimes});
+            this.setState({initialDates: initialDates});
 
-            })
 
         })
 
     }
 
     //acquire time slots between start and end timestamp within one time period
-    getSingleTimes = (startTimestamp, endTimestamp, type) => {
+    getSingleTimes = (startTimestamp, endTimestamp) => {
         let arr = [];
         let current = startTimestamp;
         while (current < endTimestamp - 1000) {
             arr.push(new Date(parseInt(current)));
             current += 60 * 60 * 1000;
         }
-        if (type !== 'booking') {
-            arr.push(new Date(parseInt(endTimestamp)));
-        }
+        arr.push(new Date(parseInt(endTimestamp)));
 
         return arr;
     };
 
     //get all time slots in time array
-    availableTimes = (initials, type) => {
+    availableTimes = (initials) => {
         let arr = [];
         initials.forEach((data) => {
             if (data.start !== undefined && data.end !== undefined) {
                 let startStp = data.start.getTime();
                 let endStp = data.end.getTime();
-                let newArr = this.getSingleTimes(startStp, endStp, type);
+                let newArr = this.getSingleTimes(startStp, endStp);
                 if (newArr !== null && newArr !== undefined) {
                     newArr.forEach((data) => {
                         if (arr.indexOf(data) === -1) {
@@ -109,7 +97,7 @@ class BookingCalendar extends React.Component {
         });
         //change text in datepicker time header
         let a = document.querySelectorAll('.react-datepicker-time__header');
-        if(a && a.length > 1) {
+        if (a && a.length > 1) {
             a[0].innerText = 'Start';
             a[1].innerText = 'End';
         }
@@ -121,37 +109,36 @@ class BookingCalendar extends React.Component {
         let timeOnSpecificDayForStart = [];
         let timeOnSpecificDayForEnd = [];
         this.state.initialTimes.map((data) => {
+
             let dateDay = data.start.getDate();
-            let dataForStart = {start: new Date(data.start), end: new Date(data.end)};
-            let dataForEnd = {start: new Date(data.start), end: new Date(data.end)};
+            let dataForStart = {
+                start: new Date(parseInt(data.start.getTime())),
+                end: new Date(parseInt(data.end.getTime()))
+            };
+            let dataForEnd = {
+                start: new Date(parseInt(data.start.getTime())),
+                end: new Date(parseInt(data.end.getTime()))
+            };
             if (value.getDate() === dateDay) {
-                dataForStart.end.setHours(parseInt(data.end.getHours())-1);
+                dataForStart.end.setHours(parseInt(data.end.getHours()) - 1);
                 timeOnSpecificDayForStart.push(dataForStart);
                 dataForEnd.start.setHours(parseInt(data.start.getHours()) + 1);
-                timeOnSpecificDayForEnd.push(dataForEnd)
+                timeOnSpecificDayForEnd.push(dataForEnd);
             }
         });
 
         //if startTime is chosen, app will match valid endTimes to be specified for the startTime
-        for (let i = 0; i < timeOnSpecificDayForEnd.length; i++){
-            if(parseInt(timeOnSpecificDayForEnd[i].start.getHours()) <= parseInt(value.getHours()) &&
-                parseInt(timeOnSpecificDayForEnd[i].end.getHours()) === 0?
-                    24 > parseInt(value.getHours()) :
-                    parseInt(timeOnSpecificDayForEnd[i].end.getHours()) > parseInt(value.getHours())
-            ){
+        for (let i = 0; i < timeOnSpecificDayForEnd.length; i++) {
+            if (parseInt(timeOnSpecificDayForEnd[i].start.getHours()) <= parseInt(value.getHours()) &&
+            parseInt(timeOnSpecificDayForEnd[i].end.getHours()) === 0 ?
+                24 > parseInt(value.getHours()) :
+                parseInt(timeOnSpecificDayForEnd[i].end.getHours()) > parseInt(value.getHours()) &&
+                //avoid invalid ent times
+                parseInt(value.getHours()) !== 0) {
                 console.log(value);
                 timeOnSpecificDayForEnd[i].start.setHours(parseInt(value.getHours()) + 1);
             }
         }
-
-        let bookingOnSpecificDay = [];
-        this.state.bookedTimes.map((data) => {
-            let dateDay = data.start.getDate();
-            if (value.getDate() === dateDay) {
-                bookingOnSpecificDay.push(data);
-            }
-        });
-
         this.setState({selectedStart: value});
         let tmpDate = new Date(value.getTime());
         tmpDate.setHours(0);
@@ -160,8 +147,6 @@ class BookingCalendar extends React.Component {
         this.setState({initialTimesForSpecificDayForStart: timeOnSpecificDayForStart});
         this.setState({initialTimesForSpecificDayForEnd: timeOnSpecificDayForEnd});
         this.setState({minDate: value});
-        this.setState({bookingTimesForSpecificDayForStart: bookingOnSpecificDay});
-        this.setState({bookingTimesForSpecificDayForEnd: bookingOnSpecificDay});
 
     };
 
@@ -219,6 +204,11 @@ class BookingCalendar extends React.Component {
         return timestamp.toDateString() + ' ' + timeHour + ":" + timeMin;
     };
 
+    handleCancel=()=>{
+        this.setState({selectedStart:undefined});
+        this.setState({selectedEnd:undefined});
+    }
+
     render() {
         return (
             <div>
@@ -227,9 +217,8 @@ class BookingCalendar extends React.Component {
                         id="newPickDate"
                         require
                         inline
-                        includeDates={this.availableTimes(this.state.initialDates, '')}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForStart, '')}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDayForStart, 'booking')}
+                        includeDates={this.availableTimes(this.state.initialDates)}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForStart)}
                         timesShown={2}
                         style={stylePicker}
                         dateFormat='dd.MM.yyyy HH:mm'
@@ -254,9 +243,8 @@ class BookingCalendar extends React.Component {
                         dateFormat='dd.MM.yyyy HH:mm'
                         className="md-cell"
                         selected={this.state.selectedEnd}
-                        includeDates={this.availableTimes(this.state.initialDates, '')}
-                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForEnd, '')}
-                        excludeTimes={this.availableTimes(this.state.bookingTimesForSpecificDayForEnd, 'booking')}
+                        includeDates={this.availableTimes(this.state.initialDates)}
+                        includeTimes={this.availableTimes(this.state.initialTimesForSpecificDayForEnd)}
                         isClearable
                         minDate={this.state.minDate}
                         //   minTime={new Date()}
@@ -288,7 +276,8 @@ class BookingCalendar extends React.Component {
                                duration={this.state.duration}
                                startTime={this.state.selectedStart}
                                endTime={this.state.selectedEnd}
-                               topic={this.props.topic}/>
+                               topic={this.props.topic}
+                               handleCancel={this.handleCancel}/>
             </div>
 
         );
