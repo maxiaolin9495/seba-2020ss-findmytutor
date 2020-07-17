@@ -187,7 +187,7 @@ class TutorPersonalPage extends React.Component {
                     </div>
                 </div>
                 <hr style={{ height: 1 }} />
-                <div style={{ marginLeft: '200px' }}>
+                <div style={{ marginLeft: '0px' }}>
                     <div className="md-grid">
                         <h1 className='md-row md-full-width'>Comments</h1>
                         {this.state.reviews.map(r => {
