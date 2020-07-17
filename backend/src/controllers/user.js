@@ -13,7 +13,7 @@ const login = (req, res) => {
     if (!verificationResult.ifValid) {
         return res.status(400).json(verificationResult.message);
     }
-    tutorModel.findOne({ email: req.body.email }).exec()
+    tutorModel.findOne({ email: req.body.email.trim().toLowerCase() }).exec()
         .then(user => {
             //user object
             if(!user){
@@ -73,6 +73,7 @@ const register = (req, res) => {
     } else {
 
         const user = Object.assign(req.body);
+        user.email = user.email.trim().toLowerCase();
         return registerUser(user, tutorModel, customerModel, req, res);
 
     }
