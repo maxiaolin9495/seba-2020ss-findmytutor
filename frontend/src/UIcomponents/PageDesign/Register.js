@@ -111,10 +111,19 @@ class RegisterTab extends React.Component {
             document.getElementById('floating-password').label = "Password length must larger than 8";
             document.getElementById('floating-password-confirm').value = "";
             document.getElementById('floating-password').value = "";
+            document.getElementById('floating-password').focus();
             toast.error('Password length must longer than 8');
             return false;
         }
 
+
+        if(this.state.password.search(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/) === -1){
+            toast.error('The password must contain at least 1 lowercase and 1uppercase alphabetical and 1 numerical character');
+            document.getElementById('floating-password-confirm').value = "";
+            document.getElementById('floating-password').value = "";
+            document.getElementById('floating-password').focus();
+            return false;
+        }
         if ( this.state.password === this.state.passwordConfirm) {
             return true;
         } else {
