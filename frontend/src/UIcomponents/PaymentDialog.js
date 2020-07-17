@@ -21,6 +21,7 @@ class PaymentDialog extends PureComponent {
 
 
     show = () => {
+        console.log(this.props)
         if(this.props.topic) {
             this.setState({visible: true});
         }else{
@@ -34,6 +35,7 @@ class PaymentDialog extends PureComponent {
     handleClick = () => {
         this.show();
     };
+
 
     paymentSuccess = (res) => {
         toast.success('Successful payment');
@@ -86,7 +88,7 @@ class PaymentDialog extends PureComponent {
                         onClick={this.handleClick} style={{marginLeft: '17px'}}>Pay</Button>
                 <Button id="cancel"
                         raised secondary swapTheming
-                        style={{marginLeft: '17px'}}>Cancel</Button>
+                        onClick={this.props.handleCancel} style={{marginLeft: '17px'}}>Cancel</Button>
                 <DialogContainer
                     id="scrolling-content-dialog"
                     title='Confirm your Booking'

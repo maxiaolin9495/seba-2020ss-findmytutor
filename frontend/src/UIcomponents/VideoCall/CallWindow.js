@@ -41,10 +41,10 @@ function CallWindow({ peerSrc, localSrc, config, mediaDevice, status, endCall, s
     };
     return (
         <div className={classNames('call-window', status)}
-             style={{ marginLeft:"30px",
+             style={{  marginLeft:"30px",
                  marginTop:"80px",
-                 height:"650px",
-                 width:"940px"}}>
+                 height:"82%",
+                 width:"70%"}}>
             <video id="peerVideo" ref={peerVideo} autoPlay />
             <video id="localVideo" ref={localVideo} autoPlay muted />
             <div className="video-control" >
