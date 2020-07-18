@@ -1,7 +1,7 @@
-const customerModel = require('../models/customer');
-const tutorialModel = require('../models/tutorial');
-const tutorModel = require('../models/tutor');
-const reviewModel = require('../models/review');
+const customerModel = require('../models/customerModel');
+const tutorialModel = require('../models/tutorialModel');
+const tutorModel = require('../models/tutorModel');
+const reviewModel = require('../models/reviewModel');
 const emailService = require('../services/emailService');
 
 const getTutorialsForCustomer = (req, res) => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const middleWares = require('../middleWares');
-const tutorController = require('../controllers/tutor');
+const tutorController = require('../controllers/tutorController');
 
 router.get('/tutorialForTutor', middleWares.checkAuthentication,tutorController.getTutorialsForTutor);
 router.put('/uploadTutorProfile', middleWares.checkAuthentication, tutorController.uploadTutorProfile);

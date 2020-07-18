@@ -1,4 +1,4 @@
-const customerSupportModel = require('../models/customerSupport');
+const customerSupportModel = require('../models/customerSupportModel');
 const emailService = require('../services/emailService');
 
 
@@ -20,7 +20,7 @@ const saveMessage = (req, res) =>{
         "timeStamp" : timestamp,
     };
 
-    customerSupportModel.create(contact).then(contact => {
+    customerSupportModel.create(contact).then(() => {
         emailService.contactUs(req.body.email, req.body.firstName);
         return res.status(200).json({});
     }).catch(error => {

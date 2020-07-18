@@ -1,5 +1,5 @@
-const tutorialModel = require('../models/tutorial');
-const tutorModel = require('../models/tutor');
+const tutorialModel = require('../models/tutorialModel');
+const tutorModel = require('../models/tutorModel');
 const emailService = require('../services/emailService');
 
 const getTutorProfile = (req, res) => {
@@ -222,10 +222,6 @@ const getTutorialsForTutor = (req, res) => {
             console.log('internal server error by searching');
             return res.status(400).json({ error: error.message })
         })
-};
-
-const getReviews = (req, res) => {
-
 };
 
 const searchTutor = (req, res) => {

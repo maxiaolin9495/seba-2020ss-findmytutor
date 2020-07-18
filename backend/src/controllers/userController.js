@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const customerModel = require('../models/customer');
-const tutorModel = require('../models/tutor');
+const customerModel = require('../models/customerModel');
+const tutorModel = require('../models/tutorModel');
 const config = require('../config');
-const tutorialModel = require('../models/tutorial');
-const reviewModel = require('../models/review');
+const tutorialModel = require('../models/tutorialModel');
+const reviewModel = require('../models/reviewModel');
 const emailService = require('../services/emailService');
 
 const login = (req, res) => {

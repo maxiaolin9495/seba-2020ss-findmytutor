@@ -1,6 +1,6 @@
-const transactionModel = require('../models/transaction');
-const customerModel = require('../models/customer');
-const tutorModel = require('../models/tutor');
+const transactionModel = require('../models/transactionModel');
+const customerModel = require('../models/customerModel');
+const tutorModel = require('../models/tutorModel');
 const getTransaction = (req, res) => {
     const {
         payer,
