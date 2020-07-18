@@ -8,8 +8,8 @@ const reviewTutorial = 'Your Tutorial Session has just been reviewed';
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'findmytutor2020@gmail.com',
-        pass: 'Zxcv12345'
+        user: config.gmailAccount,
+        pass: config.gmailPassword
     }
 });
 
