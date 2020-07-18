@@ -3,6 +3,7 @@ const tutorialModel = require('../models/tutorialModel');
 const tutorModel = require('../models/tutorModel');
 const reviewModel = require('../models/reviewModel');
 const emailService = require('../services/emailService');
+const requestBodyVerificationService =  require('../services/requestBodyVerificationService');
 
 const getTutorialsForCustomer = (req, res) => {
     const email = req.email;
@@ -35,13 +36,17 @@ const getCustomerProfile = (req, res) => {
 };
 
 const searchCustomerByEmail = (req, res) => {
+
     if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
         return res.status(200).json({
             error: 'Bad Request',
             message: 'The request query must contain a q property'
         });
-    if (!req.query.q)
+
+    if (!req.query.q) {
         return res.status(200).json({});
+    }
+
     const customerEmail = decodeURI(req.query.q);
     customerModel.findOne({ email: customerEmail }).exec()
         .then(customer => {
@@ -60,30 +65,29 @@ const searchCustomerByEmail = (req, res) => {
 };
 
 const uploadCustomerProfile = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a email property'
-    });
-    if (req.body.email !== req.email)
+
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "firstName",
+            "lastName",
+            "university",
+            "email"
+        ], req);
+
+    if (!verificationResult.ifValid) {
+
+        return res.status(400).json(verificationResult.message);
+
+    }
+
+    if (req.body.email !== req.email) {
         return res.status(400).json({
             error: 'Bad Request',
             message: 'No permission to upload other profile'
         });
+    }
+
     if (req.userType === 'customer') {
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'firstName')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a firstName property'
-        });
-
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'lastName')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a lastName property'
-        });
-
-        if (!Object.prototype.hasOwnProperty.call(req.body, 'university')) return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a university property'
-        });
 
         const customer = Object.assign({
             email: req.body.email,
@@ -239,55 +243,19 @@ const getReview = (req, res) => {
 
 const verifyReviewBody = (req) => {
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message:
-                    'The request body must contain a tutorEmail property'
-            }
-        };
-    }
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "tutorEmail",
+            "comprehensionRating",
+            "friendlinessRating",
+            "teachingStyleRating",
+            "text"
+        ], req);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'comprehensionRating')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message: 'The request body must contain a comprehensionRating property'
-            }
-        };
-    }
+    if (!verificationResult.ifValid) {
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'friendlinessRating')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message: 'The request body must contain a friendlinessRating property'
-            }
-        };
-    }
+        return res.status(400).json(verificationResult.message);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'teachingStyleRating')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message: 'The request body must contain a teachingStyleRating property'
-            }
-        };
-    }
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'text')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message: 'The request body must contain a text property'
-            }
-        };
     }
 
     return {
@@ -324,14 +292,30 @@ const updateRatingForTutor = (email) => {
 
 const createTutorial = (req, res) => {
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) {
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a tutorFirstName property'
-        });
-    }
+
+
 
     if (req.userType === 'customer') {
+
+        let verificationResult = requestBodyVerificationService.verifyRequestBody(
+            [
+                "tutorFirstName",
+                "tutorEmail",
+                "customerEmail",
+                "sessionTopic",
+                "selectedCourse",
+                "price",
+                "startTime",
+                "endTime",
+                "transactionId"
+            ], req);
+
+        if (!verificationResult.ifValid) {
+
+            return res.status(400).json(verificationResult.message);
+
+        }
+
         const tutorial = Object.assign({
             tutorEmail: req.body.tutorEmail,
             customerEmail: req.body.customerEmail,
@@ -523,35 +507,22 @@ const updateReviewForCustomer = (email, reviewId) => {
 };
 
 const contactTutor = (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerFirstName'))
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a customerFirstName property'
-        });
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerLastName'))
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a customerLastName property'
-        });
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "customerFirstName",
+            "customerLastName",
+            "content",
+            "tutorEmail",
+            "tutorFirstName"
+        ], req);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'content'))
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a content property'
-        });
+    if (!verificationResult.ifValid) {
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail'))
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a tutorEmail property'
-        });
+        return res.status(400).json(verificationResult.message);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName'))
-        return res.status(400).json({
-            error: 'Bad Request',
-            message: 'The request body must contain a tutorFirstName property'
-        });
+    }
+
 
     let message = `Our customer ${req.body.customerFirstName} ${req.body.customerLastName} would like to know more about you
         He/She leaves a message to you: \n ${req.body.content} \n`;

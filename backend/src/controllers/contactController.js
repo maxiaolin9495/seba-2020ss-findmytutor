@@ -1,17 +1,23 @@
 const customerSupportModel = require('../models/customerSupportModel');
 const emailService = require('../services/emailService');
+const requestBodyVerificationService =  require('../services/requestBodyVerificationService');
 
 
 const saveMessage = (req, res) =>{
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'message')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a message property'
-    });
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a email property'
-    });
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "message",
+            "email",
+            "firstName"
+        ], req);
+
+    if (!verificationResult.ifValid) {
+
+        return res.status(400).json(verificationResult.message);
+
+    }
+
     let timestamp = (new Date()).valueOf();
     const contact = {
         "email": req.body.email,

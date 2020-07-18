@@ -5,6 +5,7 @@ const config = require('../config');
 const tutorialModel = require('../models/tutorialModel');
 const reviewModel = require('../models/reviewModel');
 const emailService = require('../services/emailService');
+const requestBodyVerificationService =  require('../services/requestBodyVerificationService');
 
 const login = (req, res) => {
 
@@ -13,6 +14,7 @@ const login = (req, res) => {
     if (!verificationResult.ifValid) {
         return res.status(400).json(verificationResult.message);
     }
+
     tutorModel.findOne({ email: req.body.email.trim().toLowerCase() }).exec()
         .then(user => {
             //user object
@@ -140,27 +142,15 @@ const errorHandlerForRegister = (error, res) => {
 };
 
 const verifyRequestBody = (req) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message:
-                    'The request body must contain a password property'
-            }
-        };
-    }
+    let response = requestBodyVerificationService.verifyRequestBody(
+        [
+            "email",
+            "password"
+        ], req);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'email')) {
-        return {
-            ifValid: false,
-            message: {
-                error: 'Bad Request',
-                message: 'The request body must contain a email property'
-            }
-        };
+    if (!response.ifValid){
+        return response;
     }
-
     // only 2 valid userType values
     if (req.body.userType && req.body.userType !== "tutor" && req.body.userType !== "customer") {
         return {
@@ -179,35 +169,22 @@ const verifyRequestBody = (req) => {
 };
 
 const cancelTutorial = async (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a _id property'
-    });
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'status')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a status property'
-    });
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "_id",
+            "status",
+            "tutorFirstName",
+            "customerFirstName",
+            "tutorEmail",
+            "customerEmail"
+        ], req);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a tutorFirstName property'
-    });
+    if (!verificationResult.ifValid) {
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerFirstName')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a customerFirstName property'
-    });
+        return res.status(400).json(verificationResult.message);
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a tutorEmail property'
-    });
-
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerEmail')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a customerEmail property'
-    });
+    }
 
     if (req.body.status === 'cancelled') {
         tutorialModel.updateOne({ _id: req.body._id }, { tutorialStatus: req.body.status, transactionStatus: 'inProgress' }).then(tutorial => {
@@ -227,18 +204,21 @@ const cancelTutorial = async (req, res) => {
 };
 
 const closeTutorial = async (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, '_id')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a _id property'
-    });
 
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'status')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a status property'
-    });
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "_id",
+            "status"
+        ], req);
+
+    if (!verificationResult.ifValid) {
+
+        return res.status(400).json(verificationResult.message);
+
+    }
 
     if (req.body.status === 'closed') {
-        var ObjectID = require('mongodb').ObjectID;
+        let ObjectID = require('mongodb').ObjectID;
         tutorialModel.updateOne({ _id: ObjectID(req.body._id) }, { tutorialStatus: req.body.status }).then(tutorial => {
             return res.status(200).json({
                 tutorial: tutorial,
@@ -254,10 +234,18 @@ const closeTutorial = async (req, res) => {
 };
 
 const getAllTutorials = async (req, res) => {
-    if (!Object.prototype.hasOwnProperty.call(req.body, 'ids')) return res.status(400).json({
-        error: 'Bad Request',
-        message: 'The request body must contain a ids property'
-    });
+
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "ids"
+        ], req);
+
+    if (!verificationResult.ifValid) {
+
+        return res.status(400).json(verificationResult.message);
+
+    }
+
     let ids = req.body.ids;
     if (ids) {
         tutorialModel.find().where('_id').in(ids).exec().then(records => {
@@ -266,7 +254,7 @@ const getAllTutorials = async (req, res) => {
             console.log(err);
             return res.status(500).json({
                 error: 'Internal server error',
-                message: error.message
+                message: err.message
             })
         });
     } else {
