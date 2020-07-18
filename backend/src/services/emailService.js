@@ -20,7 +20,7 @@ const contactUs = (email, firstName) => {
         from: 'findmytutor2020@gmail.com',
         to: email,
         subject: 'New message from FindMyTutor',
-        text: 'Hello '+ firstName +',\n' +
+        text: 'Hello ' + firstName + ',\n' +
             '\n' +
             'we have received your request. Our customer service team will contact you as soon as possible. \n' +
             '\n' +
@@ -29,23 +29,24 @@ const contactUs = (email, firstName) => {
             'Your FindMyTutor Team'
     };
 
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
+    transporter.sendMail(mailOptions,
+        function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
 
 };
 
-const emailNotification = (email, firstName, subject, message) =>{
+const emailNotification = (email, firstName, subject, message) => {
 
     let mailOptions = {
         from: 'findmytutor2020@gmail.com',
         to: email,
         subject: subject,
-        text: 'Hello '+ firstName +',\n' +
+        text: 'Hello ' + firstName + ',\n' +
             '\n' +
             message +
             '\n' +
@@ -54,13 +55,14 @@ const emailNotification = (email, firstName, subject, message) =>{
             'Your FindMyTutor Team'
     };
 
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
+    transporter.sendMail(mailOptions,
+        function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
 };
 
 module.exports = {
