@@ -161,7 +161,7 @@ class TutorPersonalPage extends React.Component {
 
                 </Grid>
                 <hr style={{ height: 1 }} />
-                <div style={{ marginLeft: '400px' }}>
+                <div>
                     <div className="md-grid">
                         <h1 className='md-row md-full-width'>Topics</h1>
                         <TextField className="md-cell md-cell--4"
@@ -176,7 +176,7 @@ class TutorPersonalPage extends React.Component {
                     </div>
                 </div>
 
-                <div style={{ marginLeft: '400px' }}>
+                <div>
                     <div className="md-grid">
                         <h1 className='md-row md-full-width'>Calender</h1>
                         {/** Calender should be placed here */}
