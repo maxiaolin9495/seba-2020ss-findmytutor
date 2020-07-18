@@ -3,7 +3,6 @@ import Navigation from "../UIcomponents/PageDesign/Navigation";
 import Background from '../Images/Homepage.jpg';
 import UserService from '../Services/UserService';
 import TutorialService from '../Services/TutorialService';
-import TutorPageService from "../Services/TutorPageService";
 import ReviewService from "../Services/ReviewService";
 import ReviewPage from "../UIcomponents/PageDesign/ReviewPage";
 import { toast } from 'react-toastify';
@@ -71,7 +70,7 @@ export class ReviewTutorView extends React.Component {
                 this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
             }) :
             ReviewService.createReview(review).then(() => {
-                toast.success('Successfully submited');
+                toast.success('Successfully submitted');
                 this.props.history.goBack();
             }).catch((e) => {
                 console.error(e);
@@ -91,7 +90,7 @@ export class ReviewTutorView extends React.Component {
                     review={this.state.review} />}
 
                 <div className="img-container">
-                    <img src={Background} className="bg" />
+                    <img src={Background} className="bg" alt={"Background"}/>
                 </div>
             </div>
         )

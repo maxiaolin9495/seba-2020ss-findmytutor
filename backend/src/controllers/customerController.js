@@ -4,18 +4,6 @@ const tutorModel = require('../models/tutorModel');
 const reviewModel = require('../models/reviewModel');
 const emailService = require('../services/emailService');
 
-const getTutorialsForCustomer = (req, res) => {
-    const email = req.email;
-    tutorialModel.find({ customerEmail: email })
-        .then(tutorials => {
-            return res.status(200).json(tutorials);
-        })
-        .catch(error => {
-            console.log('internal server error by searching');
-            return res.status(400).json({ error: error.message })
-        })
-};
-
 const getCustomerProfile = (req, res) => {
     if (req.userType === 'customer') {
         customerModel.findOne({ email: req.email }).exec()
@@ -561,7 +549,6 @@ const contactTutor = (req, res) => {
 }
 
 module.exports = {
-    getTutorialsForCustomer,
     getCustomerProfile,
     createTutorial,
     uploadCustomerProfile,
@@ -569,5 +556,5 @@ module.exports = {
     updateReview,
     getReview,
     searchCustomerByEmail,
-    contactTutor,
+    contactTutor
 };

@@ -213,18 +213,6 @@ const confirmTutorial = async (req, res) => {
     }
 };
 
-const getTutorialsForTutor = (req, res) => {
-    const email = req.email;
-    tutorialModel.find({ tutorEmail: email })
-        .then(tutorials => {
-            return res.status(200).json(tutorials)
-        })
-        .catch(error => {
-            console.log('internal server error by searching');
-            return res.status(400).json({ error: error.message })
-        })
-};
-
 const searchTutor = (req, res) => {
     if (!Object.prototype.hasOwnProperty.call(req.query, 'q'))
         return res.status(200).json({
@@ -330,7 +318,6 @@ module.exports = {
     getTutorProfile,
     getTutorProfileById,
     uploadTutorProfile,
-    getTutorialsForTutor,
     confirmTutorial,
     searchTutor,
     autoCompleteForSearch,

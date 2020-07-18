@@ -338,6 +338,32 @@ const getAllReviewsByTutorId = async (req, res) => {
     }
 };
 
+const getTutorialsForCustomer = (req, res) => {
+    let email = req.email;
+    return getTutorialsWithEmail(email, res, 'customer')
+};
+
+
+const getTutorialsForTutor = (req, res) => {
+    let email = req.email;
+    return getTutorialsWithEmail(email, res, 'tutor')
+};
+
+const getTutorialsWithEmail = (email, res, type) => {
+    tutorialModel.find(
+        type === 'customer' ?
+            {customerEmail: email} :
+            {tutorEmail: email}
+    )
+        .then(tutorials => {
+            return res.status(200).json(tutorials);
+        })
+        .catch(error => {
+            console.log('internal server error by searching');
+            return res.status(400).json({error: error.message})
+        })
+};
+
 module.exports = {
     login,
     register,
@@ -346,5 +372,7 @@ module.exports = {
     getAllTutorials,
     getAllTutorialsByTutorId,
     getAllReviewsByTutorId,
-    getTutorialById
+    getTutorialById,
+    getTutorialsForCustomer,
+    getTutorialsForTutor
 };

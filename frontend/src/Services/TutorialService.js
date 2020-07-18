@@ -69,7 +69,7 @@ export default class TutorialService {
     static getAllTutorialsForCustomer() {
         return new Promise((resolve, reject) => {
             HttpService.get(
-                `${this.baseURL()}/customer/tutorialForCustomer`,
+                `${this.baseURL()}/user/tutorialForCustomer`,
                 function (data) {
                     resolve(data);
                 }, function (textStatus) {
@@ -96,7 +96,7 @@ export default class TutorialService {
     static getAllTutorialsForTutor() {
         return new Promise((resolve, reject) => {
             HttpService.get(
-                `${this.baseURL()}/tutor/tutorialForTutor`,
+                `${this.baseURL()}/user/tutorialForTutor`,
                 function (data) {
                     resolve(data);
                 }, function (textStatus) {

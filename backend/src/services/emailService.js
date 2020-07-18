@@ -1,11 +1,11 @@
-const nodemailer = require('nodemailer');
+const nodeMailer = require('nodemailer');
 const config = require('../config.js');
 const newTutorial = 'You have new Tutorial Session from FindMyTutor, please confirm it or cancel it in soon.';
 const confirmTutorial = 'Your Tutorial Session has just been confirmed by tutor ';
 const cancelTutorial = 'Your Tutorial Session has just been canceled';
 const reviewTutorial = 'Your Tutorial Session has just been reviewed';
 
-const transporter = nodemailer.createTransport({
+const transporter = nodeMailer.createTransport({
     service: 'gmail',
     auth: {
         user: config.gmailAccount,

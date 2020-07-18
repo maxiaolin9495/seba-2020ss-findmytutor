@@ -47,7 +47,7 @@ Please use feature branches only to commit your code.
 
 After finishing your feature, create a pull request and add one reviewer.
 
-The reviewer needs to make sure that the features committed are working without errors before approving.
+The reviewer needs to make sure the features committed are working without errors before approving.
 
 The reviewer shall merge the feature branch into the develop branch once they approved the pull request.
 

@@ -12,7 +12,7 @@ export default class TutorPageService {
 
     static getTutorProfileById(_id) {
         return new Promise((resolve, reject) => {
-            HttpService.get(`${this.baseURL()}/tutorProfilebyId?` + new URLSearchParams({ _id }).toString(), function (data) {
+            HttpService.get(`${this.baseURL()}/tutorProfileById?` + new URLSearchParams({ _id }).toString(), function (data) {
                 if (data !== undefined || Object.keys(data).length !== 0) {
                     resolve(data);
                 }

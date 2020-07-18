@@ -3,7 +3,6 @@ const router = express.Router();
 const middleWares = require('../middleWares');
 const tutorController = require('../controllers/tutorController');
 
-router.get('/tutorialForTutor', middleWares.checkAuthentication,tutorController.getTutorialsForTutor);
 router.put('/uploadTutorProfile', middleWares.checkAuthentication, tutorController.uploadTutorProfile);
 router.put('/confirmTutorial', middleWares.checkAuthentication,tutorController.confirmTutorial);
 router.get('/tutorProfile', middleWares.checkAuthentication, tutorController.getTutorProfile);

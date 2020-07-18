@@ -11,4 +11,7 @@ router.post('/getAllTutorials', middleWares.checkAuthentication, userController.
 router.get('/getTutorial/:tutorialId', userController.getTutorialById);
 router.get('/getAllTutorials/:tutorId', userController.getAllTutorialsByTutorId);
 router.get('/getAllReviews/:tutorId', userController.getAllReviewsByTutorId);
+router.get('/tutorialForTutor', middleWares.checkAuthentication,userController.getTutorialsForTutor);
+router.get('/tutorialForCustomer', middleWares.checkAuthentication,userController.getTutorialsForCustomer);
+
 module.exports = router;

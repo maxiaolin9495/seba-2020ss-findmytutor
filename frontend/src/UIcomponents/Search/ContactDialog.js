@@ -7,8 +7,8 @@ import TutorPageService from "../../Services/TutorPageService";
 export default class ContactDialog extends PureComponent {
     state = {
         visible: false,
-        firstname: '',
-        lastname: '',
+        firstName: '',
+        lastName: '',
         email: UserService.getCurrentUser().email || '',
         content: ''
     };
@@ -22,21 +22,17 @@ export default class ContactDialog extends PureComponent {
     };
 
     sendEmail = () => {
-        if (!this.state.firstname || !this.state.lastname || !this.state.email || !this.state.content) {
+        if (!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.content) {
             toast.error("Please fill in required message");
         }else{
             TutorPageService.contactTutor({
-                customerFirstName: this.state.firstname,
-                customerLastName: this.state.lastname,
+                customerFirstName: this.state.firstName,
+                customerLastName: this.state.lastName,
                 content: this.state.content,
                 tutorFirstName: this.props.tutorFistName,
                 tutorEmail: this.props.tutorEmail,
             }).then((data) => {
                 this.setState({ visible: false });
-                // console.log(this.state.firstname);
-                // console.log(this.state.lastname);
-                // console.log(this.state.content);
-                // console.log(this.state.email);
                 toast.success("Message successfully sent to tutor");
             }).catch((e) => {
                 console.error(e);
@@ -83,9 +79,9 @@ export default class ContactDialog extends PureComponent {
                         required={true}
                         id="contact-firstname-field"
                         label="Firstname"
-                        placeholder="your firstname"
-                        value={this.state.firstname}
-                        onChange={(value) => this.handleChange('firstname', value)}
+                        placeholder="your firstName"
+                        value={this.state.firstName}
+                        onChange={(value) => this.handleChange('firstName', value)}
                         errorText="First name is required"
                     />
                     <TextField
@@ -93,10 +89,10 @@ export default class ContactDialog extends PureComponent {
                         leftIcon={<FontIcon>person</FontIcon>}
                         required={true}
                         id="contact-lastname-field"
-                        label="Lastname"
-                        placeholder="your lastname"
-                        value={this.state.lastname}
-                        onChange={(value) => this.handleChange('lastname', value)}
+                        label="LastName"
+                        placeholder="your lastName"
+                        value={this.state.lastName}
+                        onChange={(value) => this.handleChange('lastName', value)}
                         errorText="Last name is required"
                         maxLength={20}
                     />
