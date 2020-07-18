@@ -238,7 +238,7 @@ const closeTutorial = async (req, res) => {
     });
 
     if (req.body.status === 'closed') {
-        var ObjectID = require('mongodb').ObjectID;
+        let ObjectID = require('mongodb').ObjectID;
         tutorialModel.updateOne({ _id: ObjectID(req.body._id) }, { tutorialStatus: req.body.status }).then(tutorial => {
             return res.status(200).json({
                 tutorial: tutorial,

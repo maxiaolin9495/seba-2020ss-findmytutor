@@ -73,7 +73,7 @@ export class SearchResultView extends React.Component {
         return (
             <div>
                 <Navigation/>
-                <img src={Background} className="bg"/>
+                <img src={Background} className="bg" alt={'Background'}/>
                 <section>
                     <SearchResultPage
                         data={this.state.data}

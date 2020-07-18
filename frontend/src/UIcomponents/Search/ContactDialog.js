@@ -31,7 +31,7 @@ export default class ContactDialog extends PureComponent {
                 content: this.state.content,
                 tutorFirstName: this.props.tutorFistName,
                 tutorEmail: this.props.tutorEmail,
-            }).then((data) => {
+            }).then(() => {
                 this.setState({ visible: false });
                 toast.success("Message successfully sent to tutor");
             }).catch((e) => {

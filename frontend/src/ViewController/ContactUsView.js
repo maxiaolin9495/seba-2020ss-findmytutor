@@ -52,7 +52,7 @@ export class ContactUsView extends React.Component {
             <div>
                 <Navigation/>
                 <section>
-                    <img src={Background} className="bg"/>
+                    <img src={Background} className="bg" alt={'Background'}/>
                     <ContactUs onSubmit={(contactForm) => this.send(contactForm)} error={this.state.error}/>
                 </section>
             </div>

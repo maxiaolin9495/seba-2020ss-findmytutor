@@ -19,7 +19,7 @@ class ContactUs extends React.Component {
 
     render(){
         return (
-            <div className="md-grid" id="ContactTable" label=""  style={{
+            <div className="md-grid" id="ContactTable" style={{
                 display: 'flex',
                 width: '30%',
                 margin: '0 auto',
