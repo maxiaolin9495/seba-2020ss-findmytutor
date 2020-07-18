@@ -83,18 +83,20 @@ const register = (req, res) => {
 };
 
 const registerUser = (user, dataModel1, dataModel2, req, res) => {
-    dataModel1.findOne({ email: req.body.email.trim().toLowerCase() }).exec()
+    dataModel1.findOne({ email: req.body.email.trim().toLowerCase() })
+        .exec()
         .then(data => {
             //verify if the email is registered in the dataModel1
             if (data === null) {
                 //if not, then try to register the email in the dataModel2
-                dataModel2.create(user).then(user => {
+                dataModel2.create(user)
+                    .then(user => {
 
-                    // if user is registered without errors
-                    // create a token
-                    return createTokenResponse(req, res, user);
+                        // if user is registered without errors
+                        // create a token
+                        return createTokenResponse(req, res, user);
 
-                })
+                    })
                     .catch(error => {
                         return errorHandlerForRegister(error, res);
                     });
@@ -219,7 +221,9 @@ const closeTutorial = async (req, res) => {
 
     if (req.body.status === 'closed') {
         let ObjectID = require('mongodb').ObjectID;
-        tutorialModel.updateOne({ _id: ObjectID(req.body._id) }, { tutorialStatus: req.body.status }).then(tutorial => {
+        tutorialModel.updateOne(
+            {_id: ObjectID(req.body._id)}, {tutorialStatus: req.body.status}
+        ).then(tutorial => {
             return res.status(200).json({
                 tutorial: tutorial,
             })
@@ -248,9 +252,13 @@ const getAllTutorials = async (req, res) => {
 
     let ids = req.body.ids;
     if (ids) {
-        tutorialModel.find().where('_id').in(ids).exec().then(records => {
-            return res.status(200).json(records);
-        }).catch(err => {
+        tutorialModel.find()
+            .where('_id')
+            .in(ids)
+            .exec()
+            .then(records => {
+                return res.status(200).json(records);
+            }).catch(err => {
             console.log(err);
             return res.status(500).json({
                 error: 'Internal server error',
@@ -267,12 +275,17 @@ const getAllTutorialsByTutorId = async (req, res) => {
         tutorId,
     } = req.params;
 
-    if(tutorId){
-        tutorModel.findById(tutorId).exec().then(tutor => {
-            tutorialModel.find().where('_id').in(tutor.bookedTutorialSessionIds).exec().then(records => {
-                return res.status(200).json(records);
-            });
-        }).catch(err => {
+    if (tutorId) {
+        tutorModel.findById(tutorId)
+            .exec()
+            .then(tutor => {
+                tutorialModel.find()
+                    .where('_id').in(tutor.bookedTutorialSessionIds)
+                    .exec()
+                    .then(records => {
+                        return res.status(200).json(records);
+                    });
+            }).catch(err => {
             console.log(err);
             return res.status(500).json({
                 error: 'Internal server error',
@@ -309,12 +322,18 @@ const getAllReviewsByTutorId = async (req, res) => {
         tutorId,
     } = req.params;
 
-    if(tutorId){
-        tutorModel.findById(tutorId).exec().then(tutor => {
-            reviewModel.find().where('_id').in(tutor.reviewIds).exec().then(records => {
-                return res.status(200).json(records);
-            });
-        }).catch(err => {
+    if (tutorId) {
+        tutorModel.findById(tutorId)
+            .exec()
+            .then(tutor => {
+                reviewModel.find()
+                    .where('_id')
+                    .in(tutor.reviewIds)
+                    .exec()
+                    .then(records => {
+                        return res.status(200).json(records);
+                    });
+            }).catch(err => {
             console.log(err);
             return res.status(500).json({
                 error: 'Internal server error',

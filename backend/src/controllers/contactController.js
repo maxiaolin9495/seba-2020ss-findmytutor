@@ -3,7 +3,7 @@ const emailService = require('../services/emailService');
 const requestBodyVerificationService =  require('../services/requestBodyVerificationService');
 
 
-const saveMessage = (req, res) =>{
+const saveMessage = (req, res) => {
 
     let verificationResult = requestBodyVerificationService.verifyRequestBody(
         [
@@ -23,15 +23,16 @@ const saveMessage = (req, res) =>{
         "email": req.body.email,
         "message": req.body.message,
         "supportStatus": "open",
-        "timeStamp" : timestamp,
+        "timeStamp": timestamp,
     };
 
-    customerSupportModel.create(contact).then(() => {
-        emailService.contactUs(req.body.email, req.body.firstName);
-        return res.status(200).json({});
-    }).catch(error => {
+    customerSupportModel.create(contact)
+        .then(() => {
+            emailService.contactUs(req.body.email, req.body.firstName);
+            return res.status(200).json({});
+        }).catch(error => {
         console.log('error happened by creating customerSupport');
-        return res.status(400).json({error: error })
+        return res.status(400).json({error: error})
     })
 
 

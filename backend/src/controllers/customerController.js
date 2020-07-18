@@ -36,7 +36,8 @@ const searchCustomerByEmail = (req, res) => {
     }
 
     const customerEmail = decodeURI(req.query.q);
-    customerModel.findOne({ email: customerEmail }).exec()
+    customerModel.findOne({ email: customerEmail })
+        .exec()
         .then(customer => {
             return res.status(200).json({
                 email: customer.email,
@@ -83,9 +84,10 @@ const uploadCustomerProfile = (req, res) => {
             lastName: req.body.lastName,
             university: req.body.university,
         });
-        customerModel.updateOne({ email: customer.email }, customer).then(() => {
-            return res.status(200).json({ message: "successfully updated" });
-        }).catch(error => {
+        customerModel.updateOne({email: customer.email}, customer)
+            .then(() => {
+                return res.status(200).json({message: "successfully updated"});
+            }).catch(error => {
             console.log('error by creating a customer Profile');
             if (error.code === 11000) {
                 return res.status(400).json({
@@ -105,7 +107,7 @@ const uploadCustomerProfile = (req, res) => {
 
 const createReview = (req, res) => {
 
-    let verificationResult = verifyReviewBody(req);
+    let verificationResult = verifyReviewBody(req, res);
 
     if (!verificationResult.ifValid) {
         return res.status(400).json(verificationResult.message);
@@ -165,7 +167,7 @@ const updateReview = (req, res) => {
         message: 'The request body must contain a reviewId parameter'
     });
 
-    let verificationResult = verifyReviewBody(req);
+    let verificationResult = verifyReviewBody(req, res);
 
     if (!verificationResult.ifValid) {
         return res.status(400).json(verificationResult.message);
@@ -183,19 +185,20 @@ const updateReview = (req, res) => {
         customerEmail: req.body.customerEmail
     });
 
-    reviewModel.updateOne({ _id: reviewId }, review).then(
-        review => {
-            let error = updateRatingForTutor(req.body.tutorEmail);
-            if (!error) {
-                return res.status(200).json(review);
+    reviewModel.updateOne({_id: reviewId}, review)
+        .then(
+            review => {
+                let error = updateRatingForTutor(req.body.tutorEmail);
+                if (!error) {
+                    return res.status(200).json(review);
+                }
+                console.log(error);
+                return res.status(500).json({
+                    error: 'Internal server error',
+                    message: 'Internal server error happened when create a new review ' + error.message
+                });
             }
-            console.log(error);
-            return res.status(500).json({
-                error: 'Internal server error',
-                message: 'Internal server error happened when create a new review ' + error.message
-            });
-        }
-    ).catch(error => {
+        ).catch(error => {
         console.log(error);
         return res.status(404).json({
             error: 'Review Not Found',
@@ -229,7 +232,7 @@ const getReview = (req, res) => {
 
 };
 
-const verifyReviewBody = (req) => {
+const verifyReviewBody = (req, res) => {
 
     let verificationResult = requestBodyVerificationService.verifyRequestBody(
         [
@@ -252,7 +255,9 @@ const verifyReviewBody = (req) => {
 };
 
 const updateReviewForTutor = (email, reviewId) => {
-    tutorModel.updateOne({ email: email }, { $push: { reviewIds: reviewId } }).exec().catch(error => {
+    tutorModel.updateOne({ email: email }, { $push: { reviewIds: reviewId } })
+        .exec()
+        .catch(error => {
         console.log('error by adding a review id to the tutor');
         return error;
     });
@@ -260,18 +265,26 @@ const updateReviewForTutor = (email, reviewId) => {
 };
 
 const updateRatingForTutor = (email) => {
-    tutorModel.findOne({ email: email }).exec().then(
-        tutor => {
-            let reviewIds = tutor.reviewIds;
-            let sumOverallRating = 0;
-            reviewModel.find().where('_id').in(reviewIds).exec().then(reviews => {
-                for (let i = 0; i < reviews.length; i++) {
-                    sumOverallRating += reviews[i].overallRating;
-                }
-                tutorModel.updateOne({ email: email }, { rating: Math.round(sumOverallRating / reviews.length) }).exec();
-            });
-        }
-    ).catch(error => {
+    tutorModel.findOne({email: email})
+        .exec()
+        .then(
+            tutor => {
+                let reviewIds = tutor.reviewIds;
+                let sumOverallRating = 0;
+                reviewModel.find()
+                    .where('_id')
+                    .in(reviewIds)
+                    .exec()
+                    .then(reviews => {
+                        for (let i = 0; i < reviews.length; i++) {
+                            sumOverallRating += reviews[i].overallRating;
+                        }
+                        tutorModel.updateOne(
+                            {email: email}, {rating: Math.round(sumOverallRating / reviews.length)}
+                        ).exec();
+                    });
+            }
+        ).catch(error => {
         console.log('error by update rating to the tutor');
         return error;
     });
@@ -279,8 +292,6 @@ const updateRatingForTutor = (email) => {
 };
 
 const createTutorial = (req, res) => {
-
-
 
 
     if (req.userType === 'customer') {
@@ -319,7 +330,7 @@ const createTutorial = (req, res) => {
             ifHadVideo: false
         });
 
-        tutorModel.findOne({ email: tutorial.tutorEmail }).exec()
+        tutorModel.findOne({email: tutorial.tutorEmail}).exec()
             .then(
                 tutor => {
                     let newTimeSlots = updateTimeSlots(tutor.timeSlotIds, tutorial);
@@ -329,37 +340,38 @@ const createTutorial = (req, res) => {
                             message: 'The request body contains an invalid time span'
                         });
                     } else {
-                        tutorialModel.create(tutorial).then(tutorial => {
-                            let tutorialId = tutorial._id;
-                            let transactionId = tutorial.transactionId;
-                            let error = updateTutorialAndTransactionForTutor(req.body.tutorEmail, tutorialId, transactionId);
-                            if (!error) {
-                                error = updateTutorialAndTransactionForCustomer(req.body.customerEmail, tutorialId, transactionId);
+                        tutorialModel.create(tutorial)
+                            .then(tutorial => {
+                                let tutorialId = tutorial._id;
+                                let transactionId = tutorial.transactionId;
+                                let error = updateTutorialAndTransactionForTutor(req.body.tutorEmail, tutorialId, transactionId);
                                 if (!error) {
-                                    emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
-                                    tutorModel.updateOne(
-                                        { email: tutor.email },
-                                        { timeSlotIds: newTimeSlots.timeSlotIds }
-                                    ).then(
-                                        tutor => {
-                                            console.log(tutor)
-                                        }
-                                    );
-                                    return res.status(200).json({
-                                        tutorEmail: req.body.tutorEmail,
-                                        customerEmail: req.body.customerEmail,
-                                        sessionTopic: req.body.sessionTopic,
-                                        selectedCourse: req.body.selectedCourse,
-                                        bookedTime: req.body.bookedTime,
-                                        price: req.body.price,
-                                        tutorialStatus: 'notConfirmed',
-                                        transactionStatus: 'transferred',
-                                        startTime: req.body.startTime,
-                                        endTime: req.body.endTime
-                                    });
+                                    error = updateTutorialAndTransactionForCustomer(req.body.customerEmail, tutorialId, transactionId);
+                                    if (!error) {
+                                        emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
+                                        tutorModel.updateOne(
+                                            {email: tutor.email},
+                                            {timeSlotIds: newTimeSlots.timeSlotIds}
+                                        ).then(
+                                            tutor => {
+                                                console.log(tutor)
+                                            }
+                                        );
+                                        return res.status(200).json({
+                                            tutorEmail: req.body.tutorEmail,
+                                            customerEmail: req.body.customerEmail,
+                                            sessionTopic: req.body.sessionTopic,
+                                            selectedCourse: req.body.selectedCourse,
+                                            bookedTime: req.body.bookedTime,
+                                            price: req.body.price,
+                                            tutorialStatus: 'notConfirmed',
+                                            transactionStatus: 'transferred',
+                                            startTime: req.body.startTime,
+                                            endTime: req.body.endTime
+                                        });
+                                    }
                                 }
-                            }
-                        }).catch(error => {
+                            }).catch(error => {
                             console.log('error by creating a Tutorial');
                             if (error.code === 11000) {
                                 return res.status(400).json({
@@ -482,9 +494,9 @@ const updateTutorialAndTransactionForCustomer = (email, bookedTutorialSessionId,
 
 const updateReviewForCustomer = (email, reviewId) => {
     customerModel.updateOne(
-        { email: email },
+        {email: email},
         {
-            $push: { reviewIds: reviewId }
+            $push: {reviewIds: reviewId}
         })
         .exec()
         .catch(
