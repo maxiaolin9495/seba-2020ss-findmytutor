@@ -6,19 +6,19 @@ const emailService = require('../services/emailService');
 
 const getTutorialsForCustomer = (req, res) => {
     const email = req.email;
-    tutorialModel.find({customerEmail: email})
+    tutorialModel.find({ customerEmail: email })
         .then(tutorials => {
             return res.status(200).json(tutorials);
         })
         .catch(error => {
             console.log('internal server error by searching');
-            return req.status(400).json({error: error.message})
+            return req.status(400).json({ error: error.message })
         })
 };
 
 const getCustomerProfile = (req, res) => {
     if (req.userType === 'customer') {
-        customerModel.findOne({email: req.email}).exec()
+        customerModel.findOne({ email: req.email }).exec()
             .then(customer => {
                 return res.status(200).json({
                     email: customer.email,
@@ -43,7 +43,7 @@ const searchCustomerByEmail = (req, res) => {
     if (!req.query.q)
         return res.status(200).json({});
     const customerEmail = decodeURI(req.query.q);
-    customerModel.findOne({email: customerEmail}).exec()
+    customerModel.findOne({ email: customerEmail }).exec()
         .then(customer => {
             return res.status(200).json({
                 email: customer.email,
@@ -52,11 +52,11 @@ const searchCustomerByEmail = (req, res) => {
                 university: customer.university,
             })
         }).catch(error => {
-        return res.status(404).json({
-            error: 'Customer not found',
-            message: error.message
+            return res.status(404).json({
+                error: 'Customer not found',
+                message: error.message
+            })
         })
-    })
 };
 
 const uploadCustomerProfile = (req, res) => {
@@ -91,8 +91,8 @@ const uploadCustomerProfile = (req, res) => {
             lastName: req.body.lastName,
             university: req.body.university,
         });
-        customerModel.updateOne({email: customer.email}, customer).then(() => {
-            return res.status(200).json({message: "successfully updated"});
+        customerModel.updateOne({ email: customer.email }, customer).then(() => {
+            return res.status(200).json({ message: "successfully updated" });
         }).catch(error => {
             console.log('error by creating a customer Profile');
             if (error.code === 11000) {
@@ -191,7 +191,7 @@ const updateReview = (req, res) => {
         customerEmail: req.body.customerEmail
     });
 
-    reviewModel.updateOne({_id: reviewId}, review).then(
+    reviewModel.updateOne({ _id: reviewId }, review).then(
         review => {
             let error = updateRatingForTutor(req.body.tutorEmail);
             if (!error) {
@@ -296,7 +296,7 @@ const verifyReviewBody = (req) => {
 };
 
 const updateReviewForTutor = (email, reviewId) => {
-    tutorModel.updateOne({email: email}, {$push: {reviewIds: reviewId}}).exec().catch(error => {
+    tutorModel.updateOne({ email: email }, { $push: { reviewIds: reviewId } }).exec().catch(error => {
         console.log('error by adding a review id to the tutor');
         return error;
     });
@@ -304,7 +304,7 @@ const updateReviewForTutor = (email, reviewId) => {
 };
 
 const updateRatingForTutor = (email) => {
-    tutorModel.findOne({email: email}).exec().then(
+    tutorModel.findOne({ email: email }).exec().then(
         tutor => {
             let reviewIds = tutor.reviewIds;
             let sumOverallRating = 0;
@@ -312,7 +312,7 @@ const updateRatingForTutor = (email) => {
                 for (let i = 0; i < reviews.length; i++) {
                     sumOverallRating += reviews[i].overallRating;
                 }
-                tutorModel.updateOne({email: email}, {rating: Math.round(sumOverallRating / reviews.length)}).exec();
+                tutorModel.updateOne({ email: email }, { rating: Math.round(sumOverallRating / reviews.length) }).exec();
             });
         }
     ).catch(error => {
@@ -343,10 +343,10 @@ const createTutorial = (req, res) => {
             startTime: req.body.startTime,
             endTime: req.body.endTime,
             transactionId: req.body.transactionId,
-            ifHadVideo:false
+            ifHadVideo: false
         });
 
-        tutorModel.findOne({email: tutorial.tutorEmail}).exec()
+        tutorModel.findOne({ email: tutorial.tutorEmail }).exec()
             .then(
                 tutor => {
                     let newTimeSlots = updateTimeSlots(tutor.timeSlotIds, tutorial);
@@ -365,8 +365,8 @@ const createTutorial = (req, res) => {
                                 if (!error) {
                                     emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
                                     tutorModel.updateOne(
-                                        {email: tutor.email},
-                                        {timeSlotIds: newTimeSlots.timeSlotIds}
+                                        { email: tutor.email },
+                                        { timeSlotIds: newTimeSlots.timeSlotIds }
                                     ).then(
                                         tutor => {
                                             console.log(tutor)
@@ -474,7 +474,7 @@ const updateTimeSlots = (timeSlotIds, tutorial) => {
 
 const updateTutorialAndTransactionForTutor = (email, bookedTutorialSessionId, transactionIds) => {
     tutorModel.updateOne(
-        {email: email},
+        { email: email },
         {
             $push: {
                 bookedTutorialSessionIds: bookedTutorialSessionId,
@@ -491,7 +491,7 @@ const updateTutorialAndTransactionForTutor = (email, bookedTutorialSessionId, tr
 
 const updateTutorialAndTransactionForCustomer = (email, bookedTutorialSessionId, transactionIds) => {
     customerModel.updateOne(
-        {email: email},
+        { email: email },
         {
             $push: {
                 bookedTutorialSessionIds: bookedTutorialSessionId,
@@ -508,9 +508,9 @@ const updateTutorialAndTransactionForCustomer = (email, bookedTutorialSessionId,
 
 const updateReviewForCustomer = (email, reviewId) => {
     customerModel.updateOne(
-        {email: email},
+        { email: email },
         {
-            $push: {reviewIds: reviewId}
+            $push: { reviewIds: reviewId }
         })
         .exec()
         .catch(
@@ -519,6 +519,44 @@ const updateReviewForCustomer = (email, reviewId) => {
                 return error;
             });
 };
+
+const contactTutor = (req, res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerFirstName'))
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body must contain a customerFirstName property'
+        });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'customerLastName'))
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body must contain a customerLastName property'
+        });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'content'))
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body must contain a content property'
+        });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorEmail'))
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body must contain a tutorEmail property'
+        });
+
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tutorFirstName'))
+        return res.status(400).json({
+            error: 'Bad Request',
+            message: 'The request body must contain a tutorFirstName property'
+        });
+
+    let message = `Our customer ${req.body.customerFirstName} ${req.body.customerLastName} would like to know more about you
+        He/She leaves a message to you: \n ${req.body.content} \n`;
+
+    emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, "Message from customer", message);
+    return res.status(200).json({});
+}
 
 module.exports = {
     getTutorialsForCustomer,
@@ -529,4 +567,5 @@ module.exports = {
     updateReview,
     getReview,
     searchCustomerByEmail,
+    contactTutor,
 };
