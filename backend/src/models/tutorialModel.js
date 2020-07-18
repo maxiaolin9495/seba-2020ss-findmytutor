@@ -46,7 +46,7 @@ const TutorialSchema = new mongoose.Schema({
     },
     transactionId: [{
         type: String,
-        required: false
+        required: true
     }],
     ifHadVideo: {
         type: Boolean,
