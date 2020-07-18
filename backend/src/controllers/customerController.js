@@ -12,7 +12,7 @@ const getTutorialsForCustomer = (req, res) => {
         })
         .catch(error => {
             console.log('internal server error by searching');
-            return req.status(400).json({ error: error.message })
+            return res.status(400).json({ error: error.message })
         })
 };
 
