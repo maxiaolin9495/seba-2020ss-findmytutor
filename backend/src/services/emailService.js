@@ -49,6 +49,7 @@ const emailNotification = (email, firstName, subject, message) =>{
             '\n' +
             message +
             '\n' +
+            '\n' +
             'Best Regards\n' +
             'Your FindMyTutor Team'
     };
