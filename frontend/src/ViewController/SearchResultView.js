@@ -19,22 +19,23 @@ export class SearchResultView extends React.Component {
 
     componentWillMount() {
         UserService.getCurrentUser().userType === 'tutor' && this.props.history.push("/booking");
-        
+
         this.setState({
             loading: true
         });
         console.log(this.props);
-        SearchService.getTutorsByKeyword(this.props.location.search.split('=')[1]).then((data) => {
-            let sortedTutor = data.sort(this.sortByRating)
-            this.setState({
-                data: sortedTutor,
-                filteredData: [...data],
-                loading: false
-            });
-        }).catch((e) => {
+        SearchService.getTutorsByKeyword(this.props.location.search.split('=')[1])
+            .then((data) => {
+                let sortedTutor = data.sort(this.sortByRating)
+                this.setState({
+                    data: sortedTutor,
+                    filteredData: [...data],
+                    loading: false
+                });
+            }).catch((e) => {
             console.error(e);
         });
-    
+
     }
 
     sortByRating=(a, b)=> {

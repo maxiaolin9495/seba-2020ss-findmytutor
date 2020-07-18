@@ -1,8 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import UserService from "../../Services/UserService";
-import {toast} from "react-toastify";
-
 
 export default class MainWindow extends React.Component {
     constructor(props) {
@@ -25,27 +22,7 @@ export default class MainWindow extends React.Component {
 
     render() {
         return (
-            /*
-            <div>
-              <h3>
-                Hi, your ID is
-                <input
-                  type="text"
-                  className="txt-clientId"
-                  defaultValue={clientId}
-                  readOnly
-                />
-              </h3>
-              <h4>Get started by calling a friend below</h4>
-            </div>
-                <input
-                type="text"
-                className="txt-clientId"
-                spellCheck={false}
-                placeholder="Your friend ID"
-                onChange={(event) => setFriendID(event.target.value)}
-                />
-             */
+
             <div className="container main-window">
 
                 <div>

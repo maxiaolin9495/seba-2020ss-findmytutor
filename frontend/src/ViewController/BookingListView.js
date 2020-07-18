@@ -30,15 +30,16 @@ export class BookingListView extends React.Component {
             this.props.history.goBack();
         }
         userType === `customer` ?
-            TutorialService.getAllTutorialsForCustomer().then((tutorialsData) => {
-                let tutorialSort = tutorialsData;
-                tutorialSort.sort(this.tutorialCompareFunction);
-                this.setState({
-                    tutorials: tutorialSort,
-                    loading: false,
-                    userType
-                });
-            }).catch((e) => {
+            TutorialService.getAllTutorialsForCustomer()
+                .then((tutorialsData) => {
+                    let tutorialSort = tutorialsData;
+                    tutorialSort.sort(this.tutorialCompareFunction);
+                    this.setState({
+                        tutorials: tutorialSort,
+                        loading: false,
+                        userType
+                    });
+                }).catch((e) => {
                 console.error(e);
             }) :
             TutorialService.getAllTutorialsForTutor().then((tutorialsData) => {
@@ -70,7 +71,8 @@ export class BookingListView extends React.Component {
                 tutorials: this.state.tutorials.map(t => (
                     t._id === tutorialInfo._id ?
                         Object.assign({}, t, { tutorialStatus: 'cancelled' }) :
-                        t))
+                        t)
+                )
             })
         }).catch(() => {
             toast.error('Failed to cancel tutorial');
@@ -84,7 +86,8 @@ export class BookingListView extends React.Component {
                 tutorials: this.state.tutorials.map(t => (
                     t._id === tutorialInfo._id ?
                         Object.assign({}, t, { tutorialStatus: 'confirmed' }) :
-                        t))
+                        t)
+                )
             })
         }).catch(() => {
             toast.error('Failed to confirm tutorial');

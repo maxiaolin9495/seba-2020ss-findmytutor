@@ -12,11 +12,12 @@ export class LoginView extends React.Component {
     }
 
     login = (user) => {
-        LoginService.login(user.email, user.password).then(() => {
-            toast.success('Login succeeded');
-            this.props.history.push('/');
+        LoginService.login(user.email, user.password)
+            .then(() => {
+                toast.success('Login succeeded');
+                this.props.history.push('/');
 
-        }).catch((e) => {
+            }).catch((e) => {
             toast.error('Please input correct email and password');
             document.getElementById('floating-password').value = '';
             this.setState({

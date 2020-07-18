@@ -458,13 +458,13 @@ const updateTimeSlots = (timeSlotIds, tutorial) => {
 
 };
 
-const updateTutorialAndTransactionForTutor = (email, bookedTutorialSessionId, transactionIds) => {
+const updateTutorialAndTransactionForTutor = (email, bookedTutorialSessionId, transactionId) => {
     tutorModel.updateOne(
         { email: email },
         {
             $push: {
                 bookedTutorialSessionIds: bookedTutorialSessionId,
-                transactionIds: transactionIds
+                transactionIds: transactionId
             }
         })
         .exec()

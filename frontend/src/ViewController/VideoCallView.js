@@ -1,5 +1,4 @@
 import React from "react";
-import { Prompt } from 'react-router';
 import Navigation from "../UIcomponents/PageDesign/Navigation";
 import VideoCall from "../UIcomponents/VideoCall/VideoCall";
 import UserService from "../Services/UserService";
@@ -30,13 +29,14 @@ export class VideoCallView extends React.Component {
             return;
         }
 
-        TutorialService.getTutorial(this.props.match.params.id).then((data) => {
-            if (userType=== 'customer') {
-                this.setState({caller: data.tutorEmail, clientId: data.customerEmail});
-            } else {
-                this.setState({ caller: data.customerEmail, clientId: data.tutorEmail });
-            }
-        })
+        TutorialService.getTutorial(this.props.match.params.id)
+            .then((data) => {
+                if (userType === 'customer') {
+                    this.setState({caller: data.tutorEmail, clientId: data.customerEmail});
+                } else {
+                    this.setState({caller: data.customerEmail, clientId: data.tutorEmail});
+                }
+            })
         window.addEventListener("beforeunload", this.handleWindowBeforeUnload);
     }
 

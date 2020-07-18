@@ -15,10 +15,10 @@ const TransactionSchema = new mongoose.Schema({
         required: true,
         enum: ['transferred', 'cancelled', 'paid'],
     },
-    transactionIds: [{
+    transactionId: {
         type: String,
         required: false
-    }],
+    },
 });
 
 module.exports = mongoose.model('transaction', TransactionSchema);

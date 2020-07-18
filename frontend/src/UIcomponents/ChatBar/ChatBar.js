@@ -23,7 +23,7 @@ export class ChatBar extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ loading: true });
+        this.setState({loading: true});
         if (this.props.ready) {
             const socket = this.props.socket;
             if (!socket) {
@@ -32,37 +32,39 @@ export class ChatBar extends React.Component {
             }
             // Read tutor and customer's information
             let tutorialId = this.props.tutorialId;
-            TutorialService.getTutorial(tutorialId).then((data) => {
-                let tutorPromise = TutorialService.getTutorByTutorEmail(data.tutorEmail);
-                let customerPromise = EditProfileService.getCustomerByCustomerEmail(data.customerEmail);
-                Promise.all([tutorPromise, customerPromise]).then((values) => {
-                    this.setState({
-                        tutor: values[0],
-                        customer: values[1],
-                        tutorial: data,
-                        avatarUrl: {
-                            [values[0].email]: values[0].avatar,
-                            [values[1].email]: logoIcon
-                        }
-                    });
-                    socket.emit('join',
-                        {
-                            email: UserService.getCurrentUser().email,
-                            name: (UserService.getCurrentUser().userType === 'tutor' ?
-                                `${values[0].firstName} ${values[0].lastName}` :
-                                `${values[1].firstName} ${values[1].lastName}`),
-                            room: tutorialId
-                        },
-                        (error) => {
-                            if (error) {
-                                toast.error(error);
-                            }
+            TutorialService.getTutorial(tutorialId)
+                .then((data) => {
+                    let tutorPromise = TutorialService.getTutorByTutorEmail(data.tutorEmail);
+                    let customerPromise = EditProfileService.getCustomerByCustomerEmail(data.customerEmail);
+                    Promise.all([tutorPromise, customerPromise])
+                        .then((values) => {
+                            this.setState({
+                                tutor: values[0],
+                                customer: values[1],
+                                tutorial: data,
+                                avatarUrl: {
+                                    [values[0].email]: values[0].avatar,
+                                    [values[1].email]: logoIcon
+                                }
+                            });
+                            socket.emit('join',
+                                {
+                                    email: UserService.getCurrentUser().email,
+                                    name: (UserService.getCurrentUser().userType === 'tutor' ?
+                                        `${values[0].firstName} ${values[0].lastName}` :
+                                        `${values[1].firstName} ${values[1].lastName}`),
+                                    room: tutorialId
+                                },
+                                (error) => {
+                                    if (error) {
+                                        toast.error(error);
+                                    }
 
-                        });
+                                });
+                        }).catch((e) => {
+                        console.error(e);
+                    });
                 }).catch((e) => {
-                    console.error(e);
-                });
-            }).catch((e) => {
                 console.error(e);
             });
 
@@ -96,12 +98,12 @@ export class ChatBar extends React.Component {
                 })
             });
 
-            socket.on("roomData", ({ users }) => {
+            socket.on("roomData", ({users}) => {
                 let newNotification = {
                     text: 'Current users: ' + users.map(u => u.name).join(', '),
                     timestamp: +new Date(),
                     type: 'notification',
-                };    
+                };
                 this.setState({
                     users,
                     messages: [...this.state.messages, newNotification]

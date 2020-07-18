@@ -21,18 +21,20 @@ export class ReviewTutorView extends React.Component {
     componentDidMount() {
         let tutorialId = this.props.match.params.id;
         TutorialService.getTutorial(tutorialId).then((data) => {
-            TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
-                this.setState({
-                    tutor: tutor,
-                    tutorial: data
-                });
-            });
-            if (data.reviewId)
-                ReviewService.getReview(data.reviewId).then((review) => {
+            TutorialService.getTutorByTutorEmail(data.tutorEmail)
+                .then((tutor) => {
                     this.setState({
-                        review
-                    })
+                        tutor: tutor,
+                        tutorial: data
+                    });
                 });
+            if (data.reviewId)
+                ReviewService.getReview(data.reviewId)
+                    .then((review) => {
+                        this.setState({
+                            review
+                        })
+                    });
         }).catch((e) => {
             console.error(e);
         });
@@ -44,8 +46,7 @@ export class ReviewTutorView extends React.Component {
                 loading: false,
                 error: "No login information"
             })
-        }
-        else {
+        } else {
             this.setState({
                 userType: user.userType
             });
@@ -62,19 +63,21 @@ export class ReviewTutorView extends React.Component {
 
     handleReview = (review) => {
         (this.state.tutorial.reviewId) ?
-            ReviewService.updateReview(this.state.tutorial.reviewId, review).then(() => {
-                toast.success('Successfully updated');
-                this.props.history.goBack();
-            }).catch((e) => {
+            ReviewService.updateReview(this.state.tutorial.reviewId, review)
+                .then(() => {
+                    toast.success('Successfully updated');
+                    this.props.history.goBack();
+                }).catch((e) => {
                 console.error(e);
-                this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
+                this.setState(Object.assign({}, this.state, {error: 'Error while creating review'}));
             }) :
-            ReviewService.createReview(review).then(() => {
-                toast.success('Successfully submitted');
-                this.props.history.goBack();
-            }).catch((e) => {
+            ReviewService.createReview(review)
+                .then(() => {
+                    toast.success('Successfully submitted');
+                    this.props.history.goBack();
+                }).catch((e) => {
                 console.error(e);
-                this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
+                this.setState(Object.assign({}, this.state, {error: 'Error while creating review'}));
             });
     };
 

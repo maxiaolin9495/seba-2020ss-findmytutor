@@ -36,32 +36,30 @@ class BookingCalendar extends React.Component {
         //get initial available times
         let initials = [];
         let initialDates = [];
-        TutorPageService.getTutorProfileById(this.props.match.params.id).then((data) => {
-            this.setState({price: data.price});
-            data.timeSlotIds.forEach((times) => {
-                if (!times.ifBooked) {
-                    initials.push({
-                        start: new Date(parseInt(times.start)),
-                        end: new Date(parseInt(times.end))
-                    })
-                }
-            });
-            //add available dates and unit the start and end time to solve additional date problem
-            data.timeSlotIds.forEach((times) => {
-                if (!times.ifBooked) {
-                    initialDates.push({
-                        start: new Date(parseInt(times.start)),
-                        end: new Date(parseInt(times.start))
-                    })
-                }
+        TutorPageService.getTutorProfileById(this.props.match.params.id)
+            .then((data) => {
+                this.setState({price: data.price});
+                data.timeSlotIds.forEach((times) => {
+                    if (!times.ifBooked) {
+                        initials.push({
+                            start: new Date(parseInt(times.start)),
+                            end: new Date(parseInt(times.end))
+                        })
+                    }
+                });
+                //add available dates and unit the start and end time to solve additional date problem
+                data.timeSlotIds.forEach((times) => {
+                    if (!times.ifBooked) {
+                        initialDates.push({
+                            start: new Date(parseInt(times.start)),
+                            end: new Date(parseInt(times.start))
+                        })
+                    }
 
-            });
-            this.setState({initialTimes: initials});
-            this.setState({initialDates: initialDates});
-
-
-        })
-
+                });
+                this.setState({initialTimes: initials});
+                this.setState({initialDates: initialDates});
+            })
     }
 
     //acquire time slots between start and end timestamp within one time period
@@ -172,7 +170,8 @@ class BookingCalendar extends React.Component {
         let startTime = this.state.selectedStart.getHours();
         let endTime = tmpSelectEnd.getHours();
         if (endTime <= startTime &&
-            this.state.selectedStart.getDay() === tmpSelectEnd.getDay()) {
+            this.state.selectedStart.getDay() === tmpSelectEnd.getDay()
+        ) {
             toast.error('Invalid time selected!');
             this.setState({selectedEnd: undefined});
         } else {

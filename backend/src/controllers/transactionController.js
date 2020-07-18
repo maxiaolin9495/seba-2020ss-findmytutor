@@ -36,7 +36,7 @@ const createTransaction = (req, res) => {
             "payer",
             "receiver",
             "transactionStatus",
-            "transactionIds"
+            "transactionId"
         ], req);
 
     if (!verificationResult.ifValid) {

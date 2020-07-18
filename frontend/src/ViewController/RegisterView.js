@@ -13,10 +13,11 @@ export class RegisterView extends React.Component {
     }
 
     register = (user) => {
-        RegisterService.register(user.email, user.password, user.userType).then((data) => {
-            toast.success('Registration succeeded');
-            this.props.history.push('/');
-        }).catch((e) => {
+        RegisterService.register(user.email, user.password, user.userType)
+            .then(() => {
+                toast.success('Registration succeeded');
+                this.props.history.push('/');
+            }).catch((e) => {
             toast.error('Registration failed, please check your input');
             this.setState({
                 error: e

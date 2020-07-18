@@ -32,7 +32,9 @@ class TutorPersonalPage extends React.Component {
 
     renderCourses = () => {
         // TODO: remove manual added courses
-        let courses = (this.props.tutor.courses && this.props.tutor.courses.length) ? this.props.tutor.courses : ['SEBA', 'Database'];
+        let courses = (this.props.tutor.courses && this.props.tutor.courses.length) ?
+            this.props.tutor.courses :
+            ['SEBA', 'Database'];
         // TODO: use (key, val)
         return courses.map(c => {
             let style = {

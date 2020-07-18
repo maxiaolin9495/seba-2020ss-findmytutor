@@ -133,7 +133,9 @@ class NavigationMenu extends React.Component {
 
     toTitle = (str) => {
         return str.split(/-|[A-Z]+/).reduce((s, split) => {
-            const capititalized = split.match(/svg$/) ? 'SVG' : upperFirst(split);
+            const capititalized = split.match(/svg$/) ?
+                'SVG' :
+                upperFirst(split);
             return `${s ? `${s} ` : ''}${capititalized}`;
         }, '');
     };
@@ -147,13 +149,21 @@ class NavigationMenu extends React.Component {
             attractions: [],
             titles: [],
             toolbarTitle: this.getCurrentTitle(props),
-            navItems: LoginService.isAuthenticated() ? (UserService.getCurrentUser().userType === 'customer'? logInNavItemsCustomer : logInNavItemsTutor) :defaultNavItems
+            navItems: LoginService.isAuthenticated() ?
+                (UserService.getCurrentUser().userType === 'customer' ?
+                    logInNavItemsCustomer :
+                    logInNavItemsTutor) :
+                defaultNavItems
         };
     }
 
     logout = () => {
         LoginService.logout();
-        this.setState({navItems: LoginService.isAuthenticated() ? (UserService.getCurrentUser().userType === 'customer'? logInNavItemsCustomer : logInNavItemsTutor) :defaultNavItems}, ()=>{
+        this.setState({navItems: LoginService.isAuthenticated() ?
+                (UserService.getCurrentUser().userType === 'customer'?
+                    logInNavItemsCustomer :
+                    logInNavItemsTutor) :
+                defaultNavItems}, ()=>{
             this.props.history.push('/');
         });
     };

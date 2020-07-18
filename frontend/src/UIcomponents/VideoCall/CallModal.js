@@ -14,10 +14,6 @@ export default class CallModal extends React.Component {
         return () => this.props.startCall(false, this.props.callFrom, config);
     };
 
-    shareScreen = () => {
-        return () => this.props.startScreenShare(this.props.callFrom);
-    };
-
     render() {
         return (
             <div className={classNames('call-modal', this.props.status)}>

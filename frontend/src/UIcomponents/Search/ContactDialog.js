@@ -22,9 +22,13 @@ export default class ContactDialog extends PureComponent {
     };
 
     sendEmail = () => {
-        if (!this.state.firstName || !this.state.lastName || !this.state.email || !this.state.content) {
+        if (!this.state.firstName ||
+            !this.state.lastName ||
+            !this.state.email ||
+            !this.state.content
+        ) {
             toast.error("Please fill in required message");
-        }else{
+        } else {
             TutorPageService.contactTutor({
                 customerFirstName: this.state.firstName,
                 customerLastName: this.state.lastName,
@@ -32,12 +36,12 @@ export default class ContactDialog extends PureComponent {
                 tutorFirstName: this.props.tutorFistName,
                 tutorEmail: this.props.tutorEmail,
             }).then(() => {
-                this.setState({ visible: false });
+                this.setState({visible: false});
                 toast.success("Message successfully sent to tutor");
             }).catch((e) => {
                 console.error(e);
                 toast.error('Error by contact tutor');
-            });         
+            });
         }
     }
 

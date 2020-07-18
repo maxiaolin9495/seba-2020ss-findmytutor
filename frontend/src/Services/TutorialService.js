@@ -23,7 +23,7 @@ export default class TutorialService {
                     transactionStatus: booking.transactionStatus,
                     startTime: booking.startTime,
                     endTime: booking.endTime,
-                    transactionId:booking.transactionId
+                    transactionId: booking.transactionId
                 }, function (data) {
                     resolve(data);
                 }, function (textStatus) {
@@ -35,34 +35,34 @@ export default class TutorialService {
 
     static getAllTutorials(id) {
         return new Promise((resolve, reject) => {
-            HttpService.get(`${this.baseURL()}/user/getAllTutorials/${id}`, function (data) {
-                console.log('service');
-                console.log(data);
+            HttpService.get(`${this.baseURL()}/user/getAllTutorials/${id}`,
+                function (data) {
+                    console.log('service');
+                    console.log(data);
 
-                if (data !== undefined || Object.keys(data).length !== 0) {
-                    resolve(data);
-                }
-                else {
-                    reject('Error while retrieving tutorials');
-                }
-            }, function (textStatus) {
-                reject(textStatus);
-            });
+                    if (data !== undefined || Object.keys(data).length !== 0) {
+                        resolve(data);
+                    } else {
+                        reject('Error while retrieving tutorials');
+                    }
+                }, function (textStatus) {
+                    reject(textStatus);
+                });
         });
     }
 
     static getTutorByTutorEmail(email) {
         return new Promise((resolve, reject) => {
-            HttpService.get(`${this.baseURL()}/tutor/searchTutorByEmail?` + new URLSearchParams({ q: email }).toString(), function (data) {
-                if (data !== undefined) {
-                    resolve(data);
-                }
-                else {
-                    reject('Error while retrieving tutors');
-                }
-            }, function (textStatus) {
-                reject(textStatus);
-            });
+            HttpService.get(`${this.baseURL()}/tutor/searchTutorByEmail?` + new URLSearchParams({q: email}).toString(),
+                function (data) {
+                    if (data !== undefined) {
+                        resolve(data);
+                    } else {
+                        reject('Error while retrieving tutors');
+                    }
+                }, function (textStatus) {
+                    reject(textStatus);
+                });
         });
     }
 
@@ -80,16 +80,16 @@ export default class TutorialService {
 
     static getTutorial(id) {
         return new Promise((resolve, reject) => {
-            HttpService.get(`${this.baseURL()}/user/getTutorial/${id}`, function (data) {
-                if (data !== undefined) {
-                    resolve(data);
-                }
-                else {
-                    reject('Error while retrieving tutorial');
-                }
-            }, function (textStatus) {
-                reject(textStatus);
-            });
+            HttpService.get(`${this.baseURL()}/user/getTutorial/${id}`,
+                function (data) {
+                    if (data !== undefined) {
+                        resolve(data);
+                    } else {
+                        reject('Error while retrieving tutorial');
+                    }
+                }, function (textStatus) {
+                    reject(textStatus);
+                });
         });
     }
 

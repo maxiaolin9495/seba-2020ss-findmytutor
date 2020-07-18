@@ -51,16 +51,18 @@ export default class BookingCard extends React.Component {
 
     componentWillMount() {
         // this.props.userType === 'customer' ?
-        TutorialService.getTutorByTutorEmail(this.props.tutorial.tutorEmail).then((tutor) => {
-            this.setState({
-                tutor
-            })
-        }); // :
-        EditProfileService.getCustomerByCustomerEmail(this.props.tutorial.customerEmail).then((customer) => {
-            this.setState({
-                customer
-            })
-        });
+        TutorialService.getTutorByTutorEmail(this.props.tutorial.tutorEmail)
+            .then((tutor) => {
+                this.setState({
+                    tutor
+                })
+            }); // :
+        EditProfileService.getCustomerByCustomerEmail(this.props.tutorial.customerEmail)
+            .then((customer) => {
+                this.setState({
+                    customer
+                })
+            });
     }
 
     convertTimeToStr = (timeStr) => {
@@ -107,7 +109,7 @@ export default class BookingCard extends React.Component {
         switch (this.props.tutorial.tutorialStatus) {
             case 'finished':
             case 'reviewed':
-                if (this.props.userType === 'customer')
+                if (this.props.userType === 'customer') {
                     return (
                         <Button
                             raised
@@ -124,8 +126,10 @@ export default class BookingCard extends React.Component {
                             onClick={() => this.props.handleReview(`/review/${this.props.tutorial._id}`)}>
                             REVIEW
                         </Button>);
-                else
+                }
+                else {
                     return '';
+                }
             case 'notConfirmed':
             case 'confirmed':
                 return (
@@ -167,12 +171,14 @@ export default class BookingCard extends React.Component {
             case 'reviewed':
                 if (this.props.userType === 'customer')
                     return StatusButton('md-full-width', 'mark_chat_read', '#64A338', 'reviewed');
-            case 'finished': return StatusButton('md-full-width', 'done', '#64A338', 'finished');
+            case 'finished':
+                return StatusButton('md-full-width', 'done', '#64A338', 'finished');
             case 'notConfirmed':
-                if (this.props.userType === 'customer')
+                if (this.props.userType === 'customer') {
                     return StatusButton('md-full-width', 'more_horiz', '#FBBC05', 'need confirm');
-                else
-                    return <Dialog actionName='confirm' onClick={() => this.confirmTutorial()} />;
+                } else {
+                    return <Dialog actionName='confirm' onClick={() => this.confirmTutorial()}/>;
+                }
             case 'confirmed':
                 return StatusButton('md-full-width', 'check_circle', '#4285F4', 'confirmed');
             case 'cancelled':
