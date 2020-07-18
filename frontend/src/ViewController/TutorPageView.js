@@ -13,7 +13,8 @@ export class TutorPageView extends React.Component {
         this.state = {
             loading: true,
             tutor: {},
-            reviews: []
+            reviews: [],
+            selectedCourse: props.location.search.split('=')[1] || ''
         };
     }
 
@@ -64,7 +65,8 @@ export class TutorPageView extends React.Component {
                     <TutorPersonalPage
                         loading={this.state.loading}
                         tutor={this.state.tutor}
-                        reviews={this.state.reviews} />
+                        reviews={this.state.reviews}
+                        selectedCourse={this.state.selectedCourse} />
                 </section>
             </div>
         );

@@ -16,6 +16,7 @@ export default class TutorialService {
                     tutorEmail: booking.tutorEmail,
                     customerEmail: booking.customerEmail,
                     sessionTopic: booking.sessionTopic,
+                    selectedCourse: booking.selectedCourse,
                     bookedTime: booking.bookedTime,
                     price: booking.price,
                     tutorialStatus: booking.tutorialStatus,

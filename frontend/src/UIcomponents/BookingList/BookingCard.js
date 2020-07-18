@@ -282,7 +282,7 @@ export default class BookingCard extends React.Component {
                     {this.showLastButton()}
                 </div>
                 <hr style={{ marginLeft: 0, marginRight: 0 }} />
-                <h4 style={{ marginLeft: '8px', marginBottom: 0 }}>Topics: {this.props.tutorial.sessionTopic}</h4>
+                        <h4 style={{ marginLeft: '8px', marginBottom: 0 }}>Course: {this.props.tutorial.selectedCourse || ''} / Topic: {this.props.tutorial.sessionTopic}</h4>
             </div>
         );
     }
