@@ -3,7 +3,7 @@
 import React from 'react';
 import Background from '../Images/Homepage.jpg';//https://www.umc.edu/Research/Centers-and-Institutes/Centers/Center-for-Informatics-and-Analytics/Center-for-Informatics-and-Analytics-Home.html
 import SearchBarComponent from "../UIcomponents/Search/SearchBarComponent";
-import '../Css/bg.css';
+import '../UIcomponents/Search/SearchPage.css';
 import Navigation from "../UIcomponents/PageDesign/Navigation";
 import UserService from "../Services/UserService";
 

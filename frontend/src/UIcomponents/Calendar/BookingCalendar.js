@@ -7,7 +7,7 @@ import {toast} from "react-toastify";
 import TutorPageService from "../../Services/TutorPageService";
 import {TextIconSpacing} from "@react-md/icon";
 import {AccessAlarmFontIcon} from "@react-md/material-icons";
-import '../../Css/bookingCalendar.css';
+import './BookingCalendar.css';
 
 const stylePicker = {
     display: "contents",
