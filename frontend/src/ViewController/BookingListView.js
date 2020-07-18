@@ -41,7 +41,7 @@ export class BookingListView extends React.Component {
             }).catch((e) => {
                 console.error(e);
             }) :
-            TutorialService.getAllTutorialsForTutor().then((tutorials) => {
+            TutorialService.getAllTutorialsForTutor().then((tutorialsData) => {
                 let tutorialSort = tutorialsData;
                 tutorialSort.sort(this.tutorialCompareFunction);
                 this.setState({
