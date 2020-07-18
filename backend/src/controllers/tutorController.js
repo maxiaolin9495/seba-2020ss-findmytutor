@@ -42,7 +42,8 @@ const getTutorProfileById = (req, res) => {
                 description: tutor.description,
                 courses: tutor.courses,
                 timeSlotIds: tutor.timeSlotIds,
-                avatar: tutor.avatar
+                avatar: tutor.avatar,
+                rating: tutor.rating
             })
         }).catch(error => {
             return res.status(404).json({

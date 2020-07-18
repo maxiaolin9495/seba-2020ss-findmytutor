@@ -277,7 +277,8 @@ class BookingCalendar extends React.Component {
                                startTime={this.state.selectedStart}
                                endTime={this.state.selectedEnd}
                                topic={this.props.topic}
-                               handleCancel={this.handleCancel}/>
+                               selectedCourse={this.props.selectedCourse}
+                               handleCancel={this.handleCancel} />
             </div>
 
         );

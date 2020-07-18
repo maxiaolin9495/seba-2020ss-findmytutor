@@ -16,6 +16,7 @@ export class BookingListView extends React.Component {
             filteredData: [],
             error: undefined
         };
+        this.nowTime = +new Date();
     }
 
     componentWillMount() {
@@ -29,20 +30,22 @@ export class BookingListView extends React.Component {
             this.props.history.goBack();
         }
         userType === `customer` ?
-            TutorialService.getAllTutorialsForCustomer().then((tutorials) => {
-                console.log(tutorials);
+            TutorialService.getAllTutorialsForCustomer().then((tutorialsData) => {
+                let tutorialSort = tutorialsData;
+                tutorialSort.sort(this.tutorialCompareFunction);
                 this.setState({
-                    tutorials,
+                    tutorials: tutorialSort,
                     loading: false,
                     userType
                 });
             }).catch((e) => {
                 console.error(e);
             }) :
-            TutorialService.getAllTutorialsForTutor().then((tutorials) => {
-                console.log(tutorials);
+            TutorialService.getAllTutorialsForTutor().then((tutorialsData) => {
+                let tutorialSort = tutorialsData;
+                tutorialSort.sort(this.tutorialCompareFunction);
                 this.setState({
-                    tutorials,
+                    tutorials: tutorialSort,
                     loading: false,
                     userType
                 });
@@ -87,6 +90,24 @@ export class BookingListView extends React.Component {
             toast.error('Failed to confirm tutorial');
         });
     };
+
+    tutorialCompareFunction = (a, b) => {
+        console.log(a.startTime);
+        console.log(this.nowTime);
+        if(a.startTime > this.nowTime && b.startTime > this.nowTime){
+            return a.startTime - b.startTime;
+        }
+        if(a.startTime < this.nowTime && b.startTime > this.nowTime){
+            return 1;
+        }
+        if(a.startTime > this.nowTime && b.startTime < this.nowTime){
+            return -1;
+        }
+        if(a.startTime < this.nowTime && b.startTime < this.nowTime){
+            return b.startTime - a.startTime;
+        }
+        return -1;
+    }
 
     render() {
         if (this.state.loading) {

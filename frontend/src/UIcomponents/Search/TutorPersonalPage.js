@@ -36,7 +36,8 @@ class TutorPersonalPage extends React.Component {
         // TODO: use (key, val)
         return courses.map(c => {
             let style = {
-                marginRight: '8px'
+                marginRight: '8px',
+                marginBottom: '8px'
             };
             if (c !== this.state.selectedCourse) {
                 style = {
@@ -179,7 +180,7 @@ class TutorPersonalPage extends React.Component {
                     <div className="md-grid">
                         <h1 className='md-row md-full-width'>Calender</h1>
                         {/** Calender should be placed here */}
-                        <BookingCalendar topic={this.state.topic} />
+                        <BookingCalendar topic={this.state.topic} selectedCourse={this.state.selectedCourse} />
                     </div>
                 </div>
                 <hr style={{ height: 1 }} />
