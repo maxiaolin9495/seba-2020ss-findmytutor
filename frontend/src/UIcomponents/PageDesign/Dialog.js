@@ -46,7 +46,7 @@ export default class ScrollingContentAndSizing extends PureComponent {
                         primary
                         style={{
                             borderRadius: '10px',
-                            marginTop: '32px',
+                            marginTop: '5px',
                             color: 'white',
                             fontSize: '18px',
                             fontFamily: 'San Francisco'

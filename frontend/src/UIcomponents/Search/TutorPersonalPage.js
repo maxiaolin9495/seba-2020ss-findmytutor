@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import StarRatingComponent from 'react-star-rating-component';
 import BookingCalendar from "../Calendar/BookingCalendar";
 import ReviewCard from "./ReviewCard";
+import ContactDialog from "./ContactDialog";
 
 
 class TutorPersonalPage extends React.Component {
@@ -15,7 +16,7 @@ class TutorPersonalPage extends React.Component {
         this.state = {
             selectedCourse: this.props.selectedCourse,
             reviews: this.props.reviews,
-            topic:''
+            topic: ''
         };
     }
 
@@ -151,14 +152,9 @@ class TutorPersonalPage extends React.Component {
                                 </Media>
                             </div>
                         </div>
-                        <Button
-                            className="md-block-centered"
-                            style={{
-                                marginTop: '16px',
-                                borderRadius: '30px',
-                                border: '2px solid #00b0ff',
-                                color: '#00b0ff'
-                            }} flat >CONTACT</Button>
+                        <ContactDialog
+                            tutorFistName={this.props.tutor.firstName}
+                            tutorEmail={this.props.tutor.email} />
                     </Cell>
 
 
@@ -183,11 +179,11 @@ class TutorPersonalPage extends React.Component {
                     <div className="md-grid">
                         <h1 className='md-row md-full-width'>Calender</h1>
                         {/** Calender should be placed here */}
-                        <BookingCalendar topic={this.state.topic}/>
+                        <BookingCalendar topic={this.state.topic} />
                     </div>
                 </div>
                 <hr style={{ height: 1 }} />
-                <div style={{ marginLeft: '200px' }}>
+                <div style={{ marginLeft: '0px' }}>
                     <div className="md-grid">
                         <h1 className='md-row md-full-width'>Comments</h1>
                         {this.state.reviews.map(r => {

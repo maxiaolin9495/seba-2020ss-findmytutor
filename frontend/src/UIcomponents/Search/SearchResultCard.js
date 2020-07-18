@@ -95,7 +95,7 @@ class SearchResultCard extends Component {
                             editing={false}
                             starCount={5}
                             value={this.props.tutor.rating} /></div>
-                        <h3 style={{ fontWeight: 'bolder',fontFamily: 'cursive' ,marginLeft:'50px'}}>{3} review(s)</h3>
+                        <h3 style={{ fontWeight: 'bolder',fontFamily: 'cursive' ,marginLeft:'50px'}}>{this.props.tutor.reviewIds ? this.props.tutor.reviewIds.length : 0} review(s)</h3>
                         <Button primary style={{
                             background: '#2196F3',
                             borderRadius: '10px',

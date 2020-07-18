@@ -11,4 +11,5 @@ router.post('/createTutorial', middleWares.checkAuthentication, customerControll
 router.put('/review/:reviewId', middleWares.checkAuthentication, customerController.updateReview);
 router.get('/review/:reviewId', middleWares.checkAuthentication, customerController.getReview);
 router.get('/searchCustomerByEmail', customerController.searchCustomerByEmail);
+router.post('/contactTutor', customerController.contactTutor);
 module.exports = router;
