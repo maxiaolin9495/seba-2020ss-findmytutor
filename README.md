@@ -18,7 +18,7 @@ Then you can start the whole project with:
 
 `-d` runs container in detached mode (in the background)
 
-To stop the docker containers, simply use `docker-compose down`
+To stop the docker containers, simply use `docker-compose -f "docker-compose.debug.yml" down`
 
 ## Deploy to Azure
 Simply update the prod docker images which are located in this project container registry. The image pull will be automatically done by Azure in about 10 minutes.
