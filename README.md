@@ -10,11 +10,11 @@ Using Terminal
 we strongly recommend you to use docker \
 Firstly you need to build the docker images in your local path
 
-`docker-compose build`
+`docker-compose -f "docker-compose.debug.yml" build`
 
 Then you can start the whole project with:
 
-`docker-compose up -d`
+`docker-compose -f "docker-compose.debug.yml" up -d`
 
 `-d` runs container in detached mode (in the background)
 
