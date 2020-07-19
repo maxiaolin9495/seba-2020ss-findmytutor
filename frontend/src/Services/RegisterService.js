@@ -5,14 +5,15 @@ const config = require ('../config');
 export default class RegisterService {
 
     static baseURL() {
-        return config.backendUri + "/register";
+        return config.backendUri + "/user/register";
     }
 
-    static register(email, pass) {
+    static register(email, pass, userType) {
         return new Promise((resolve, reject) => {
             HttpService.post(this.baseURL(),{
                 email: email,
-                password: MD5.hex_md5(pass)
+                password: MD5.hex_md5(pass),
+                userType: userType
             }, function (data) {
                 resolve(data);
             }, function (textStatus) {

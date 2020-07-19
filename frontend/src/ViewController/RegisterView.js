@@ -1,8 +1,9 @@
 import React from "react";
-import Navigation from "../UIcomponents/pageDesign/Navigation";
 import Background from "../Images/Homepage.jpg";
-import RegisterTab from "../UIcomponents/pageDesign/Register";
+import RegisterTab from "../UIcomponents/PageDesign/Register";
 import RegisterService from "../Services/RegisterService";
+import { toast } from 'react-toastify';
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class RegisterView extends React.Component {
     constructor(props) {
@@ -11,11 +12,13 @@ export class RegisterView extends React.Component {
 
     }
 
-    register=(user)=> {
-        RegisterService.register(user.email, user.password).then((data) => {
-            this.props.history.push('/');
-        }).catch((e) => {
-            console.error(e);
+    register = (user) => {
+        RegisterService.register(user.email, user.password, user.userType)
+            .then(() => {
+                toast.success('Registration succeeded');
+                this.props.history.push('/');
+            }).catch((e) => {
+            toast.error('Registration failed, please check your input');
             this.setState({
                 error: e
             });
@@ -23,12 +26,12 @@ export class RegisterView extends React.Component {
     };
 
     render() {
-        setTimeout(() => window.scrollTo(0,0), 150);
+        setTimeout(() => window.scrollTo(0, 0), 150);
         return (
             <div>
                 <Navigation/>
                 <section>
-                    <img src={Background} alt={"Ein Hintergrundbild"} className="bg"/>
+                    <img src={Background} alt={"A Background Picture"} className="bg"/>
                     <RegisterTab onSubmit={(user) => this.register(user)} error={this.state.error}/>
                 </section>
             </div>

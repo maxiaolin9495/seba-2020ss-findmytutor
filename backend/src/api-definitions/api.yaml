@@ -5,8 +5,8 @@ info:
   description: 'API providing basic functionalities of the Find My Tutor '
   termsOfService: https://foo.com/terms-of-use
   contact:
-    name: Tri
-    url: tum.de
+    name: Tri Huynh
+    url: https://wwwmatthes.in.tum.de/pages/v4xzukutru9w/Tri-Huynh
     email: tri.huynh@tum.de
   license:
     name: MIT License
@@ -15,9 +15,18 @@ info:
 tags:
   - name: user
     description: Access to sign up or log in
+  - name: tutor
+    description: Access to add or upload tutor's profile
+  - name: customer
+    description: Access to add or upload customer's profile
   - name: contact
     description: Access to contact the customer service team
-
+  - name: tutorial
+    description: Access to do CRU operation on a tutorial session object or get all tutorial sessions with a tutor id.
+  - name: review
+    description: Access to do CRU operation on a review object or get all reviews with a tutor id.
+  - name: transaction
+    description: Access to do CR operation on a transaction object or get all transactions with payer.
 
 paths:
   /user/register:
@@ -65,6 +74,434 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
 
+  /customer/createTutorial:
+    summary: To create a new tutorial.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - tutorial
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tutorialForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/schemas/tutorialForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /tutor/confirmTutorial:
+    summary: To confirm a tutorial.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - tutorial
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/confirmTutorialForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /user/cancelTutorial:
+    summary: To cancel a tutorial.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - tutorial
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cancelTutorialForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /user/getAllTutorials:
+    summary: To get the detail of a list of tutorials.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - tutorial
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: a list of tutorial ids
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/allTutorialIdsForms'
+        required: true
+      responses:
+        200:
+          content: []
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /user/getAllTutorials/{tutorId}:
+    get:
+      tags:
+      - tutorial
+      summary: To get a list of tutorials by a tutor id
+      description: Only valid user can use this backend service
+      parameters:
+      - name: tutorId
+        in: path
+        description: the id of related tutor
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content: []
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /customer/createReview:
+    summary: To create a new review.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+      - review
+      parameters:
+      - name: x-access-token
+        in: header
+        description: JWT token
+        required: true
+        schema:
+          type: string
+          format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reviewForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/schemas/reviewForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /customer/updateReview/{reviewId}:
+    summary: To update an existing review.
+    description: Only valid user can use this backend service
+    put:
+      tags:
+      - review
+      parameters:
+      - name: x-access-token
+        in: header
+        description: JWT token
+        required: true
+        schema:
+          type: string
+          format: byte
+      - name: reviewId
+        in: path
+        description: the id of the review
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/reviewForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/schemas/reviewForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /user/getAllReviews/{tutorId}:
+    get:
+      tags:
+      - review
+      summary: To get a list of reviews by a tutor id
+      description: Only valid user can use this backend service
+      parameters:
+      - name: tutorId
+        in: path
+        description: the id of related tutor
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content: []
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /user/closeTutorial:
+    summary: For close a tutorial.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+      - tutorial
+      parameters:
+      - name: x-access-token
+        in: header
+        description: JWT token
+        required: true
+        schema:
+          type: string
+          format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/closeTutorialForms'
+        required: true
+      responses:
+        200:
+          description: token created
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /tutor/uploadTutorProfile:
+    summary: For tutor upload Tutor Profile.
+    description: Only valid tutor can use this backend service
+    put:
+      tags:
+        - tutor
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tutorProfileForms'
+        required: true
+      responses:
+        200:
+          description: Successfully update
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  /tutor/tutorProfile:
+    summary: to ger Tutor Profile.
+    description: Only valid tutor can use this backend service
+    get:
+      tags:
+        - tutor
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      responses:
+        200:
+          description: Load tutor profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tutorProfileForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /tutor/search:
+    get:
+      tags:
+        - tutor
+      description: Search Tutor with given parameter.
+      parameters:
+        - name: q
+          in: query
+          description: Search query parameter
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully load searched profile
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/tutorProfileForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
+  /tutor/autoComplete:
+    get:
+      tags:
+        - tutor
+      description: auto complete result for Search bar
+      parameters:
+        - name: q
+          in: query
+          description: Search query parameter
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully load auto complete result list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+                
+  /customer/uploadCustomerProfile:
+    summary: For Customer upload Customer Profile.
+    description: Only valid Customer can use this backend service
+    post:
+      tags:
+        - customer
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: customer profile to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customerProfileForms'
+        required: true
+      responses:
+        200:
+          description: Successfully updated
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+  
+  /customer/customerProfile:
+    summary: To get Customer Profile.
+    description: Only valid Customer can use this backend service
+    get:
+      tags:
+        - customer
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      responses:
+        200:
+          description: Customer profile loaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/customerProfileForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
+
   /contact/saveMessage:
     summary: save a contact message
     description: This endpoint is used to store the contact message sent by our customers/tutors. Each contactMessage is identified by an unique message_id.
@@ -88,7 +525,64 @@ paths:
         500:
           $ref: '#/components/httpCodesSchemas/500'
 
+  /transaction/getTransaction/{payer}:
+    get:
+      tags:
+        - transaction
+      summary: To get a list of transaction by payer
+      description: Only valid user can use this backend service
+      parameters:
+        - name: payer
+          in: path
+          description: the payer of related transaction
+          required: true
+          schema:
+            type: string
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      responses:
+        200:
+          content: []
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
 
+  /transaction/createTransaction:
+    summary: To create a new transaction.
+    description: Only valid user can use this backend service
+    post:
+      tags:
+        - transaction
+      parameters:
+        - name: x-access-token
+          in: header
+          description: JWT token
+          required: true
+          schema:
+            type: string
+            format: byte
+      requestBody:
+        description: user object that needs to be verified
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transactionForms'
+        required: true
+      responses:
+        200:
+          $ref: '#/components/schemas/transactionForms'
+        400:
+          $ref: '#/components/httpCodesSchemas/400'
+        404:
+          $ref: '#/components/httpCodesSchemas/404'
+        500:
+          $ref: '#/components/httpCodesSchemas/500'
 
 components:
   schemas:
@@ -100,12 +594,6 @@ components:
           type: string
         password: # length must greater than 8
           type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        university:
-          type: string
         userType:
           type: string
     loginForms:
@@ -116,15 +604,144 @@ components:
           type: string
         password: # length must greater than 8
           type: string
-        userType:
-          type: string
     contactForms:
       type: object
       $ref: '#/components/schemas/contactForms'
       properties:
+        firstName:
+          type: string
         email:
           type: string
-        message: # length must greater than 8
+        message:
+          type: string
+    tutorialForms:
+      type: object
+      $ref: '#/components/schemas/tutorialForms'
+      properties:
+        tutorFirstName:
+          type: string
+        userType:
+          type: string
+        tutorEmail:
+          type: string
+        customerEmail:
+          type: string
+        sessionTopic:
+          type: string
+        bookedTime:
+          type: string
+        price:
+          type: string
+    reviewForms:
+      type: object
+      $ref: '#/components/schemas/reviewForms'
+      properties:
+        reviewerName:
+          type: string
+        tutorName:
+          type: string
+        tutorEmail:
+          type: string
+        comprehensionRating:
+          type: integer
+          format: int32
+          maximum: 5
+          minimum: 1
+        friendlinessRating:
+          type: integer
+          format: int32
+          maximum: 5
+          minimum: 1
+        teachingStyleRating:
+          type: integer
+          format: int32
+          maximum: 5
+          minimum: 1
+        text:
+          type: string
+    confirmTutorialForms:
+      type: object
+      $ref: '#/components/schemas/confirmTutorialForms'
+      properties:
+        _id:
+          type: string
+        status:
+          type: string
+        tutorFirstName:
+          type: string
+        customerEmail:
+          type: string
+    closeTutorialForms:
+      type: object
+      $ref: '#/components/schemas/closeTutorialForms'
+      properties:
+        _id:
+          type: string
+        status:
+          type: string
+    cancelTutorialForms:
+      type: object
+      $ref: '#/components/schemas/cancelTutorialForms'
+      properties:
+        tutorFirstName:
+          type: string
+        _id:
+          type: string
+        tutorEmail:
+          type: string
+        customerEmail:
+          type: string
+        customerFirstName:
+          type: string
+        status:
+          type: string
+    allTutorialIdsForms:
+      type: object
+      $ref: '#/components/schemas/allTutorialIdsForms'
+      properties:
+        ids:
+          type: array
+          items:
+          - type: string
+    tutorProfileForms:
+      type: object
+      $ref: '#/components/schemas/tutorProfileForms'
+      properties:
+        email:
+          type: string
+        firstName: 
+          type: string
+        lastName: 
+          type: string
+        university:
+          type: string
+        price:
+          type: string
+        description:
+          type: string
+    customerProfileForms:
+      type: object
+      $ref: '#/components/schemas/customerProfileForms'
+      properties:
+        email:
+          type: string
+        firstName: 
+          type: string
+        lastName: 
+          type: string
+        university:
+          type: string
+    transactionForms:
+      type: object
+      $ref: '#/components/schemas/transactionForms'
+      properties:
+        payer:
+          type: string
+        receiver:
+          type: string
+        transactionStatus:
+          type: string
+        transactionIds:
           type: string
 
   securitySchemas:

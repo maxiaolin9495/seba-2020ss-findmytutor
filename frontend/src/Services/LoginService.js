@@ -7,7 +7,7 @@ export default class LoginService {
     }
 
     static baseURL() {
-        return config.backendUri + "/login"
+        return config.backendUri + "/user/login"
     }
     static login(email, pass) {
         return new Promise((resolve, reject) => {
@@ -23,13 +23,13 @@ export default class LoginService {
         });
     }
     static logout(){
-        window.localStorage.removeItem("jwtTokenFMC")
+        window.localStorage.removeItem("jwtTokenFMT")
     }
 
     //gets data from jwtToken, which is prefilled with user data. Data from database has to be added to token beforehand.
 
 
     static isAuthenticated() {
-        return window.localStorage.hasOwnProperty('jwtTokenFMC');
+        return window.localStorage.hasOwnProperty('jwtTokenFMT');
     }
 }

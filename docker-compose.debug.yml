@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  server:
+    build: ./backend
+    container_name: server
+    environment:
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017
+      - JWT_SECRET=VerySecretSecret
+      - GMAIL_ACCOUNT=findmytutor2020@gmail.com
+      - process.env.GMAIL_PASSWORD=Zxcv12345
+    volumes:
+      - './backend:/app'
+      - '/app/node_modules'
+    ports:
+      - "3000:3000"
+      - "5858:5858"
+    command: nodemon --inspect=0.0.0.0:5858 --exec babel-node src/server.js
+  client:
+    build: ./frontend
+    container_name: client
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - BACKEND_URI=http://localhost:3000
+    volumes:
+      - './frontend:/app'
+      - '/app/node_modules'
+    ports:
+      - "8080:8080"
+    command: webpack-dev-server --host=0.0.0.0 --config webpack.dev.js
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+#    environment:
+#      - MONGO_DATA_DIR=/data/db
+    volumes:
+      - 'mongodata:/data/db'
+    ports:
+      - "27017:27017"
+volumes:
+  mongodata:

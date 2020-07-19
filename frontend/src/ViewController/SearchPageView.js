@@ -1,42 +1,43 @@
 "use strict";
 
 import React from 'react';
-import Background from '../Images/Homepage.jpg';
-import '../css/bg.css';
-import Navigation from "../UIcomponents/pageDesign/Navigation";
-import UserService from '../Services/UserService';
+import Background from '../Images/Homepage.jpg';//https://www.umc.edu/Research/Centers-and-Institutes/Centers/Center-for-Informatics-and-Analytics/Center-for-Informatics-and-Analytics-Home.html
+import SearchBarComponent from "../UIcomponents/Search/SearchBarComponent";
+import '../UIcomponents/Search/SearchPage.css';
+import Navigation from "../UIcomponents/PageDesign/Navigation";
+import UserService from "../Services/UserService";
 
 export class SearchPageView extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            searchValue: ''
         }
     }
 
-    addProfile=(user)=>{
-        UserService.addProfile(user).then((data) => {
-            this.props.history.push('/');
-        }).catch((e) => {
-            console.error(e);
-            this.setState({
-                error: e
-            });
-        });
-    };
+    componentWillMount() {
+        UserService.getCurrentUser().userType === 'tutor' && this.props.history.push("/booking");
+    }
 
 
     render() {
-        return <div>
-            <Navigation/>
-            <section>
-                <img src={Background} alt={"Ein Hintergrundbild"} className="bg"/>
+        return (
+            <div>
+                <Navigation />
 
-                <div style={{marginTop: '25%', position: 'relative'}}>
-                </div>
+                <section>
+                    <div className="md-grid" style={{ marginTop: "20%", marginLeft: "0%" }}>
 
-            </section>
-        </div>
+                        {<SearchBarComponent />}
+
+                    </div>
+                    <img src={Background} alt={"A Background Picture"} className="bg" />
+
+
+                </section>
+            </div>
+        )
     }
 
 }

@@ -1,8 +1,9 @@
 import React from "react";
-import Navigation from "../UIcomponents/pageDesign/Navigation";
 import Background from "../Images/Homepage.jpg";
-import LoginTab from "../UIcomponents/pageDesign/Login";
+import LoginTab from "../UIcomponents/PageDesign/Login";
 import LoginService from "../Services/LoginService";
+import { toast } from 'react-toastify';
+import Navigation from "../UIcomponents/PageDesign/Navigation";
 
 export class LoginView extends React.Component {
     constructor(props) {
@@ -10,11 +11,14 @@ export class LoginView extends React.Component {
         this.state = {};
     }
 
-    login=(user) =>{
-        LoginService.login(user.email, user.password).then(() => {
-            this.props.history.push('/');
-        }).catch((e) => {
-            alert('Please input correct email and password');
+    login = (user) => {
+        LoginService.login(user.email, user.password)
+            .then(() => {
+                toast.success('Login succeeded');
+                this.props.history.push('/');
+
+            }).catch((e) => {
+            toast.error('Please input correct email and password');
             document.getElementById('floating-password').value = '';
             this.setState({
                 error: e
@@ -22,17 +26,16 @@ export class LoginView extends React.Component {
         });
     };
 
-    render(){
-        setTimeout(() => window.scrollTo(0,0), 150);
+    render() {
+        setTimeout(() => window.scrollTo(0, 0), 150);
         return (
             <div>
                 <Navigation/>
                 <section>
-                    <img src={Background} alt={"Ein Hintergrundbild"} className="bg"/>
-                    <LoginTab  onSubmit={(user) => this.login(user)} error={this.state.error}/>
+                    <img src={Background} alt={"A Background Picture"} className="bg"/>
+                    <LoginTab onSubmit={(user) => this.login(user)} error={this.state.error}/>
                 </section>
             </div>
-
         )
     }
 }
