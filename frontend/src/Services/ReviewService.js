@@ -12,6 +12,7 @@ export default class ReviewService {
             HttpService.post(this.baseURL() + '/customer/review',
                 {
                     time: new Date().toLocaleDateString(),
+                    tutorialId: review.tutorialId,
                     tutorEmail: review.tutorEmail,
                     customerEmail: review.customerEmail,
                     comprehensionRating: review.comprehensionRating,

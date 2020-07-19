@@ -3,7 +3,7 @@ const tutorialModel = require('../models/tutorialModel');
 const tutorModel = require('../models/tutorModel');
 const reviewModel = require('../models/reviewModel');
 const emailService = require('../services/emailService');
-const requestBodyVerificationService =  require('../services/requestBodyVerificationService');
+const requestBodyVerificationService = require('../services/requestBodyVerificationService');
 
 const getCustomerProfile = (req, res) => {
     if (req.userType === 'customer') {
@@ -84,23 +84,23 @@ const uploadCustomerProfile = (req, res) => {
             lastName: req.body.lastName,
             university: req.body.university,
         });
-        customerModel.updateOne({email: customer.email}, customer)
+        customerModel.updateOne({ email: customer.email }, customer)
             .then(() => {
-                return res.status(200).json({message: "successfully updated"});
+                return res.status(200).json({ message: "successfully updated" });
             }).catch(error => {
-            console.log('error by creating a customer Profile');
-            if (error.code === 11000) {
-                return res.status(400).json({
-                    error: 'customer Profile exists',
-                    message: error.message
-                })
-            } else {
-                return res.status(500).json({
-                    error: 'Internal server error happens by add customer Profile',
-                    message: error.message
-                })
-            }
-        });
+                console.log('error by creating a customer Profile');
+                if (error.code === 11000) {
+                    return res.status(400).json({
+                        error: 'customer Profile exists',
+                        message: error.message
+                    })
+                } else {
+                    return res.status(500).json({
+                        error: 'Internal server error happens by add customer Profile',
+                        message: error.message
+                    })
+                }
+            });
     }
 };
 
@@ -133,6 +133,14 @@ const createReview = (req, res) => {
                 error = updateReviewForTutor(req.body.tutorEmail, review._id);
                 if (!error) {
                     error = updateRatingForTutor(req.body.tutorEmail);
+                    tutorialModel.updateOne({
+                        _id: req.body.tutorialId
+                    }, {
+                        reviewId: review._id,
+                        tutorialStatus: 'reviewed'
+                    }).catch((errorMsg) => {
+                        console.log(errorMsg);
+                    });
                     emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, "New Feedback Received", emailService.reviewTutorial);
                     if (!error) {
                         return res.status(200).json(review);
@@ -185,7 +193,7 @@ const updateReview = (req, res) => {
         customerEmail: req.body.customerEmail
     });
 
-    reviewModel.updateOne({_id: reviewId}, review)
+    reviewModel.updateOne({ _id: reviewId }, review)
         .then(
             review => {
                 let error = updateRatingForTutor(req.body.tutorEmail);
@@ -199,12 +207,12 @@ const updateReview = (req, res) => {
                 });
             }
         ).catch(error => {
-        console.log(error);
-        return res.status(404).json({
-            error: 'Review Not Found',
-            message: error.message
-        });
-    })
+            console.log(error);
+            return res.status(404).json({
+                error: 'Review Not Found',
+                message: error.message
+            });
+        })
 
 };
 
@@ -258,14 +266,14 @@ const updateReviewForTutor = (email, reviewId) => {
     tutorModel.updateOne({ email: email }, { $push: { reviewIds: reviewId } })
         .exec()
         .catch(error => {
-        console.log('error by adding a review id to the tutor');
-        return error;
-    });
+            console.log('error by adding a review id to the tutor');
+            return error;
+        });
 
 };
 
 const updateRatingForTutor = (email) => {
-    tutorModel.findOne({email: email})
+    tutorModel.findOne({ email: email })
         .exec()
         .then(
             tutor => {
@@ -280,14 +288,14 @@ const updateRatingForTutor = (email) => {
                             sumOverallRating += reviews[i].overallRating;
                         }
                         tutorModel.updateOne(
-                            {email: email}, {rating: Math.round(sumOverallRating / reviews.length)}
+                            { email: email }, { rating: Math.round(sumOverallRating / reviews.length) }
                         ).exec();
                     });
             }
         ).catch(error => {
-        console.log('error by update rating to the tutor');
-        return error;
-    });
+            console.log('error by update rating to the tutor');
+            return error;
+        });
 
 };
 
@@ -330,7 +338,7 @@ const createTutorial = (req, res) => {
             ifHadVideo: false
         });
 
-        tutorModel.findOne({email: tutorial.tutorEmail}).exec()
+        tutorModel.findOne({ email: tutorial.tutorEmail }).exec()
             .then(
                 tutor => {
                     let newTimeSlots = updateTimeSlots(tutor.timeSlotIds, tutorial);
@@ -350,8 +358,8 @@ const createTutorial = (req, res) => {
                                     if (!error) {
                                         emailService.emailNotification(req.body.tutorEmail, req.body.tutorFirstName, 'New Tutorial Session', emailService.newTutorial);
                                         tutorModel.updateOne(
-                                            {email: tutor.email},
-                                            {timeSlotIds: newTimeSlots.timeSlotIds}
+                                            { email: tutor.email },
+                                            { timeSlotIds: newTimeSlots.timeSlotIds }
                                         ).then(
                                             tutor => {
                                                 console.log(tutor)
@@ -372,19 +380,19 @@ const createTutorial = (req, res) => {
                                     }
                                 }
                             }).catch(error => {
-                            console.log('error by creating a Tutorial');
-                            if (error.code === 11000) {
-                                return res.status(400).json({
-                                    error: 'Internal server error happens by add Tutorial',
-                                    message: error.message
-                                })
-                            } else {
-                                return res.status(500).json({
-                                    error: 'Internal server error happens by add Tutorial',
-                                    message: error.message
-                                })
-                            }
-                        });
+                                console.log('error by creating a Tutorial');
+                                if (error.code === 11000) {
+                                    return res.status(400).json({
+                                        error: 'Internal server error happens by add Tutorial',
+                                        message: error.message
+                                    })
+                                } else {
+                                    return res.status(500).json({
+                                        error: 'Internal server error happens by add Tutorial',
+                                        message: error.message
+                                    })
+                                }
+                            });
 
                     }
                 }
@@ -494,9 +502,9 @@ const updateTutorialAndTransactionForCustomer = (email, bookedTutorialSessionId,
 
 const updateReviewForCustomer = (email, reviewId) => {
     customerModel.updateOne(
-        {email: email},
+        { email: email },
         {
-            $push: {reviewIds: reviewId}
+            $push: { reviewIds: reviewId }
         })
         .exec()
         .catch(

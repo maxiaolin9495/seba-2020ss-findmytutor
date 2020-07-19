@@ -68,16 +68,18 @@ export class ReviewTutorView extends React.Component {
                     toast.success('Successfully updated');
                     this.props.history.goBack();
                 }).catch((e) => {
+                    console.error(e);
+                    this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
+                }) :
+            ReviewService.createReview({
+                ...review,
+                tutorialId: this.state.tutorial._id
+            }).then(() => {
+                toast.success('Successfully submitted');
+                this.props.history.goBack();
+            }).catch((e) => {
                 console.error(e);
-                this.setState(Object.assign({}, this.state, {error: 'Error while creating review'}));
-            }) :
-            ReviewService.createReview(review)
-                .then(() => {
-                    toast.success('Successfully submitted');
-                    this.props.history.goBack();
-                }).catch((e) => {
-                console.error(e);
-                this.setState(Object.assign({}, this.state, {error: 'Error while creating review'}));
+                this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
             });
     };
 
@@ -93,7 +95,7 @@ export class ReviewTutorView extends React.Component {
                     review={this.state.review} />}
 
                 <div className="img-container">
-                    <img src={Background} className="bg" alt={"Background"}/>
+                    <img src={Background} className="bg" alt={"Background"} />
                 </div>
             </div>
         )
