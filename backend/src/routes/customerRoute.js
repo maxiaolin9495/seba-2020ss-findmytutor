@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const middleWares = require('../middleWares');
-const customerController = require('../controllers/customer');
+const customerController = require('../controllers/customerController');
 
-router.get('/tutorialForCustomer', middleWares.checkAuthentication, customerController.getTutorialsForCustomer);
 router.put('/uploadCustomerProfile', middleWares.checkAuthentication, customerController.uploadCustomerProfile);
 router.get('/customerProfile', middleWares.checkAuthentication, customerController.getCustomerProfile);
 router.post('/review', middleWares.checkAuthentication, customerController.createReview);

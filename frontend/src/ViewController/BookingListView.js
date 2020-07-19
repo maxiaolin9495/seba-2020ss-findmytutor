@@ -25,20 +25,20 @@ export class BookingListView extends React.Component {
         });
         let userType = UserService.getCurrentUser().userType;
         if (!userType) {
-            // TODO: Need Test
             toast.error("Need login information!");
             this.props.history.goBack();
         }
         userType === `customer` ?
-            TutorialService.getAllTutorialsForCustomer().then((tutorialsData) => {
-                let tutorialSort = tutorialsData;
-                tutorialSort.sort(this.tutorialCompareFunction);
-                this.setState({
-                    tutorials: tutorialSort,
-                    loading: false,
-                    userType
-                });
-            }).catch((e) => {
+            TutorialService.getAllTutorialsForCustomer()
+                .then((tutorialsData) => {
+                    let tutorialSort = tutorialsData;
+                    tutorialSort.sort(this.tutorialCompareFunction);
+                    this.setState({
+                        tutorials: tutorialSort,
+                        loading: false,
+                        userType
+                    });
+                }).catch((e) => {
                 console.error(e);
             }) :
             TutorialService.getAllTutorialsForTutor().then((tutorialsData) => {
@@ -70,7 +70,8 @@ export class BookingListView extends React.Component {
                 tutorials: this.state.tutorials.map(t => (
                     t._id === tutorialInfo._id ?
                         Object.assign({}, t, { tutorialStatus: 'cancelled' }) :
-                        t))
+                        t)
+                )
             })
         }).catch(() => {
             toast.error('Failed to cancel tutorial');
@@ -84,7 +85,8 @@ export class BookingListView extends React.Component {
                 tutorials: this.state.tutorials.map(t => (
                     t._id === tutorialInfo._id ?
                         Object.assign({}, t, { tutorialStatus: 'confirmed' }) :
-                        t))
+                        t)
+                )
             })
         }).catch(() => {
             toast.error('Failed to confirm tutorial');
@@ -92,8 +94,6 @@ export class BookingListView extends React.Component {
     };
 
     tutorialCompareFunction = (a, b) => {
-        console.log(a.startTime);
-        console.log(this.nowTime);
         if(a.startTime > this.nowTime && b.startTime > this.nowTime){
             return a.startTime - b.startTime;
         }
@@ -114,7 +114,6 @@ export class BookingListView extends React.Component {
             return <h2>Loading</h2>
         }
 
-        // TODO: sort tutorials
         return (
             <div>
                 <Navigation />

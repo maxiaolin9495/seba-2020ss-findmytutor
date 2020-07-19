@@ -40,11 +40,12 @@ class PaymentDialog extends PureComponent {
     paymentSuccess = (res) => {
         toast.success('Successful payment');
         this.hide();
-
+        console.log(res);
         let transaction ={
             payer:UserService.getCurrentUser().email,
             receiver:this.state.tutor.email,
             transactionStatus: 'transferred',
+            transactionId:res.id
         };
 
 
@@ -67,6 +68,7 @@ class PaymentDialog extends PureComponent {
             };
             TutorialService.createBooking(booking);
         })
+        this.props.history.push('/booking')
         // this.props.history.push('tutor/' + this.props.match.params.id);
     };
 

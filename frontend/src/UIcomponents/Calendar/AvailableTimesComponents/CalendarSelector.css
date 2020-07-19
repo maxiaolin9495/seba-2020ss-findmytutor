@@ -36,7 +36,6 @@
 
 :local(.calendar) {
     cursor: pointer;
-    display: block;
     padding: 5px 10px;
     display: flex;
     align-items: center;

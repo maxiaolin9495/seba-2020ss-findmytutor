@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, Link, withRouter} from 'react-router-dom';
 import {Avatar, FontIcon, ListItem, NavigationDrawer, Button, IconSeparator } from 'react-md';
 import imgURL from '../../Images/LogoIcon.png';
-import NavigationMenuStyle from '../../Css/navigation.css';
+import NavigationMenuStyle from './Navigation.css';
 import LoginService from '../../Services/LoginService';
 import UserService from '../../Services/UserService';
 import { upperFirst } from 'lodash/string';
@@ -133,7 +133,9 @@ class NavigationMenu extends React.Component {
 
     toTitle = (str) => {
         return str.split(/-|[A-Z]+/).reduce((s, split) => {
-            const capititalized = split.match(/svg$/) ? 'SVG' : upperFirst(split);
+            const capititalized = split.match(/svg$/) ?
+                'SVG' :
+                upperFirst(split);
             return `${s ? `${s} ` : ''}${capititalized}`;
         }, '');
     };
@@ -147,13 +149,21 @@ class NavigationMenu extends React.Component {
             attractions: [],
             titles: [],
             toolbarTitle: this.getCurrentTitle(props),
-            navItems: LoginService.isAuthenticated() ? (UserService.getCurrentUser().userType === 'customer'? logInNavItemsCustomer : logInNavItemsTutor) :defaultNavItems
+            navItems: LoginService.isAuthenticated() ?
+                (UserService.getCurrentUser().userType === 'customer' ?
+                    logInNavItemsCustomer :
+                    logInNavItemsTutor) :
+                defaultNavItems
         };
     }
 
     logout = () => {
         LoginService.logout();
-        this.setState({navItems: LoginService.isAuthenticated() ? (UserService.getCurrentUser().userType === 'customer'? logInNavItemsCustomer : logInNavItemsTutor) :defaultNavItems}, ()=>{
+        this.setState({navItems: LoginService.isAuthenticated() ?
+                (UserService.getCurrentUser().userType === 'customer'?
+                    logInNavItemsCustomer :
+                    logInNavItemsTutor) :
+                defaultNavItems}, ()=>{
             this.props.history.push('/');
         });
     };

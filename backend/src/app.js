@@ -1,6 +1,5 @@
 const bodyParser = require('body-parser');
 const config = require('./config.js');
-const contact = require('./routes/contact.js');
 const express = require('express');
 const helmet = require('helmet');
 const swaggerUi = require('swagger-ui-express');
@@ -8,10 +7,12 @@ const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/api-definitions/api.yaml');
 const mongoose = require('mongoose');
 const middleWares = require('./middleWares');
-const user = require('./routes/user.js');
-const tutor = require('./routes/tutor.js');
-const customer = require('./routes/customer');
-const transaction = require('./routes/transaction');
+const contact = require('./routes/contactRoute');
+const customer = require('./routes/customerRoute');
+const transaction = require('./routes/transactionRoute');
+const tutor = require('./routes/tutorRoute');
+const user = require('./routes/userRoute');
+
 const app = express();
 
 /**

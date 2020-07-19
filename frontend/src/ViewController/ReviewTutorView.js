@@ -3,7 +3,6 @@ import Navigation from "../UIcomponents/PageDesign/Navigation";
 import Background from '../Images/Homepage.jpg';
 import UserService from '../Services/UserService';
 import TutorialService from '../Services/TutorialService';
-import TutorPageService from "../Services/TutorPageService";
 import ReviewService from "../Services/ReviewService";
 import ReviewPage from "../UIcomponents/PageDesign/ReviewPage";
 import { toast } from 'react-toastify';
@@ -22,18 +21,20 @@ export class ReviewTutorView extends React.Component {
     componentDidMount() {
         let tutorialId = this.props.match.params.id;
         TutorialService.getTutorial(tutorialId).then((data) => {
-            TutorialService.getTutorByTutorEmail(data.tutorEmail).then((tutor) => {
-                this.setState({
-                    tutor: tutor,
-                    tutorial: data
-                });
-            });
-            if (data.reviewId)
-                ReviewService.getReview(data.reviewId).then((review) => {
+            TutorialService.getTutorByTutorEmail(data.tutorEmail)
+                .then((tutor) => {
                     this.setState({
-                        review
-                    })
+                        tutor: tutor,
+                        tutorial: data
+                    });
                 });
+            if (data.reviewId)
+                ReviewService.getReview(data.reviewId)
+                    .then((review) => {
+                        this.setState({
+                            review
+                        })
+                    });
         }).catch((e) => {
             console.error(e);
         });
@@ -45,8 +46,7 @@ export class ReviewTutorView extends React.Component {
                 loading: false,
                 error: "No login information"
             })
-        }
-        else {
+        } else {
             this.setState({
                 userType: user.userType
             });
@@ -63,15 +63,19 @@ export class ReviewTutorView extends React.Component {
 
     handleReview = (review) => {
         (this.state.tutorial.reviewId) ?
-            ReviewService.updateReview(this.state.tutorial.reviewId, review).then(() => {
-                toast.success('Successfully updated');
-                this.props.history.goBack();
-            }).catch((e) => {
-                console.error(e);
-                this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
-            }) :
-            ReviewService.createReview(review).then(() => {
-                toast.success('Successfully submited');
+            ReviewService.updateReview(this.state.tutorial.reviewId, review)
+                .then(() => {
+                    toast.success('Successfully updated');
+                    this.props.history.goBack();
+                }).catch((e) => {
+                    console.error(e);
+                    this.setState(Object.assign({}, this.state, { error: 'Error while creating review' }));
+                }) :
+            ReviewService.createReview({
+                ...review,
+                tutorialId: this.state.tutorial._id
+            }).then(() => {
+                toast.success('Successfully submitted');
                 this.props.history.goBack();
             }).catch((e) => {
                 console.error(e);
@@ -91,7 +95,7 @@ export class ReviewTutorView extends React.Component {
                     review={this.state.review} />}
 
                 <div className="img-container">
-                    <img src={Background} className="bg" />
+                    <img src={Background} className="bg" alt={"Background"} />
                 </div>
             </div>
         )

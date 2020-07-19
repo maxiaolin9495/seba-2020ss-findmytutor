@@ -23,7 +23,7 @@ class TutorCalendar extends React.Component {
     }
 
     isDateBeforeToday = (date) => {
-        return new Date(date.toDateString()) < new Date(new Date().toDateString());
+        return date.getTime() < new Date().getTime();
     };
 
     verifySelectionsWithInvalidDate = (selections) => {

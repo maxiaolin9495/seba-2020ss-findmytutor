@@ -15,11 +15,12 @@ export default class ReviewCard extends React.Component {
     }
 
     componentWillMount() {
-        EditProfileService.getCustomerByCustomerEmail(this.props.review.customerEmail).then((customer) => {
-            this.setState({
-                customerName: `${customer.firstName} ${customer.lastName}`
-            })
-        }).catch((e) => {
+        EditProfileService.getCustomerByCustomerEmail(this.props.review.customerEmail)
+            .then((customer) => {
+                this.setState({
+                    customerName: `${customer.firstName} ${customer.lastName}`
+                })
+            }).catch((e) => {
             console.error(e);
             toast.error('Error by getting tutor review');
         });

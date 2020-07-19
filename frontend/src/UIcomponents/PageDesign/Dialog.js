@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { DialogContainer, Button } from 'react-md';
 
-export default class ScrollingContentAndSizing extends PureComponent {
+export default class Dialog extends PureComponent {
 
     constructor(props) {
         super(props);

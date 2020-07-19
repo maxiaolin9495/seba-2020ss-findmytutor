@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { Checkbox, Button, Divider, TextField } from 'react-md';
-import { createHashHistory } from 'history'
-import SearchBarComponent from "./SearchBarComponent";
+import { Button } from 'react-md';
 import { withRouter } from "react-router-dom";
 import SearchResultCard from "./SearchResultCard";
 import { MultiSelect } from '@progress/kendo-react-dropdowns';
 import '@progress/kendo-theme-default/dist/all.css';
-import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 
@@ -40,21 +37,22 @@ class SearchResultPage extends Component {
             cards: props.filteredData.map(d => {
                 return (<SearchResultCard
                     key={d.id}
-                    tutor={d} />)
+                    tutor={d}/>)
             })
         });
         let altUniversities = props.data.map(function (uni) {
             return uni.university
         });
         this.setState({
-            universities: altUniversities.filter(function (item, pos) {
-                return altUniversities.indexOf(item) == pos;
-            })
+            universities: altUniversities.filter(
+                function (item, pos) {
+                    return altUniversities.indexOf(item) === pos;
+                })
         })
     }
 
     handleFilter=()=> {
-        let filterUni = [];
+        let filterUni;
         if (this.state.value.length !== 0){
             filterUni = this.state.value
         } else {

@@ -1,11 +1,12 @@
 "use strict";
 
 import React from 'react';
-import { Card, Button, FontIcon, TextField, FileInput, Media, Cell, Grid, Chip } from 'react-md';
+import { Card, Button, FontIcon, TextField, FileInput, Media, Cell } from 'react-md';
 import { withRouter } from 'react-router-dom'
 import TutorCalendar from "../Calendar/TutorCalendar";
 import Resizer from 'react-image-file-resizer';
 import CoursesChip from "./CoursesChip";
+import { toast } from 'react-toastify';
 
 const style = {
     maxWidth: 750,
@@ -106,7 +107,7 @@ class EditProfile extends React.Component {
 
     handleSubmit = () => {
         let userProfile = this.props.userProfile;
-        // TODO: change to not user profile
+
         if (userProfile === undefined) {
             userProfile = {};
         }

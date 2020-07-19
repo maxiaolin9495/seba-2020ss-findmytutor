@@ -17,10 +17,11 @@ export class ContactUsView extends React.Component {
     };
     send = (contactForm) => {
         if (!this.validateInputs()) return;
-        UserService.uploadMessage(contactForm.message, contactForm.email).then( () => {
-            toast.success("Message successfully sent out");
-            this.props.history.push('/');
-        }).catch(e => {
+        UserService.uploadMessage(contactForm.message, contactForm.email)
+            .then(() => {
+                toast.success("Message successfully sent out");
+                this.props.history.push('/');
+            }).catch(e => {
             console.log(e);
             toast.error(e);
         });
@@ -52,7 +53,7 @@ export class ContactUsView extends React.Component {
             <div>
                 <Navigation/>
                 <section>
-                    <img src={Background} className="bg"/>
+                    <img src={Background} className="bg" alt={'Background'}/>
                     <ContactUs onSubmit={(contactForm) => this.send(contactForm)} error={this.state.error}/>
                 </section>
             </div>

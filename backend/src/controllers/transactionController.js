@@ -1,6 +1,8 @@
-const transactionModel = require('../models/transaction');
-const customerModel = require('../models/customer');
-const tutorModel = require('../models/tutor');
+const transactionModel = require('../models/transactionModel');
+const customerModel = require('../models/customerModel');
+const tutorModel = require('../models/tutorModel');
+const requestBodyVerificationService =  require('../services/requestBodyVerificationService');
+
 const getTransaction = (req, res) => {
     const {
         payer,
@@ -28,6 +30,20 @@ const getTransaction = (req, res) => {
     })
 };
 const createTransaction = (req, res) => {
+
+    let verificationResult = requestBodyVerificationService.verifyRequestBody(
+        [
+            "payer",
+            "receiver",
+            "transactionStatus",
+            "transactionId"
+        ], req);
+
+    if (!verificationResult.ifValid) {
+
+        return res.status(400).json(verificationResult.message);
+
+    }
 
     customerModel.findOne({email: req.body.payer}).exec()//customerModel schema
         .then(user => {

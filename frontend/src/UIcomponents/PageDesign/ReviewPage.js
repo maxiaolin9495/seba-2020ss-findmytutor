@@ -32,16 +32,16 @@ export class ReviewPage extends React.Component {
         return null
     }
 
-    onStarClickComprehensionRating(nextValue, prevValue, name) {
+    onStarClickComprehensionRating(nextValue) {
         console.log(nextValue);
         this.setState({ comprehensionRating: nextValue });
     }
 
-    onStarClickTeachingStyleRating(nextValue, prevValue, name) {
+    onStarClickTeachingStyleRating(nextValue) {
         this.setState({ teachingStyleRating: nextValue });
     }
 
-    onStarClickFriendlinessRating(nextValue, prevValue, name) {
+    onStarClickFriendlinessRating(nextValue) {
         this.setState({ friendlinessRating: nextValue });
     }
 
@@ -55,7 +55,7 @@ export class ReviewPage extends React.Component {
             return;
         }
         let review = this.props.review;
-        if (review == undefined) {
+        if (review === undefined) {
             review = {};
         }
         review.time = this.state.time;
@@ -77,7 +77,7 @@ export class ReviewPage extends React.Component {
         const { teachingStyleRating } = this.state;
 
         return (
-            <div className="md-grid" id="reviewTable" label="Review" style={{
+            <div className="md-grid" id="reviewTable" style={{
                 display: 'flex',
                 maxWidth: '60%',
                 marginTop: '2%',
@@ -86,7 +86,7 @@ export class ReviewPage extends React.Component {
             }}>
 
                 <div className="chef-container" style={{ marginTop: '0.5%' }}>
-                    <img src={this.props.tutor.avatar} />
+                    <img src={this.props.tutor.avatar} alt={'avatar'}/>
                     <h3 style={{ marginTop: '2%' }}>Tutor</h3>
                     <h1 style={{ marginTop: '-2%' }}>{this.props.tutor.firstName} {this.props.tutor.lastName}</h1>
                 </div>

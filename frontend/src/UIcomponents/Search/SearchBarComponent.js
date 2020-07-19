@@ -14,11 +14,12 @@ class SearchBarComponent extends React.Component {
         }
     }
     componentDidMount() {
-        SearchService.getAllTutorsAndCourses().then((data) => {
-            this.setState({
-                data: [...data]
-            });
-        }).catch((e) => {
+        SearchService.getAllTutorsAndCourses()
+            .then((data) => {
+                this.setState({
+                    data: [...data]
+                });
+            }).catch((e) => {
             console.error(e);
         });
     }

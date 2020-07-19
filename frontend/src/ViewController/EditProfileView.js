@@ -30,45 +30,46 @@ export class EditProfileView extends React.Component {
                 loading: false,
                 error: "No login information"
             })
-        }
-        else {
+        } else {
             this.setState({
                 userType: user.userType
             });
             // get customer profile
             if (user.userType === 'tutor') {
-                EditProfileService.getTutorProfile().then((data) => {
-                    if (data.timeSlotIds){
-                        console.log(data.timeSlotIds);
-                        let arr = [];
-                        //make sure we only present valid timeSlot on the calendar
-                        data.timeSlotIds.forEach(
-                            timeSlot => {
-                                if (timeSlot && timeSlot.start && timeSlot.end) {
-                                    arr.push(timeSlot);
-                                }
+                EditProfileService.getTutorProfile()
+                    .then((data) => {
+                        if (data.timeSlotIds) {
+                            console.log(data.timeSlotIds);
+                            let arr = [];
+                            //make sure we only present valid timeSlot on the calendar
+                            data.timeSlotIds.forEach(
+                                timeSlot => {
+                                    if (timeSlot && timeSlot.start && timeSlot.end) {
+                                        arr.push(timeSlot);
+                                    }
+                                });
+                            console.log(arr);
+                            data.timeSlotIds = arr;
+
+                        }
+
+                        this.setState({
+                            userProfile: data,
+                            loading: false,
+                            error: undefined
                         });
-                        console.log(arr);
-                        data.timeSlotIds = arr;
-
-                    }
-
-                    this.setState({
-                        userProfile: data,
-                        loading: false,
-                        error: undefined
-                    });
-                }).catch((e) => {
+                    }).catch((e) => {
                     console.error(e);
                 });
             } else {
-                EditProfileService.getCustomerProfile().then((data) => {
-                    this.setState({
-                        userProfile: data,
-                        loading: false,
-                        error: undefined
-                    });
-                }).catch((e) => {
+                EditProfileService.getCustomerProfile()
+                    .then((data) => {
+                        this.setState({
+                            userProfile: data,
+                            loading: false,
+                            error: undefined
+                        });
+                    }).catch((e) => {
                     console.error(e);
                 });
             }
@@ -77,20 +78,22 @@ export class EditProfileView extends React.Component {
 
     updateProfile = (userProfile) => {
         if (this.state.userType === 'tutor') {
-            EditProfileService.updateTutorProfile(userProfile).then(() => {
-                toast.success('Update profile succeeded');
-                // this.props.history.push('/');
-            }).catch(() => {
+            EditProfileService.updateTutorProfile(userProfile)
+                .then(() => {
+                    toast.success('Update profile succeeded');
+                    // this.props.history.push('/');
+                }).catch(() => {
                 toast.error('Please input correct information');
                 this.setState({
                     error: 'Error while updating user profile'
                 });
             });
         } else {
-            EditProfileService.updateCustomerProfile(userProfile).then(() => {
-                toast.success('Update profile succeeded');
-                // this.props.history.push('/');
-            }).catch(() => {
+            EditProfileService.updateCustomerProfile(userProfile)
+                .then(() => {
+                    toast.success('Update profile succeeded');
+                    // this.props.history.push('/');
+                }).catch(() => {
                 toast.error('Please input correct information');
                 this.setState({
                     error: 'Error while updating customer profile'
